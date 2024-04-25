@@ -136,21 +136,37 @@ erDiagram
 
 ## 📐 Wireframes
 
->[!note]
-> Don't go crazy detailed with the wireframes! These should be minimal sketches to convey to the customer what the app will roughly look like. These things tend to change over time as requirements evolve, but you need to start from somewhere.
+![Home View](images/home-view.png)
+
+The home view is...
 
 ![Login View](images/login-view.png)
 
 The login view is the initial screen where users can enter their credentials to log into their account. It typically consists of a form with input fields for the username/email and password, along with a "Login" button. The login view should also include a link to the registration page for new users who don't have an account yet.
 
-![List View](images/list-view.png)
+![Video Game View](images/videogame-view.png)
 
-All the tasks for the logged in user where they can sort by title, due date, and created date. They can also filter tasks to only see completed or uncompleted tasks. The user can check off tasks here, or if they want a more detailed view, can click on one of the tasks (see next view).
+The video game view is...
 
-![Show View](images/show-view.png)
+![My Account View](images/myaccount-view.png)
 
-This view shows the user more details for one specific task. If a due date was set, it will tell them how many days from now the task is due. There is a description field to provide more context for the task, as well as task actions to mark the task as complete, edit the task, or delete. On the right we have a sub-task list so that the user can breakdown the task steps even further. The sub-tasks can be checked off when completed.
+This account view is... 
 
-![Profile View](images/profile-view.png)
+![Leave A Review View](images/leaveareview-view.png)
 
-The user profile shows the user's profile picture if set, and gives them a place where they can update their email and password. Here is also where they can control if the site is displayed in light or dark mode depending on the value of the toggle switch.
+This leave a review view is ...
+
+![Review View](images/reviews-view.png)
+
+This reviews view is ...
+
+
+![Register View](images/register-view.png)
+
+This register view is ...
+
+
+
+![Error View](images/error-view.png)
+
+This error view is ...
