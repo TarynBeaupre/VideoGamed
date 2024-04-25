@@ -2,7 +2,7 @@ Your [project](https://vikramsinghmtl.github.io/420-4W6-Web-Programming-II/proje
 
 ---
 
-![Banner](images/collab.png)
+![Banner](images/proposalCovrt.webp)
 
 Introducing "VideoGameTracker" – a platform for gamers to keep track of their favorite video games. Rate the latest games you've played, curate a wishlist and see daily rankings of the most popular video games on the marke! This app is for:
 
@@ -15,24 +15,26 @@ Discover new video games, leave ratings and meet new gamer friends with VideoGam
 ## 🧱 Core Functionality
 
 -   **Video Game Searching:** Users can search up their favorite game and see it pop up on the screen along with info about it
--   **Video Game Rating:** Users can leave star ratings on video games they enjoyed (or didn't!)
+-   **Video Game Rating:** Users can leave star ratings and reviews on video games they enjoyed (or didn't!)
 -   **Video Game Rating:** Users can "like" other user's ratings
 -   **Daily Video Game Ranking:** Users can see a daily ranking of the most highly-rated video games!
+-   **Latest Video Games:** Users can see the most newly released video games on the market
 -   **Wishlist:** Users can add a video game to their wishlist to access it anytime
 
 ### Requirements
 
-#### Rating Stories
+#### Review Stories
 
 -   As a user, I want to be able to visit a game's page and see an option to leave a review
 -   As a user, I want to give a rating out of 5 stars in my review
 -   As a user, I want to give a text review in my review
 
-#### Project Stories
+#### Video Game Page Stories
 
--   As a user, I want to create a new project so I can organize a set of related tasks.
--   As a user, I want to join a project using an invite code so I can collaborate with others.
--   As a user, I want to view all projects I'm part of to easily switch between them.
+-   As a user, I want to visit a video game's page and see info about it (release date, developer)
+-   As a user, I want to visit a video game's page and view its ratings
+-   As a user, I want to visit a video game's page and view its tags
+-   As a user, I want to visit a video game's page and view its popularity ranking
 
 #### User Management Stories
 
