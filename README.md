@@ -2,7 +2,7 @@ Your [project](https://vikramsinghmtl.github.io/420-4W6-Web-Programming-II/proje
 
 ---
 
-![Banner](images/proposalCovrt.webp)
+![Banner](images/proposalCover.webp)
 
 Introducing "VideoGameTracker" – a platform for gamers to keep track of their favorite video games. Rate the latest games you've played, curate a wishlist and see daily rankings of the most popular video games on the marke! This app is for:
 
