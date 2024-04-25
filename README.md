@@ -4,35 +4,29 @@ Your [project](https://vikramsinghmtl.github.io/420-4W6-Web-Programming-II/proje
 
 ![Banner](images/collab.png)
 
-Introducing "Taskr" – a collaborative task management platform where teams, families, or study groups can manage shared projects and hold each other accountable. This app is for:
+Introducing "VideoGameTracker" – a platform for gamers to keep track of their favorite video games. Rate the latest games you've played, curate a wishlist and see daily rankings of the most popular video games on the marke! This app is for:
 
--   Small teams and project groups needing a lightweight way to coordinate tasks.
--   Households or roommates looking to organize shared chores and responsibilities.
--   Students working on group assignments.
+-   New gamers who want to discover new games 
+-   Experienced gamers who wish to organize their video game ratings
+-   All who wish to meet other gamers and make friends!
 
-Many existing task managers are overly complex for small-scale collaboration or lack features to foster a sense of shared ownership. Taskr aims to bridge the gap, providing the right balance of structure and simplicity for coordination.
+Discover new video games, leave ratings and meet new gamer friends with VideoGameTracker!
 
 ## 🧱 Core Functionality
 
--   **Project Creation:** Users can create new shared projects with a title and basic description.
--   **User Management:** Users can join existing projects using a unique project code.
--   **Task Management:** Within a project, users can:
-    -   Create new tasks with descriptions and due dates.
-    -   Assign tasks to specific project members.
-    -   Mark tasks as completed.
--   **Basic Notifications:** Users receive notifications when assigned a task or when a task they're involved in is marked complete.
--   **In-Task Chat:** Simple comment threads attached to tasks for focused discussions.
--   **Custom Task Statuses:** Ability to define statuses beyond "Not Started" and "Completed" (e.g., "In Progress", "Blocked")
+-   **Video Game Searching:** Users can search up their favorite game and see it pop up on the screen along with info about it
+-   **Video Game Rating:** Users can leave star ratings on video games they enjoyed (or didn't!)
+-   **Video Game Rating:** Users can "like" other user's ratings
+-   **Daily Video Game Ranking:** Users can see a daily ranking of the most highly-rated video games!
+-   **Wishlist:** Users can add a video game to their wishlist to access it anytime
 
 ### Requirements
 
-#### Task Stories
+#### Rating Stories
 
--   As a user, I want to create a task so that I can keep track of what I have to get done.
--   As a user, I want to view my tasks in a list so I can see what needs my attention.
--   As a user, I want to edit a task to update its details or due date.
--   As a user, I want to mark a task as complete so I can track my progress.
--   As a user, I want to delete a task when it's no longer relevant.
+-   As a user, I want to be able to visit a game's page and see an option to leave a review
+-   As a user, I want to give a rating out of 5 stars in my review
+-   As a user, I want to give a text review in my review
 
 #### Project Stories
 
@@ -65,76 +59,48 @@ Many existing task managers are overly complex for small-scale collaboration or 
 
 ```mermaid
 erDiagram
-    PROJECT ||--o{ TASK : contains
-    PROJECT ||--o{ USER_PROJECT : "is managed by"
-    USER |o--o{ TASK : "assigned to"
-    USER ||--o{ USER_PROJECT : "works on"
-    TASK ||--o{ SUBTASK : has
-    TASK ||--o{ NOTIFICATION: emits
-    TASK ||--o{ COMMENT: has
-    USER ||--o{ COMMENT: writes
-    NOTIFICATION ||--o{ USER_NOTIFICATION: pings
-    USER ||--o{ USER_NOTIFICATION: receives
+    VIDEO_GAME ||--o{ REVIEW : has
+    USER |o--o{ REVIEW : "leaves"
+    USER |o--o{ WISHLIST : "has"
+    VIDEO_GAME |o--o{ WISHLIST : "is on"
+    VIDEO_GAME |o--o{ TAG : "has"
 
-    USER_PROJECT {
-        int user_id PK, FK
-        int project_id PK, FK
+    REVIEW {
+        int id PK
+        int stars
+        int likes
+        string text
+        int user_id FK 
+        int videogame_id FK 
     }
 
-    TASK {
+
+    VIDEO_GAME {
         int id PK
         string title
         string description
-        enum status "complete | in progress | unassigned | blocked"
-        date created_at
-        date edited_at
-        int project_id FK
-        int assignee FK
-    }
-
-    SUBTASK {
-        int id PK
-        string title
-        date created_at
-        date edited_at
-        int task_id FK
-    }
-
-    PROJECT {
-        int id PK
-        string title
-        string description
-        date created_at
-        date edited_at
+        string developer
+        date released_at
+        int total_stars
     }
 
     USER {
         int id PK
         string email
-        string name
+        string username
         date created_at
         date edited_at
     }
 
-    COMMENT {
-        int id PK
-        string content
-        date created_at
-        date edited_at
-        id user_id FK "comment author"
-        id task_id FK
+    WISHLIST {
+        int user_id FK 
+        int videogame_id FK
     }
 
-    NOTIFICATION {
-        int id PK
-        string content
-        date created_at
-        id task_id FK
-    }
-
-    USER_NOTIFICATION {
-        int user_id PK, FK
-        int notification_id PK, FK
+    TAG {
+        int id
+        string description
+        int videogame_id FK
     }
 ```
 
