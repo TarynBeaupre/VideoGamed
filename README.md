@@ -56,11 +56,13 @@ Discover new video games, leave ratings and meet new gamer friends with VideoGam
 ```mermaid
 erDiagram
     GAME ||--o{ REVIEW : has
-    USER |o--o{ REVIEW : "leaves"
+    USER |o--o{ REVIEW : "posts"
     USER |o--o{ WISHLIST_GAMES : "has"
+     USER |o--o{ PLAYED_GAMES : "has"
     GAME |o--o{ WISHLIST_GAMES : "is on"
-    GAME }o--o{ GAMETAG : "has"
-    TAG }o--o{ GAMETAG : "IS"
+    GAME |o--o{ PLAYED_GAMES : "is on"
+    GAME }o--o| GAMETAG : "has"
+    TAG ||--o| GAMETAG : "is"
 
 
     REVIEW {
@@ -91,6 +93,11 @@ erDiagram
     }
 
     WISHLIST_GAMES {
+        int user_id FK 
+        int videogame_id FK
+    }
+
+    PLAYED_GAMES{
         int user_id FK 
         int videogame_id FK
     }
@@ -162,11 +169,11 @@ The video game view/game details view is the view given to each game on the site
 
 ![My Account View](images/myaccount-view.png)
 
-This account view is a page that can be accessed by a logged in user. They can see a summary of their activity on the site such as number of games reviewed and their wishlist game count. From this page they can also alter their username, email, password or profile picture.
+This account view is a page that can be accessed by a logged in user. They can see a summary of their activity on the site such as number of games reviewed and their wishlist and played games count. From this page they can also alter their username, email, password or profile picture.
 
 ![Leave A Review View](images/leaveareview-view.png)
 
-This leave a review view is a screen accessed when the user decides to leave a review for a game. They can leave ratings via stars, add fill out the review's description. The game's title and cover on displayed so the user knowns which 
+This leave a review view is a screen accessed when the user decides to leave a review for a game. They can leave ratings via stars, add fill out the review's description. The game's title and cover on displayed so the user knowns which game they are rating. A user can only leave a review on a game they have in their played games list.
 
 ![Review View](images/reviews-view.png)
 
@@ -174,14 +181,24 @@ This reviews view is a view dedicated to showing all the existing reviews for a 
 
 ![Register View](images/register-view.png)
 
-This register view is accessed via the login view. If a user has not yet created an account, they will need to do so via the register page. They must enter: an email, a username and a password with a confirmation. No other routes besides the login and register view will be available to a user who has not logged in.
+This register view is accessed via the login view. If a user has not yet created an account, they will need to do so via the register page. They must enter: an email, a username and a password with a confirmation. 
 
 ![Error View](images/error-view.png)
 
 This error view is accessed when a user attempts to make an invalid, unauthorized or non-existing action. 
 
+![Wishlist View](images/wishlist-view.png)
+This view is accessed when a user chooses to view their wishlist. 
+
+![Played View](images/played-view.png)
+
+This view is accessed when a user chooses to view their played games list.
+
+![Search View](images/search-view.png)
+This view is accessed after a user has made a search for a game. It displays the found results, if any.
+
 #### Future Add-Ons
 If time allows, here are some bonus features that we would like to implement:
 -  Lists: allows the user to create curated groups of games such as "cozy games", "classics", etc
 -  Have the game view include the current price
--  My Games: Allow the user to mark games as "played" and see them displayed in their profile details. Optionally allow their games to be public.
+
