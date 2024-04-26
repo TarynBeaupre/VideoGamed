@@ -1,6 +1,4 @@
-Your [project](https://vikramsinghmtl.github.io/420-4W6-Web-Programming-II/project/specifications) proposal will go here. Since you have to write your proposal in markdown, I've provided the sample proposal below so you have a reference for the syntax. Don't worry about getting rid of my stuff below since there's the live [sample proposal](https://vikramsinghmtl.github.io/420-4W6-Web-Programming-II/project/example-proposal) copy on the notes website.
 
----
 
 ![Banner](images/proposalCover.webp)
 
@@ -41,9 +39,9 @@ Discover new video games, leave ratings and meet new gamer friends with VideoGam
 #### User Management Stories
 
 -   As a user, I want to register for an account so I can start using the app.
--   As a user, I want to log in to my account to access my tasks and projects.
+-   As a user, I want to log in to my account to access my wishlist. 
 -   As a user, I want to log out of my account to securely end my session.
--   As a user, I want to be able to edit my username, password and email
+-   As a user, I want to be able to edit my username, password, email and profile picture
 
 #### Home Page Stories
 -  As a user, I want to be able to search for a specific game in the home page's nav bar
@@ -57,11 +55,13 @@ Discover new video games, leave ratings and meet new gamer friends with VideoGam
 
 ```mermaid
 erDiagram
-    VIDEO_GAME ||--o{ REVIEW : has
+    GAME ||--o{ REVIEW : has
     USER |o--o{ REVIEW : "leaves"
-    USER |o--o{ WISHLIST : "has"
-    VIDEO_GAME |o--o{ WISHLIST : "is on"
-    VIDEO_GAME |o--o{ TAG : "has"
+    USER |o--o{ WISHLIST_GAMES : "has"
+    GAME |o--o{ WISHLIST_GAMES : "is on"
+    GAME }o--o{ GAMETAG : "has"
+    TAG }o--o{ GAMETAG : "IS"
+
 
     REVIEW {
         int id PK
@@ -73,7 +73,7 @@ erDiagram
     }
 
 
-    VIDEO_GAME {
+    GAME {
         int id PK
         string title
         string description
@@ -90,7 +90,7 @@ erDiagram
         date edited_at
     }
 
-    WISHLIST {
+    WISHLIST_GAMES {
         int user_id FK 
         int videogame_id FK
     }
@@ -98,14 +98,18 @@ erDiagram
     TAG {
         int id
         string description
-        int videogame_id FK
+    }
+
+    GAMETAG{
+        int tag_id FK 
+        int game_id FK
     }
 ```
 
 -   **Authentication System:** Handling user registration, login, logout, and session management.
--   **Wishlist Management:** Logic for project creation, joining projects, and CRUD operations on projects.
--   **Task Management:** Logic for task creation, assignment, updates, filtering, and notifications.
--   **UI Elements:** Design of forms, task lists, project overview, notification lists.
+-   **Wishlist Management:** Logic for wishlist adding and viewing
+-   **Review Management:** Logic for review creation, viewing, and likes
+-   **UI Elements:** Design of forms, wish lists, reviews, video game pages.
 
 ## 📍 API Routes
 
@@ -158,7 +162,7 @@ The video game view/game details view is the view given to each game on the site
 
 ![My Account View](images/myaccount-view.png)
 
-This account view is a page that can be accessed by a logged in user. They can see a summary of their activity on the site such as number of games reviewed and their wishlist game count. From this page they can also alter their username, email or password.
+This account view is a page that can be accessed by a logged in user. They can see a summary of their activity on the site such as number of games reviewed and their wishlist game count. From this page they can also alter their username, email, password or profile picture.
 
 ![Leave A Review View](images/leaveareview-view.png)
 
