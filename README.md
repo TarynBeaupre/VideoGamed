@@ -38,12 +38,18 @@ Discover new video games, leave ratings and meet new gamer friends with VideoGam
 -   As a user, I want to visit a video game's page and view its popularity ranking
 -   As a user, I want to visit a video game's page and view the reviews made from myself and other users
 
+
 #### User Management Stories
 
 -   As a user, I want to register for an account so I can start using the app.
 -   As a user, I want to log in to my account to access my tasks and projects.
 -   As a user, I want to log out of my account to securely end my session.
+-   As a user, I want to be able to edit my username, password and email
 
+#### Home Page Stories
+-  As a user, I want to be able to search for a specific game in the home page's nav bar
+-  As a user, I want the home page to be intuitive to use and for it to be easy to navigate
+  
 
 ## ᛦ Entity Relationships
 
@@ -129,7 +135,7 @@ erDiagram
 
 ![Home View](images/home-view.png)
 
-The home view is...
+The home view is the first screen to be revealed to logged in users. It contains a nav bar to go to the wishlist and review pages as well as their account details. On the screen there is a series of game displays such as featured game display, trending, newly added, etc. They can also see a small amount of trending reviews, aka the ones with the most likes. The user also has the option to log out of the site from this view. There is also a search bar so the user can easily find games.
 
 ![Login View](images/login-view.png)
 
@@ -137,15 +143,15 @@ The login view is the initial screen where users can enter their credentials to 
 
 ![Video Game View](images/videogame-view.png)
 
-The video game view is...
+The video game view is the view given to each game on the site. It contains an image of the game, the developer, publishing year, the number of accumulated stars from the reviews, the platforms it is available on and a general description of the game itself. Logged in users can add a game to their wishlist, or leave a review . It also has a links to purchase the game.
 
 ![My Account View](images/myaccount-view.png)
 
-This account view is... 
+This account view is a page that can be accessed by a logged in user. They can see a summary of their activity on the site such as number of games reviewed and their wishlist game count. From this page they can also alter their username, email or password.
 
 ![Leave A Review View](images/leaveareview-view.png)
 
-This leave a review view is ...
+This leave a review view is a screen accessed when the user decides to leave a review for a game.
 
 ![Review View](images/reviews-view.png)
 
@@ -155,8 +161,6 @@ This reviews view is ...
 ![Register View](images/register-view.png)
 
 This register view is ...
-
-
 
 ![Error View](images/error-view.png)
 
