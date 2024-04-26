@@ -4,7 +4,7 @@ Your [project](https://vikramsinghmtl.github.io/420-4W6-Web-Programming-II/proje
 
 ![Banner](images/proposalCover.webp)
 
-Introducing "VideoGameTracker" – a platform for gamers to keep track of their favorite video games. Rate the latest games you've played, curate a wishlist and see daily rankings of the most popular video games on the marke! This app is for:
+Introducing "VideoGamed" – a platform for gamers to keep track of their favorite video games. Rate the latest games you've played, curate a wishlist and see daily rankings of the most popular video games on the marke! This app is for:
 
 -   New gamers who want to discover new games 
 -   Experienced gamers who wish to organize their video game ratings
@@ -37,7 +37,6 @@ Discover new video games, leave ratings and meet new gamer friends with VideoGam
 -   As a user, I want to visit a video game's page and view its tags
 -   As a user, I want to visit a video game's page and view its popularity ranking
 -   As a user, I want to visit a video game's page and view the reviews made from myself and other users
-
 
 #### User Management Stories
 
@@ -104,7 +103,7 @@ erDiagram
 ```
 
 -   **Authentication System:** Handling user registration, login, logout, and session management.
--   **Project Management:** Logic for project creation, joining projects, and CRUD operations on projects.
+-   **Wishlist Management:** Logic for project creation, joining projects, and CRUD operations on projects.
 -   **Task Management:** Logic for task creation, assignment, updates, filtering, and notifications.
 -   **UI Elements:** Design of forms, task lists, project overview, notification lists.
 
@@ -115,21 +114,33 @@ erDiagram
 
 ### Review Management
 
-| Request              | Action                           | Response              | Description                                                             |
-| -------------------- | -------------------------------- | --------------------- | ----------------------------------------------------------------------- |
-| POST /review       | ProjectController::createReview | 201 GamePageView    | Create a new review and redirects to the game's page with the displayed reviews|
-| GET /review/:id    | ProjectController::getProject    | 200 ReviewDetails | Retrieve details of a specific review                                  |
-| PUT /review/:id    | ProjectController::updateProject | 200 GamePageView | Update a review  and redirects to the game's page|
-| DELETE /review/:id | ProjectController::deleteProject | 204 (No Content)      | Deletes a review  |
+| Request                | Action                           | Response              | Description                                                                    |
+| --------------------   | -------------------------------- | --------------------- | -------------------------------------------------------------------------------| 
+| POST /review           | ReviewController::createReview   | 201 GamePageView      | Create a new review and redirects to the game's page with the displayed reviews|
+| GET /review/:id        | ReviewController::getReview      | 200 ReviewDetails     | Retrieve details of a specific review                                          |
+| PUT /review/:id/update | ReviewController::updateReview   | 200 ReviewDetails     | Update a review  and redirects to the updated review                           |
+| DELETE /review/:id     | ReviewController::deleteProject  | 204 (No Content)      | Deletes a review                                                               |
 
-### Game Page Management
+### Profile Page Management
 
-| Request                                   | Action                     | Response                 | Description                        |
-| ----------------------------------------- | -------------------------- | ------------------------ | ---------------------------------- |
-| POST /projects/:projectId/tasks           | TaskController::createTask | 201 /projects/:projectId | Create a new task within a project |
-| GET /projects/:projectId/tasks/:taskId    | TaskController::getTask    | 200 TaskDetailView       | Retrieve a specific task's details |
-| PUT /projects/:projectId/tasks/:taskId    | TaskController::updateTask | 200 TaskDetailView       | Edit an existing task              |
-| DELETE /projects/:projectId/tasks/:taskId | TaskController::deleteTask | 204 (No Content)         | Delete a task                      |
+| Request                     | Action                           | Response                 | Description                        |
+| ----------------------------| -------------------------------- | ------------------------ | ---------------------------------- |
+| GET /profile/:profileId     | ProfileController::getProfile    | 200 ProfileView          | Retrieve a profile's details       |
+| PUT /profile/:profileId     | ProfileController::updateProfile | 200 ProfileView          | Edit an existing profile           |
+
+#### Wishlist Page Management
+| Request                            | Action                            | Response                 | Description                        |
+| -----------------------------------| --------------------------------- | ------------------------ | ---------------------------------- |
+| GET /wishlist/:profileId           | WishlistController::getWishList   | 200 TaskDetailView       | Retrieve a wishlist's details      |
+| PUT /wishlist/:projectId           | WishlistController::updateWishlist| 200 TaskDetailView       | Edit a wishlist                    |
+
+#### User Management
+
+| Request                | Action                           | Response              | Description                                                                    |
+| --------------------   | -------------------------------- | --------------------- | -------------------------------------------------------------------------------| 
+| POST /users/register   | UserController::createUser       | 201 LoginView         | Create a new user and redirects to the homepage                                |
+| POST /users/login      | UserController::loginUser        | 200 HomePage          | Authenticate user details and start a session                                  |
+| PUT /users/logout      | UserController::logoutUser       | 200 LoginView         | Logs out a user  and redirects to the login view                               |
 
 ## 📐 Wireframes
 
@@ -143,7 +154,7 @@ The login view is the initial screen where users can enter their credentials to 
 
 ![Video Game View](images/videogame-view.png)
 
-The video game view is the view given to each game on the site. It contains an image of the game, the developer, publishing year, the number of accumulated stars from the reviews, the platforms it is available on and a general description of the game itself. Logged in users can add a game to their wishlist, or leave a review . It also has a links to purchase the game.
+The video game view/game details view is the view given to each game on the site. It contains an image of the game, the developer, publishing year, the number of accumulated stars from the reviews, the platforms it is available on and a general description of the game itself. Logged in users can add a game to their wishlist, or leave a review . It also has a links to purchase the game.
 
 ![My Account View](images/myaccount-view.png)
 
@@ -151,17 +162,22 @@ This account view is a page that can be accessed by a logged in user. They can s
 
 ![Leave A Review View](images/leaveareview-view.png)
 
-This leave a review view is a screen accessed when the user decides to leave a review for a game.
+This leave a review view is a screen accessed when the user decides to leave a review for a game. They can leave ratings via stars, add fill out the review's description. The game's title and cover on displayed so the user knowns which 
 
 ![Review View](images/reviews-view.png)
 
-This reviews view is ...
-
+This reviews view is a view dedicated to showing all the existing reviews for a specific game. The reviews are displayed in a list like fashion and the user is capable of "liking" the review and seeing the username of the person who wrote it.
 
 ![Register View](images/register-view.png)
 
-This register view is ...
+This register view is accessed via the login view. If a user has not yet created an account, they will need to do so via the register page. They must enter: an email, a username and a password with a confirmation. No other routes besides the login and register view will be available to a user who has not logged in.
 
 ![Error View](images/error-view.png)
 
-This error view is ...
+This error view is accessed when a user attempts to make an invalid, unauthorized or non-existing action. 
+
+#### Future Add-Ons
+If time allows, here are some bonus features that we would like to implement:
+-  Lists: allows the user to create curated groups of games such as "cozy games", "classics", etc
+-  Have the game view include the current price
+-  My Games: Allow the user to mark games as "played" and see them displayed in their profile details. Optionally allow their games to be public.
