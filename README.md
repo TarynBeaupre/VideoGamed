@@ -61,7 +61,7 @@ erDiagram
      USER |o--o{ PLAYED_GAMES : "has"
     GAME |o--o{ WISHLIST_GAMES : "is on"
     GAME |o--o{ PLAYED_GAMES : "is on"
-    GAME }o--o| GAMETAG : "has"
+    GAME ||--o| GAMETAG : "has"
     TAG ||--o| GAMETAG : "is"
 
 
@@ -93,13 +93,13 @@ erDiagram
     }
 
     WISHLIST_GAMES {
-        int user_id FK 
-        int videogame_id FK
+        int user_id PKFK 
+        int videogame_id PKFK
     }
 
     PLAYED_GAMES{
-        int user_id FK 
-        int videogame_id FK
+        int user_id PKFK 
+        int videogame_id PKFK
     }
 
     TAG {
@@ -108,8 +108,8 @@ erDiagram
     }
 
     GAMETAG{
-        int tag_id FK 
-        int game_id FK
+        int tag_id PKFK 
+        int game_id PKFK
     }
 ```
 
