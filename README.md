@@ -93,13 +93,13 @@ erDiagram
     }
 
     WISHLIST_GAMES {
-        int user_id PKFK 
-        int videogame_id PKFK
+        int user_id PK FK 
+        int videogame_id PK FK
     }
 
     PLAYED_GAMES{
-        int user_id PKFK 
-        int videogame_id PKFK
+        int user_id PK FK 
+        int videogame_id PK FK
     }
 
     TAG {
@@ -108,8 +108,8 @@ erDiagram
     }
 
     GAMETAG{
-        int tag_id PKFK 
-        int game_id PKFK
+        int tag_id PK FK 
+        int game_id PK FK
     }
 ```
 
