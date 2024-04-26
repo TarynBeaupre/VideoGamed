@@ -39,9 +39,18 @@ Discover new video games, leave ratings and meet new gamer friends with VideoGam
 #### User Management Stories
 
 -   As a user, I want to register for an account so I can start using the app.
--   As a user, I want to log in to my account to access my wishlist. 
 -   As a user, I want to log out of my account to securely end my session.
 -   As a user, I want to be able to edit my username, password, email and profile picture
+
+#### Wishlist Management
+-   As a user, I want to view the games on my wishlist so I can see which games I would like
+-   As a user, I want to add games to my wishlist so I can keep them as games I would eventually like to play
+-   As a user, I want to be able to delete games from my wishlist so I can keep it updated
+
+#### Played List Management
+-  As a user, I want to add games to my played games list so I can review and rate them
+-  As a user, I want games added to my played games that are in my wishlist to automatically remove them from my wishlist
+-  As a user, I want to remove games from my played games list in case I accidentally added one to my list
 
 #### Home Page Stories
 -  As a user, I want to be able to search for a specific game in the home page's nav bar
@@ -127,13 +136,13 @@ erDiagram
 
 | Request                | Action                           | Response              | Description                                                                     |
 | --------------------   | -------------------------------- | --------------------- | --------------------------------------------------------------------------------| 
-| POST /review/:gameid/:profileid    | ReviewController::createReview   | 201 /game/:gameId    | Create a new review and redirects to the game's page with the displayed reviews |
+| POST /review/:gameid   | ReviewController::createReview   | 201 /game/:gameId    | Create a new review and redirects to the game's page with the displayed reviews |
 | GET /review/:reviewid        | ReviewController::getReview      | 200 ReviewDetails     | Retrieve details of a specific review                                           |
-| PUT /review/:reviewid/:id | ReviewController::updateReview   | 200 /review/reviewId     | Update a review  and redirects to the updated review                         |
-| PUT /review/:reviewid/:id | ReviewController::updateReview   | 403 Forbidden     | Review does not belong to the user                         |
-| PUT /review/:reviewid/:id | ReviewController::updateReview   | 401 Unauthorized   | User is not logged in                     |
-| PUT /review/:reviewid/:id | ReviewController::updateReview   | 400 BadRequest    | User or review id is invalid                       |
-| DELETE /review/:id     | ReviewController::deleteReview  | 204 (No Content)      | Deletes a review                                                                |
+| PUT /review/:reviewid | ReviewController::updateReview   | 200 /review/:reviewid     | Update a review  and redirects to the updated review                         |
+| PUT /review/:reviewid | ReviewController::updateReview   | 403 Forbidden     | Review does not belong to the user                         |
+| PUT /review/:reviewid | ReviewController::updateReview   | 401 Unauthorized   | User is not logged in                     |
+| PUT /review/:reviewid | ReviewController::updateReview   | 400 BadRequest    | User or review id is invalid                       |
+| DELETE /review/    | ReviewController::deleteReview  | 204 (No Content)      | Deletes a review                                                                |
 
 ### Games Management
 
@@ -141,32 +150,33 @@ erDiagram
 | -----------------------------------| --------------------------------- | ------------------------ | ---------------------------------- |
 | GET /games              | GamesController:getGames | 200 GamesView  | Shows all games |
 | GET /games/:gamesId      | GamesController::getGame | 200 GameView | Shows a single game's details
-| GET /gameslist/:profileId         | GamesController::getGamesList   | 200 GameListView      | Retrieve the played games      |
-| GET /gameslist/:profileId           | GamesController::getGamesList   | 400 BadRequest       | User's id is invalid      |
-| PUT /gameslist/:profileId  | GamesController::updateGameslist| 200 /games/:profileId | Edit a game list (add a game to the played list), redirects to the user's games list     |
-| DELETE /gamesList/:profileId/:gameId/delete   | GamesController::updateGameslist| 204 /games/:profileId      | Remove a game from the played list, redirects to their game list     |
+| GET /gameslist         | GamesController::getGamesList   | 200 GameListView      | Retrieve the played games      |
+| GET /gameslist          | GamesController::getGamesList   | 400 BadRequest       | User's id is invalid      |
+| POST /gameslist/:gameId  | GamesController::updateGameslist| 200 /games/:profileId | Edit a game list (add a game to the played list), redirects to the user's games list     |
+| DELETE /gamesList/:gameId  | GamesController::updateGameslist| 204 /games/:profileId      | Remove a game from the played list, redirects to their game list     |
 
 
 ### Profile Page Management
+Note: the user can view other user's profiles, but cannot update them. If the profile belongs to the user, the option to view/edit the email and password appears.
 
 | Request                     | Action                           | Response                 | Description                                                   |
 | ----------------------------| -------------------------------- | ------------------------ | ----------------------------------------------------------------------------- |
 | GET /profile/:profileId     | ProfileController::getProfile    | 200 ProfileView          | Retrieve a profile's details       |
-| PUT /profile/:profileId     | ProfileController::updateProfile | 200 /profile/:profileId        | Edit an existing profile, redirects to updated profile           |
-| PUT /profile/:profileId     | ProfileController::updateProfile | 401 Unauthorized         | User is not logged in          |
-| GET /profile/:profileId     | ProfileController::getProfile    | 404 Not Found            | The profile DNE         |     
-| GET /profile/:profileId     | ProfileController::getProfile    | 400 BadRequest           | The profile ID is invalid         |      
+| PUT /profile    | ProfileController::updateProfile | 200 /profile/:profileId        | Edit an existing profile, redirects to updated profile           |
+| PUT /profile     | ProfileController::updateProfile | 401 Unauthorized         | User is not logged in          |
+| GET /profile/:profileId    | ProfileController::getProfile    | 404 Not Found            | The profile DNE         |     
+| GET /profile/:profileId    | ProfileController::getProfile    | 400 BadRequest           | The profile ID is invalid         |      
 | GET /profile/:profileId     | ProfileController::getProfile    | 403 Forbidden            | The profile ID does not belong to the user  |         
-
 
 
 #### Wishlist Page Management
 
 | Request                            | Action                            | Response                 | Description                        |
 | -----------------------------------| --------------------------------- | ------------------------ | ---------------------------------- |
-| GET /wishlist/:profileId           | GamesController::getWishList   | 200 WishlistView      | Retrieve a wishlist's details      |
-| GET /wishlist/:profileId           | GamesController::getWishList   | 401 Unauthorized       | Retrieve a wishlist's details      |
-| PUT /wishlist/:profileId/:gameId   | GamesController::updateWishlist| 200 /wishlist/:id/edit       | Edit a wishlist                    |
+| GET /wishlist      | GamesController::getWishList   | 200 WishlistView      | Retrieve a wishlist's details      |
+| GET /wishlist     | GamesController::getWishList   | 401 Unauthorized       | Retrieve a wishlist's details      |
+| POST /wishlist/:gameId   | GamesController::updateWishlist| 200 /wishlist/edit       | Edit a wishlist                    |
+| DELETE /wishlist/:gameId   | GamesController::deleteWishlist| 200 /wishlist       | Delete a wishlist's game                   |
 
 #### User Management
 
