@@ -28,6 +28,7 @@ Discover new video games, leave ratings and meet new gamer friends with VideoGam
 -   As a user, I want to be able to visit a game's page and see an option to leave a review
 -   As a user, I want to give a rating out of 5 stars in my review
 -   As a user, I want to give a text review in my review
+-   As a user, I want to be able to view my reviews to update their content or remove them
 
 #### Video Game Page Stories
 
@@ -35,6 +36,7 @@ Discover new video games, leave ratings and meet new gamer friends with VideoGam
 -   As a user, I want to visit a video game's page and view its ratings
 -   As a user, I want to visit a video game's page and view its tags
 -   As a user, I want to visit a video game's page and view its popularity ranking
+-   As a user, I want to visit a video game's page and view the reviews made from myself and other users
 
 #### User Management Stories
 
@@ -42,17 +44,6 @@ Discover new video games, leave ratings and meet new gamer friends with VideoGam
 -   As a user, I want to log in to my account to access my tasks and projects.
 -   As a user, I want to log out of my account to securely end my session.
 
-#### Comment Stories
-
--   As a user, I want to leave a comment on a task to ask for clarification or provide an update.
--   As a user, I want to see comments from other team members on a task to stay on the same page.
--   As a user, I want to be notified if there's a new comment on a task I'm involved with.
-
-#### Status Stories
-
--   As a user, I want to mark a task as "In Progress" to signal that I'm actively working on it.
--   As a user, I want to mark a task as "Blocked" to indicate that I can't proceed due to a dependency.
--   As a user, I want to view tasks grouped by their status to get a quick overview of the project's health.
 
 ## ᛦ Entity Relationships
 
@@ -116,16 +107,16 @@ erDiagram
 >[!note]
 > These are only a few routes to give you an idea, these would definitely not be all the routes for this kind of app!
 
-### Project Management
+### Review Management
 
 | Request              | Action                           | Response              | Description                                                             |
 | -------------------- | -------------------------------- | --------------------- | ----------------------------------------------------------------------- |
-| POST /projects       | ProjectController::createProject | 201 /projects/:id     | Create a new project and redirect to the project's view                 |
-| GET /projects/:id    | ProjectController::getProject    | 200 ProjectDetailView | Retrieve details of a specific project                                  |
-| PUT /projects/:id    | ProjectController::updateProject | 200 ProjectDetailView | Update an existing project's information                                |
-| DELETE /projects/:id | ProjectController::deleteProject | 204 (No Content)      | Delete a project (consider implications – should tasks be deleted too?) |
+| POST /review       | ProjectController::createReview | 201 GamePageView    | Create a new review and redirects to the game's page with the displayed reviews|
+| GET /review/:id    | ProjectController::getProject    | 200 ReviewDetails | Retrieve details of a specific review                                  |
+| PUT /review/:id    | ProjectController::updateProject | 200 GamePageView | Update a review  and redirects to the game's page|
+| DELETE /review/:id | ProjectController::deleteProject | 204 (No Content)      | Deletes a review  |
 
-### Task Management
+### Game Page Management
 
 | Request                                   | Action                     | Response                 | Description                        |
 | ----------------------------------------- | -------------------------- | ------------------------ | ---------------------------------- |
