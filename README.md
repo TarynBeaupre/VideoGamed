@@ -61,8 +61,8 @@ erDiagram
      USER |o--o{ PLAYED_GAMES : "has"
     GAME |o--o{ WISHLIST_GAMES : "is on"
     GAME |o--o{ PLAYED_GAMES : "is on"
-    GAME ||--o| GAMETAG : "has"
-    TAG ||--o| GAMETAG : "is"
+    GAME ||--o{ GAMETAG : "has"
+    TAG ||--o{ GAMETAG : "is"
 
 
     REVIEW {
