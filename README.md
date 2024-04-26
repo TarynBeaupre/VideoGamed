@@ -118,25 +118,30 @@ erDiagram
 
 ### Review Management
 
-| Request                | Action                           | Response              | Description                                                                    |
-| --------------------   | -------------------------------- | --------------------- | -------------------------------------------------------------------------------| 
-| POST /review           | ReviewController::createReview   | 201 GamePageView      | Create a new review and redirects to the game's page with the displayed reviews|
-| GET /review/:id        | ReviewController::getReview      | 200 ReviewDetails     | Retrieve details of a specific review                                          |
-| PUT /review/:id/update | ReviewController::updateReview   | 200 ReviewDetails     | Update a review  and redirects to the updated review                           |
-| DELETE /review/:id     | ReviewController::deleteProject  | 204 (No Content)      | Deletes a review                                                               |
+| Request                | Action                           | Response              | Description                                                                     |
+| --------------------   | -------------------------------- | --------------------- | --------------------------------------------------------------------------------| 
+| POST /review           | ReviewController::createReview   | 201 Gam1ePageView     | Create a new review and redirects to the game's page with the displayed reviews |
+| GET /review/:id        | ReviewController::getReview      | 200 ReviewDetails     | Retrieve details of a specific review                                           |
+| PUT /review/:id/update | ReviewController::updateReview   | 200 ReviewDetails     | Update a review  and redirects to the updated review                            |
+| DELETE /review/:id     | ReviewController::deleteProject  | 204 (No Content)      | Deletes a review                                                                |
+| 
 
 ### Profile Page Management
 
-| Request                     | Action                           | Response                 | Description                        |
-| ----------------------------| -------------------------------- | ------------------------ | ---------------------------------- |
+| Request                     | Action                           | Response                 | Description                                                   |
+| ----------------------------| -------------------------------- | ------------------------ | ----------------------------------------------------------------------------- |
 | GET /profile/:profileId     | ProfileController::getProfile    | 200 ProfileView          | Retrieve a profile's details       |
 | PUT /profile/:profileId     | ProfileController::updateProfile | 200 ProfileView          | Edit an existing profile           |
+| GET /profile/:profileId     | ProfileController:: getProfile   | 404 ErrorView            | The profile DNE         |     
+| GET /profile/:profileId     | ProfileController:: getProfile   | 400 BadRequest            | The profile ID is invalid         |      
+| GET /profile/:profileId     | ProfileController:: getProfile   | 404 Unauthorized            | The profile ID does not belong to the user, or the user is not logged in   |      
+
 
 #### Wishlist Page Management
 | Request                            | Action                            | Response                 | Description                        |
 | -----------------------------------| --------------------------------- | ------------------------ | ---------------------------------- |
 | GET /wishlist/:profileId           | WishlistController::getWishList   | 200 TaskDetailView       | Retrieve a wishlist's details      |
-| PUT /wishlist/:projectId           | WishlistController::updateWishlist| 200 TaskDetailView       | Edit a wishlist                    |
+| PUT /wishlist/:profileId/:gameId   | WishlistController::updateWishlist| 200 TaskDetailView       | Edit a wishlist                    |
 
 #### User Management
 
