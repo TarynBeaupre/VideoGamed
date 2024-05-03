@@ -1,20 +1,26 @@
 {{> Header }}
-    <h1>Login</h1>
 
-    {{#if error}}
-    <p style="color: red;" id="error">{{error}}</p>
-    {{/if}}
-
-<form method="POST" action="{{ path 'login' }}" id="login-form">
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" value="{{rememberedEmail}}">
-
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password">
-
-    <label for="remember">Remember Me?</label>
-    <input type="checkbox" id="remember" name="remember">
-
-    <input type="submit" value="Login" id="login-form-submit-button">
+<h1>Login</h1>
+<h2 id="error"> {{ error }} </h2>
+<form method="POST" action="/login" id="login-form">
+	<div>
+		<label for="email">Email:</label>
+		{{#if remember}}
+		<input type="text" id="email" name="email" value="{{ remember }}"/>
+		{{else}}
+		<input type="text" id="email" name="email"/>
+		{{/if}}
+	</div>
+ 	<div>
+		<label for="password">Password:</label>
+		<input type="text" id="password" name="password" />
+	</div>
+	<div>
+			<label for="remember">Remember Me</label>
+			<input type="checkbox" id="remember" name="remember">
+	</div>
+	<input type="submit" value="Login" id="login-form-submit-button">
 </form>
+
+
 {{> Footer}}
