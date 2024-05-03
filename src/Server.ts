@@ -2,11 +2,15 @@ import http, { IncomingMessage, ServerResponse } from "http";
 import Request from "./router/Request";
 import Response, { StatusCode } from "./router/Response";
 import Router from "./router/Router";
-import Controller from "./controllers/Controller";
+//import Controller from "./controllers/Controller";
 import postgres from "postgres";
 import fs from "fs/promises";
 import SessionManager from "./auth/SessionManager";
 import Cookie from "./auth/Cookie";
+import GameController from "./controllers/GameController";
+import UserController from "./controllers/UserController";
+import AuthController from "./controllers/AuthController";
+import ReviewController from "./controllers/ReviewController";
 
 /**
  * Options for creating a new Server instance.
@@ -30,7 +34,11 @@ export default class Server {
 	private server: http.Server;
 	private sql: postgres.Sql;
 	private router: Router;
-	private controller: Controller;
+	//private controller: Controller;
+	private gameController: GameController;
+	private userController: UserController;
+	private authController: AuthController;
+	private reviewController: ReviewController;
 
 	/**
 	 * Initializes a new Server instance. The server is not started until the `start` method is called.
@@ -43,9 +51,18 @@ export default class Server {
 		this.port = serverOptions.port;
 
 		this.router = new Router();
-		this.controller = new Controller(this.sql);
+		//this.controller = new Controller(this.sql);
+		this.authController = new AuthController(this.sql);
+		this.userController = new UserController(this.sql);
+		this.gameController = new GameController(this.sql);
+		this.reviewController = new ReviewController(this.sql);
 
-		this.controller.registerRoutes(this.router);
+
+		//this.controller.registerRoutes(this.router);
+		this.authController.registerRoutes(this.router);
+		this.userController.registerRoutes(this.router);
+		this.gameController.registerRoutes(this.router);
+		this.reviewController.registerRoutes(this.router);
 
 		this.router.get("/", (req: Request, res: Response) => {
 			res.send({
@@ -53,7 +70,7 @@ export default class Server {
 				message: "Homepage!",
 				template: "HomeView",
 				payload: {
-					title: "My App",
+					title: "VideoGamed",
 				},
 			});
 		});

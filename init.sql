@@ -1,5 +1,5 @@
 DROP DATABASE IF EXISTS "VideoGamedDB";
-CREATE DATABASE "VideoGamedDBDB";
+CREATE DATABASE "VideoGamedDB";
 
 \c VideoGamedDB;
 
@@ -59,3 +59,7 @@ CREATE TABLE tag (
     id SERIAL PRIMARY KEY,
     description VARCHAR(100) NOT NULL
 );
+
+
+INSERT INTO games(title, description, cover, developer, released_at, total_stars)
+VALUES ("Minecraft", "images/covers/minecraft.png", "Mojang", 2011-11-18, 50)
