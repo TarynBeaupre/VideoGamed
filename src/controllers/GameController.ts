@@ -32,48 +32,12 @@ export default class GameController {
 	 */
 	registerRoutes(router: Router) {
 		router.get("/games", this.getGamesList);
-		router.get("/todos/new", this.getNewTodoForm);
-		router.post("/todos", this.createTodo);
-		
+
 
 		// Any routes that include an `:id` parameter should be registered last.
-		router.get("/todos/:id/edit", this.getEditTodoForm);
-		router.get("/todos/:id", this.getTodo);
-		router.put("/todos/:id", this.updateTodo);
-		router.delete("/todos/:id", this.deleteTodo);
-		router.put("/todos/:id/complete", this.completeTodo);
+		router.get("/games/:gamesId", this.getGame);
 	}
 
-	getNewTodoForm = async (req: Request, res: Response) => {
-		if (this.checkIfLoggedIn(req,res)){
-			await res.send({
-				statusCode: StatusCode.OK,
-				message: "New todo form",
-				template: "NewFormView",
-				payload: { title: "New Todo", loggedIn: true },
-			});
-		}
-	};
-
-	getEditTodoForm = async (req: Request, res: Response) => {
-		if (this.checkIfLoggedIn(req,res)){
-		const id = req.getId();
-		let todo: Todo | null = null;
-		todo = await Todo.read(this.sql, id, req.session.get("userId"));
-		if (!todo){
-			this.goToError(res)
-		    return;
-		}
-		await res.send({
-			statusCode: StatusCode.OK,
-			message: "Edit todo form",
-			template: "EditFormView",
-			payload: { todo: todo?.props, title: "Edit Todo", loggedIn: true, todoId: id },
-		});
-		return;
-		
-		}		
-	};
 
 	/**
 	 * This method should be called when a GET request is made to /todos.
@@ -104,13 +68,14 @@ export default class GameController {
 			};
 		});
 
+        let loggedIn: Boolean = this.checkIfLoggedIn(req,res);
 		await res.send({
 			statusCode: StatusCode.OK,
 			message: "Game list retrieved",
 			payload: {
 				title: "Game List",
 				games: gamesList,
-				loggedIn: true
+				loggedIn: loggedIn
 			},
 			template: "SearchView",
 		});
@@ -125,181 +90,31 @@ export default class GameController {
 	 *
 	 * @example GET /todos/1
 	 */
-	getTodo = async (req: Request, res: Response) => {
-		if (this.checkIfLoggedIn(req,res)){
+	getGame = async (req: Request, res: Response) => {
 			const id = req.getId();
-			let todo: Todo | null = null;
+			let game: Game | null = null;
 	
-			todo = await Todo.read(this.sql, id, req.session.get("userId"));
-			if (!todo){
+			game = await Game.read(this.sql, id);
+			if (!game){
 				this.goToError(res)
 				return;
 			}
 			
- 
+            let loggedIn: Boolean = this.checkIfLoggedIn(req,res);
 			await res.send({
 				statusCode: StatusCode.OK,
 				message: "Todo retrieved",
-				template: "ShowView",
+				template: "GameView",
 				payload: {
-					todo: todo?.props,
-					title: todo?.props.title,
-					isComplete: todo?.props.status === "complete",
-					loggedIn: true,
-					todoId: id
+					game: game?.props,
+					loggedIn: loggedIn,
 				},
 			});
-		}
+		
 		
 	};
 
-	/**
-	 * This method should be called when a POST request is made to /todos.
-	 * It should create a new todo in the database and send it as a response.
-	 *
-	 * @param req The request object.
-	 * @param res The response object.
-	 *
-	 * @example POST /todos { "title": "New Todo", "description": "A new todo" }
-	 */
-	createTodo = async (req: Request, res: Response) => {
-		if (this.checkIfLoggedIn(req,res)){
-		let todo: Todo | null = null;
 
-
-		let todoProps: TodoProps = {
-			title: req.body.title,
-			userId: req.session.data["userId"],
-			description: req.body.description,
-			status: "incomplete",
-			createdAt: createUTCDate(),
-		};
-
-		try {
-			todo = await Todo.create(this.sql, todoProps);
-		} catch (error) {
-			console.error("Error while creating todo:", error);
-		}
-
-		await res.send({
-			statusCode: StatusCode.Created,
-			message: "Todo created successfully!",
-			payload: { todo: todo?.props, loggedIn: true, todoId: todo?.props.id },
-			redirect: `/todos/${todo?.props.id}`,
-		});}
-	};
-
-	/**
-	 * This method should be called when a PUT request is made to /todos/:id.
-	 * It should update an existing todo in the database and send it as a response.
-	 *
-	 * @param req The request object.
-	 * @param res The response object.
-	 *
-	 * @example PUT /todos/1 { "title": "Updated title" }
-	 * @example PUT /todos/1 { "description": "Updated description" }
-	 * @example PUT /todos/1 { "title": "Updated title", "dueAt": "2022-12-31" }
-	 */
-	updateTodo = async (req: Request, res: Response) => {
-		if (this.checkIfLoggedIn(req,res)){
-		const id = req.getId();
-		const todoProps: Partial<TodoProps> = {};
-
-		if (req.body.title) {
-			todoProps.title = req.body.title;
-		}
-
-		if (req.body.description) {
-			todoProps.description = req.body.description;
-		}
-		let todo: Todo | null = null;
-		todo = await Todo.read(this.sql, id, req.session.get("userId"));
-		if (!todo){
-			this.goToError(res)
-			return;
-		}
-		try {
-			await todo?.update(todoProps);
-		} catch (error) {
-			console.error("Error while updating todo:", error);
-		}
-
-		await res.send({
-			statusCode: StatusCode.OK,
-			message: "Todo updated successfully!",
-			payload: { todo: todo?.props, loggedIn: true, todoId: id },
-			redirect: `/todos/${id}`,
-		});
-		}
-	};
-
-	/**
-	 * This method should be called when a DELETE request is made to /todos/:id.
-	 * It should delete an existing todo from the database.
-	 *
-	 * @param req The request object.
-	 * @param res The response object.
-	 *
-	 * @example DELETE /todos/1
-	 */
-	deleteTodo = async (req: Request, res: Response) => {
-		if (this.checkIfLoggedIn(req,res)){
-		const id = req.getId();
-		let todo: Todo | null = null;
-		todo = await Todo.read(this.sql, id, req.session.get("userId"));
-		if (!todo){
-			this.goToError(res)
-			return;
-		}
-
-		try {
-			await todo?.delete();
-		} catch (error) {
-			console.error("Error while deleting todo:", error);
-		}
-
-		await res.send({
-			statusCode: StatusCode.OK,
-			message: "Todo deleted successfully!",
-			payload: { todo: todo?.props, loggedIn: true, todoId: id },
-			redirect: "/todos",
-		});}
-	};
-
-	/**
-	 * This method should be called when a PUT request is made to /todos/:id/complete.
-	 * It should mark an existing todo as complete in the database and send it as a response.
-	 *
-	 * @param req The request object.
-	 * @param res The response object.
-	 *
-	 * @example PUT /todos/1/complete
-	 */
-	completeTodo = async (req: Request, res: Response) => {
-		if (this.checkIfLoggedIn(req,res)){
-			const id = req.getId();
-			let todo: Todo | null = null;
-			todo = await Todo.read(this.sql, id, req.session.get("userId"));
-			if (!todo){
-				this.goToError(res)
-				return;
-			}
-			try {
-				await todo?.markComplete();
-			} catch (error) {
-				console.error("Error while marking todo as complete:", error);
-			}
-	
-			await res.send({
-				statusCode: StatusCode.OK,
-				message: "Todo marked as complete!",
-				payload: { todo: todo?.props, loggedIn: true, todoId: id  },
-				redirect: `/todos/${id}`,
-			});
-		}
-		
-	
-	};
 	
 	// Reusable function I made since we need to check if the user is logged in before every action
 	// Given the request object, checks that the request's session id exists in the session manager
@@ -318,10 +133,11 @@ export default class GameController {
 
 			}
 		}
-		this.goToLogin(res);
+		// this.goToLogin(res);
 		return false;
 
 	}
+
 	// Reusable function I made since we need to direct back to login at every unauthorized action.
     goToLogin = async (res: Response) => {
 		await res.send({
