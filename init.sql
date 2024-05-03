@@ -19,6 +19,7 @@ CREATE TABLE games (
     id SERIAL PRIMARY KEY,
     title VARCHAR(100) NOT NULL,
     description TEXT NOT NULL,
+    cover VARCHAR(100),
     developer VARCHAR(100) NOT NULL,
     released_at TIMESTAMP NOT NULL,
     total_stars INTEGER DEFAULT 0
