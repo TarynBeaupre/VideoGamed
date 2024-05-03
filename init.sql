@@ -7,6 +7,7 @@ DROP TABLE IF EXISTS users;
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     email VARCHAR(100) NOT NULL UNIQUE,
+    username VARCHAR(100) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     edited_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -16,7 +17,7 @@ DROP TABLE IF EXISTS games;
 CREATE TABLE games (
     id SERIAL PRIMARY KEY,
     title VARCHAR(100) NOT NULL,
-    description VARCHAR(1000) NOT NULL,
+    description TEXT NOT NULL,
     developer VARCHAR(100) NOT NULL,
     released_at TIMESTAMP NOT NULL,
     total_stars INTEGER DEFAULT 0
@@ -25,9 +26,9 @@ CREATE TABLE games (
 DROP TABLE IF EXISTS reviews;
 CREATE TABLE reviews (
     id SERIAL PRIMARY KEY,
-    stars INTEGER DEFAULT 0,
-    likes INTEGER DEFAULT 0,
-    text VARCHAR(500) NOT NULL,
+    stars INTEGER NOT NULL DEFAULT 0,
+    likes INTEGER NOT NULL DEFAULT 0,
+    text TEXT NOT NULL,
     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE
     reviewed_game_id INTEGER REFERENCES games(id) ON DELETE CASCADE
 
@@ -54,5 +55,5 @@ CREATE TABLE gametag (
 DROP TABLE IF EXISTS tag;
 CREATE TABLE tag (
     id SERIAL PRIMARY KEY,
-    description VARCHAR(500)
+    description VARCHAR(100) NOT NULL
 );
