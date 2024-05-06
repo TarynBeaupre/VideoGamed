@@ -31,27 +31,21 @@ CREATE TABLE reviews (
     stars INTEGER NOT NULL DEFAULT 0,
     likes INTEGER NOT NULL DEFAULT 0,
     text TEXT NOT NULL,
-    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
     reviewed_game_id INTEGER REFERENCES games(id) ON DELETE CASCADE
 
 );
 
 DROP TABLE IF EXISTS played_games;
 CREATE TABLE played_games (
-    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
     played_game_id INTEGER REFERENCES games(id) ON DELETE CASCADE
 );
 
 DROP TABLE IF EXISTS wishlist_games;
 CREATE TABLE wishlist_games (
-    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
     wishlisted_game_id INTEGER REFERENCES games(id) ON DELETE CASCADE
-);
-
-DROP TABLE IF EXISTS gametag;
-CREATE TABLE gametag (
-    tag_id INTEGER REFERENCES tag(id) ON DELETE CASCADE
-    game_id INTEGER REFERENCES games(id) ON DELETE CASCADE
 );
 
 DROP TABLE IF EXISTS tag;
@@ -60,6 +54,11 @@ CREATE TABLE tag (
     description VARCHAR(100) NOT NULL
 );
 
+DROP TABLE IF EXISTS gametag;
+CREATE TABLE gametag (
+    tag_id INTEGER REFERENCES tag(id) ON DELETE CASCADE,
+    game_id INTEGER REFERENCES games(id) ON DELETE CASCADE
+);
 
 INSERT INTO games(title, description, cover, developer, released_at, total_stars)
 VALUES ("Minecraft", "images/covers/minecraft.png", "Mojang", 2011-11-18, 50)
