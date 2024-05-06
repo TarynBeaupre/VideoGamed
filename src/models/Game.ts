@@ -10,8 +10,9 @@ export interface GameProps {
 	id?: number;
 	title: string;
 	description: string;
+	cover: string;
     developer: string;
-	releaseDate: Date;
+	releasedAt: Date;
     totalStars: number;
 }
 

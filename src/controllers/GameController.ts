@@ -28,7 +28,7 @@ export default class GameController {
 	 *
 	 * @param router Router instance to register routes on.
 	 *
-	 * @example router.get("/todos", this.getTodoList);
+	 * @example router.get("/games", this.getGamesList);
 	 */
 	registerRoutes(router: Router) {
 		router.get("/games", this.getGamesList);
@@ -46,17 +46,14 @@ export default class GameController {
 	 * @param req The request object.
 	 * @param res The response object.
 	 *
-	 * @example GET /todos
+	 * @example GET /games
 	 */
 	getGamesList = async (req: Request, res: Response) => {
 		
 		let games: Game[] = [];
 
 		try {
-		
 			games = await Game.readAll(this.sql);
-			
-
 		} catch (error) {
 			const message = `Error while getting todo list: ${error}`;
 			console.error(message);

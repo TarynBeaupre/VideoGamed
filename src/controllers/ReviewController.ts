@@ -1,4 +1,4 @@
-//import Review, { GameProps } from "../models/Game";
+import Review, { ReviewProps } from "../models/Review";
 import postgres from "postgres";
 import Request from "../router/Request";
 import Response, { StatusCode } from "../router/Response";
@@ -15,7 +15,7 @@ import { InvalidCredentialsError } from "../models/User";
  * Routes are registered in the `registerRoutes` method.
  * Each method should be called when a request is made to the corresponding route.
  */
-export default class GameController {
+export default class ReviewController {
 	private sql: postgres.Sql<any>;
 
 	constructor(sql: postgres.Sql<any>) {
@@ -31,11 +31,11 @@ export default class GameController {
 	 * @example router.get("/todos", this.getTodoList);
 	 */
 	registerRoutes(router: Router) {
-		router.get("/games", this.getGamesList);
+		router.get("/reviews", this.getReviewsList);
 
 
 		// Any routes that include an `:id` parameter should be registered last.
-		router.get("/games/:gamesId", this.getGame);
+		//router.get("/", this.getReview);
 	}
 
 
@@ -48,36 +48,36 @@ export default class GameController {
 	 *
 	 * @example GET /todos
 	 */
-	getGamesList = async (req: Request, res: Response) => {
+	getReviewsList = async (req: Request, res: Response) => {
 		
-		let games: Game[] = [];
+		let reviews: Review[] = [];
 
 		try {
 		
-			games = await Game.readAll(this.sql);
+			reviews = await Review.readAll(this.sql);
 			
 
 		} catch (error) {
-			const message = `Error while getting todo list: ${error}`;
+			const message = `Error while getting reviews list: ${error}`;
 			console.error(message);
 		}
 
-		const gamesList = games.map((game) => {
+		const reviewsList = reviews.map((review) => {
 			return {
-				...game.props,
+				...review.props,
 			};
 		});
 
         let loggedIn: Boolean = this.checkIfLoggedIn(req,res);
 		await res.send({
 			statusCode: StatusCode.OK,
-			message: "Game list retrieved",
+			message: "Review list retrieved",
 			payload: {
-				title: "Game List",
-				games: gamesList,
+				title: "Review List",
+				reviews: reviewsList,
 				loggedIn: loggedIn
 			},
-			template: "SearchView",
+			template: "ReviewsView",
 		});
 	};
 
@@ -92,10 +92,10 @@ export default class GameController {
 	 */
 	getReview = async (req: Request, res: Response) => {
 			const id = req.getId();
-			let game: Game | null = null;
+			let review: Review | null = null;
 	
-			game = await Game.read(this.sql, id);
-			if (!game){
+			review = await Review.read(this.sql, id);
+			if (!review){
 				//this.goToError(res)
 				return;
 			}
@@ -103,10 +103,10 @@ export default class GameController {
             let loggedIn: Boolean = this.checkIfLoggedIn(req,res);
 			await res.send({
 				statusCode: StatusCode.OK,
-				message: "Todo retrieved",
-				template: "GameView",
+				message: "Review retrieved",
+				template: "ReviewsView",
 				payload: {
-					game: game?.props,
+					review: review?.props,
 					loggedIn: loggedIn,
 				},
 			});

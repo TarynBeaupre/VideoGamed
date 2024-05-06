@@ -61,4 +61,4 @@ CREATE TABLE gametag (
 );
 
 INSERT INTO games(title, description, cover, developer, released_at, total_stars)
-VALUES ("Minecraft", "images/covers/minecraft.png", "Mojang", 2011-11-18, 50)
+VALUES ('Minecraft','Hallo', 'images/covers/minecraft.png', 'Mojang', '2011-11-18', 50);
