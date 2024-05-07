@@ -21,7 +21,7 @@ CREATE TABLE games (
     description TEXT NOT NULL,
     cover VARCHAR(100),
     developer VARCHAR(100) NOT NULL,
-    released_at TIMESTAMP NOT NULL,
+    release_year SMALLINT NOT NULL,
     total_stars INTEGER DEFAULT 0
 );
 
@@ -60,5 +60,7 @@ CREATE TABLE gametag (
     game_id INTEGER REFERENCES games(id) ON DELETE CASCADE
 );
 
-INSERT INTO games(title, description, cover, developer, released_at, total_stars)
-VALUES ('Minecraft','Hallo', 'images/covers/minecraft.png', 'Mojang', '2011-11-18', 50);
+INSERT INTO games(title, description, cover, developer, release_year, total_stars)
+VALUES ('Minecraft','Minecraft is a sandbox video game that allows players to explore, create, and survive in a procedurally generated world made up of blocks. ', 'https://upload.wikimedia.org/wikinews/en/7/7a/Minecraft_game_cover.jpeg', 'Mojang', '2011', 50);
+INSERT INTO games(title, description, cover, developer, release_year, total_stars)
+VALUES ('Stardew Valley','Stardew Valley is a charming farming game where players restore a neglected farm and explore various activities like crop cultivation, animal husbandry, mining, and building relationships with villagers.', 'https://cdn2.steamgriddb.com/thumb/06be9898d168ca5d538a2f3502991152.jpg', 'ConcernedApe', '2016', 40);

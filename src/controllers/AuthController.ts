@@ -8,7 +8,7 @@ import User, { UserProps } from "../models/User";
 import Session from "../auth/Session";
 import Cookie from "../auth/Cookie";
 import SessionManager from "../auth/SessionManager";
-import { l } from "vite/dist/node/types.d-AKzkD8vd";
+
 
 export default class AuthController {
 	private sql: postgres.Sql<any>;

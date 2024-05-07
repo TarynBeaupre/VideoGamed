@@ -12,7 +12,13 @@
 	<header>
 		<nav>
 			<ul>
-				<li><a href="{{ path '' }}">Home</a></li>
+				{{#if loggedIn}}
+				<li><a href="{{ path 'home' }}">Home</a></li>
+				<li><a href="{{ path 'logout' }}">Logout</a></li>
+				{{else}}
+				<li><a href="{{ path 'login' }}">Login</a></li>
+				<li><a href="{{ path 'register' }}">Register</a></li>
+				{{/if}}
 			</ul>
 		</nav>
 	</header>

@@ -3,6 +3,17 @@
 <h1>Welcome back, {{ username }}!</h1>
 <div>
     <h3> Top rated Games:</h3>
+    {{#unless top3}}
+	<p>No games found</p>
+    {{else}}
+	<ol id="games">
+		{{#each top3}}
+			<li game-id="{{ this.props.id }}">
+				<a href="/games/{{ this.props.id }}">{{ this.props.title }}</a>
+			</li>
+		{{/each}}
+	</ol>
+{{/unless}}
 </div>
 
 {{> Footer }}

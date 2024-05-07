@@ -31,6 +31,7 @@ export default class GameController {
 	 * @example router.get("/games", this.getGamesList);
 	 */
 	registerRoutes(router: Router) {
+		router.get("/home", this.getHomePage);
 		router.get("/games", this.getGamesList);
 
 
@@ -111,7 +112,29 @@ export default class GameController {
 		
 	};
 
+	getHomePage = async (req: Request, res: Response) => {
+		const id = req.getId();
+		let games: Game[] | null = null;
 
+		games = await Game.readTop3Rated(this.sql)
+		if (!games){
+			this.goToError(res)
+			return;
+		}
+		
+		let loggedIn: Boolean = this.checkIfLoggedIn(req,res);
+		await res.send({
+			statusCode: StatusCode.OK,
+			message: "Todo retrieved",
+			template: "HomeView",
+			payload: {
+				top3: games,
+				loggedIn: loggedIn,
+			},
+		});
+	
+	
+};
 	
 	// Reusable function I made since we need to check if the user is logged in before every action
 	// Given the request object, checks that the request's session id exists in the session manager

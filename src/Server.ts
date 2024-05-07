@@ -11,7 +11,6 @@ import GameController from "./controllers/GameController";
 import UserController from "./controllers/UserController";
 import AuthController from "./controllers/AuthController";
 import ReviewController from "./controllers/ReviewController";
-
 /**
  * Options for creating a new Server instance.
  * @property host The hostname of the server.
@@ -68,10 +67,7 @@ export default class Server {
 			res.send({
 				statusCode: StatusCode.OK,
 				message: "Homepage!",
-				template: "HomeView",
-				payload: {
-					title: "VideoGamed",
-				},
+				redirect: "/home"
 			});
 		});
 	}
