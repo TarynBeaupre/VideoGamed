@@ -1,3 +1,27 @@
 {{> Header }}
+{{#if error}}
+<p style="color: red;" id="error">{{error}}</p>
+{{/if}}
+<!---->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
+<span class="fa fa-star checked"></span>
+<span class="fa fa-star checked"></span>
+<span class="fa fa-star checked"></span>
+<span class="fa fa-star"></span>
+<span class="fa fa-star"></span>
+
+<form method="POST" action="{{ path 'games' }}" id="new-review-form">
+	<label for="email">Email:</label>
+    <input type="email" id="email" name="email" value="{{rememberedEmail}}">
+	
+	<label for="password">Password:</label>
+    <input type="password" id="password" name="password">
+
+	<label for="password">Confirm Password:</label>
+    <input type="password" id="confirmPassword" name="confirmPassword">
+	
+	<input type="submit" value="Create" id="register-form-submit-button">
+</form>
+    </form>
 {{> Footer}}

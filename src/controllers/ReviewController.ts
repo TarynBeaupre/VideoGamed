@@ -53,9 +53,7 @@ export default class ReviewController {
 		let reviews: Review[] = [];
 
 		try {
-		
 			reviews = await Review.readAll(this.sql);
-			
 
 		} catch (error) {
 			const message = `Error while getting reviews list: ${error}`;
@@ -77,7 +75,7 @@ export default class ReviewController {
 				reviews: reviewsList,
 				loggedIn: loggedIn
 			},
-			template: "ReviewsView",
+			template: "LeaveReviewView",
 		});
 	};
 
