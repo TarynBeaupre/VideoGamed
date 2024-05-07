@@ -40,8 +40,8 @@ export default class GameController {
 
 
 	/**
-	 * This method should be called when a GET request is made to /todos.
-	 * It should retrieve all todos from the database and send them as a response.
+	 * This method should be called when a GET request is made to /games.
+	 * It should retrieve all games from the database and send them as a response.
 	 *
 	 * @param req The request object.
 	 * @param res The response object.
@@ -79,13 +79,13 @@ export default class GameController {
 	};
 
 	/**
-	 * This method should be called when a GET request is made to /todos/:id.
+	 * This method should be called when a GET request is made to /games/:id.
 	 * It should retrieve a single todo from the database and send it as a response.
 	 *
 	 * @param req The request object.
 	 * @param res The response object.
 	 *
-	 * @example GET /todos/1
+	 * @example GET /games/1
 	 */
 	getGame = async (req: Request, res: Response) => {
 			const id = req.getId();

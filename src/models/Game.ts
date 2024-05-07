@@ -10,10 +10,10 @@ export interface GameProps {
 	id?: number;
 	title: string;
 	description: string;
-	cover: string;
+	cover?: string;
     developer: string;
 	releasedAt: Date;
-    totalStars: number;
+    totalStars?: number;
 }
 
 export default class Game {
@@ -22,7 +22,7 @@ export default class Game {
 		public props: GameProps,
 	) {}
 
-	static async read(sql: postgres.Sql<any>, id: number) {
+    static async read(sql: postgres.Sql<any>, id: number) {
 		const connection = await sql.reserve();
 		// Changed this query to make sure we only get the todo if it has the right user id
 		const [row] = await connection<GameProps[]>`
@@ -42,7 +42,7 @@ export default class Game {
 		sql: postgres.Sql<any>
 	): Promise<Game[]> {
 		const connection = await sql.reserve();
-		// Changed this query to make sure we only get the todos with this user id
+		// Changed this query to make sure we only get the games with this user id
 		const rows = await connection<GameProps[]>`
 			SELECT *
 			FROM games;
@@ -53,7 +53,7 @@ export default class Game {
 
 		return rows.map(
 			(row) =>
-				new Game(sql, convertToCase(snakeToCamel, row) as GameProps),
+				new Game(sql, convertToCase(snakeToCamel, row) as GameProps)
 		);
 	}
 
