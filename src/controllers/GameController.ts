@@ -1,4 +1,5 @@
 import Game, { GameProps } from "../models/Game";
+import Review, {ReviewProps} from "../models/Review";
 import postgres from "postgres";
 import Request from "../router/Request";
 import Response, { StatusCode } from "../router/Response";
@@ -7,7 +8,7 @@ import { createUTCDate } from "../utils";
 import SessionManager from "../auth/SessionManager";
 import Session from "../auth/SessionManager";
 import Cookie from "../auth/Cookie";
-import { InvalidCredentialsError } from "../models/User";
+import User, { InvalidCredentialsError } from "../models/User";
 
 
 /**
@@ -91,13 +92,16 @@ export default class GameController {
 	getGame = async (req: Request, res: Response) => {
 			const id = req.getId();
 			let game: Game | null = null;
+			let reviews: Review[] | null = [];
 	
 			game = await Game.read(this.sql, id);
 			if (!game){
 				this.goToError(res)
 				return;
 			}
-			
+
+			reviews = await Review.readGameReviews(this.sql, id);
+
             let loggedIn: Boolean = this.checkIfLoggedIn(req,res);
 			await res.send({
 				statusCode: StatusCode.OK,
@@ -106,6 +110,7 @@ export default class GameController {
 				payload: {
 					game: game?.props,
 					loggedIn: loggedIn,
+					reviews: reviews,
 				},
 			});
 		

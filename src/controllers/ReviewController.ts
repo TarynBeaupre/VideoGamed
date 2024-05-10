@@ -31,9 +31,6 @@ export default class ReviewController {
 	 * @example router.get("/todos", this.getTodoList);
 	 */
 	registerRoutes(router: Router) {
-		router.get("/reviews", this.getReviewsList);
-
-
 		// Any routes that include an `:id` parameter should be registered last.
 		//router.get("/", this.getReview);
 	}
