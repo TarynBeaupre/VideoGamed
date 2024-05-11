@@ -189,7 +189,7 @@ export default class AuthController {
 					res.setCookie(new Cookie("email",req.body.email))
 					await res.send({
 						statusCode: StatusCode.OK,
-						redirect: "/todos",
+						redirect: "/home",
 						message:"Logged in successfully!",
 						payload: {user: user.props}
 					});

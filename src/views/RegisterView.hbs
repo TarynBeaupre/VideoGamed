@@ -7,13 +7,13 @@
 
 <form method="POST" action="{{ path 'users' }}" id="register-form">
 	<label for="email">Email:</label>
-    <input type="email" id="email" name="email" value="{{rememberedEmail}}">
+    <input type="text" id="email" name="email" value="{{rememberedEmail}}">
 	
 	<label for="password">Password:</label>
-    <input type="password" id="password" name="password">
+    <input type="text" id="password" name="password">
 
 	<label for="password">Confirm Password:</label>
-    <input type="password" id="confirmPassword" name="confirmPassword">
+    <input type="text" id="confirmPassword" name="confirmPassword">
 	
 	<input type="submit" value="Create" id="register-form-submit-button">
 </form>

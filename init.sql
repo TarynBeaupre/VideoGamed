@@ -7,7 +7,7 @@ DROP TABLE IF EXISTS users;
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     email VARCHAR(100) NOT NULL UNIQUE,
-    username VARCHAR(100) NOT NULL UNIQUE,
+    username VARCHAR(100),
     pfp VARCHAR(300),
     password VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -72,7 +72,8 @@ VALUES('chippichippi@email.com', 'Chippi','https://images.ctfassets.net/ub3bwfd5
 INSERT INTO users(email, username, pfp, password)
 VALUES('chappachappa@email.com', 'Chappa','https://preview.redd.it/19winbuo94t91.jpg?width=640&crop=smart&auto=webp&s=fadacc562b636622cc7851d107352d7ac1584681', 'chappa123');
 
---Reviews--
+-- Reviews--
+
 INSERT INTO reviews(stars, likes, text, user_id, reviewed_game_id)
 VALUES (5, 23, 'Im going to make you MINE... CRAFT... ahaa', 1, 1);
 
