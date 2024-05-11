@@ -1,8 +1,14 @@
 {{> Header }}
+
 <h1> {{ game.title }} </h1>
 <h3> {{ game.developer }} </h3>
 <h3> {{ game.releaseYear }} </h3>
-<img src="{{game.cover}}" width="400">
+<h5>
+{{ game.description }} 
+</h5>
+
+  <img src="{{game.cover}}" width="400">
+
 {{#unless reviews}}
 	<p>No reviews yet, be the first!</p>
 {{else}}
@@ -11,13 +17,16 @@
 		{{#each reviews}}
 			<div class="review-container" review-id="{{ this.props.id }}">
         <img class="review-profile-pic" src="{{ this.props.userPfp }}">
+        <img class="review-username" src="{{ this.props.username }}">
         <div class="review-text">
-          "{{ this.props.text }}"
+          <div>
+          {{ this.props.text }}
+          </div>
         </div>
         <div class="review-likes">
           <p>⭐️⭐️⭐️⭐️⭐️</p>
           <div class="review-likes">
-            <img src="../../images/icons/thumbs-up.svg">
+            <img class="like-logo" src="../../images/icons/thumbs-up(2).svg">
             <p>{{this.props.likes}}</p>
           </div>
         </div>
@@ -26,4 +35,5 @@
 	</div>
   <p>{{ star-average }} star average</p>
 {{/unless}}
+
 {{> Footer}}   

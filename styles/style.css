@@ -1,5 +1,7 @@
 * {
     box-sizing: border-box;
+    background-color:rgb(30, 27, 54);
+    color:white;
 }
   
 body {
@@ -14,23 +16,35 @@ body {
 .reviews-container{
   display: flex;
   flex-direction: column;
-}
-
-.review-container {
   margin:10px;
   padding: 5px;
-  background-color: #317aab;
+  background-color: #7fc3ef;
   border-radius: 5px;
 }
 
+
+.review-text {
+  margin:7px;
+}
 .review-profile-pic {
   border-radius: 50%;
   width: 5vw;
   height: 5vw;
+  margin:7px;
 }
 
 .review-likes {
   display: flex;
   flex-direction: row;
   justify-content: space-around;
+}
+
+.game-review {
+  display: flex;
+  flex-direction: row;
+}
+
+.like-logo {
+  margin: 5px;
+  color: white;
 }

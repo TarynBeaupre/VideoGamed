@@ -101,6 +101,7 @@ export default class GameController {
 			}
 
 			reviews = await Review.readGameReviews(this.sql, id);
+	
 
             let loggedIn: Boolean = this.checkIfLoggedIn(req,res);
 			await res.send({

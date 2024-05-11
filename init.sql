@@ -7,7 +7,7 @@ DROP TABLE IF EXISTS users;
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     email VARCHAR(100) NOT NULL UNIQUE,
-    username VARCHAR(100),
+    username VARCHAR(100) DEFAULT 'Guest',
     pfp VARCHAR(300),
     password VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
