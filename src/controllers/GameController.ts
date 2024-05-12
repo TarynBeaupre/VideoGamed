@@ -34,10 +34,12 @@ export default class GameController {
 	registerRoutes(router: Router) {
 		router.get("/home", this.getHomePage);
 		router.get("/games", this.getGamesList);
-
+		router.get("/wishlist", this.getWishList);
+		router.get("/played", this.getPlayedList);
 
 		// Any routes that include an `:id` parameter should be registered last.
 		router.get("/games/:gamesId", this.getGame);
+		router.post("/wishlist", this.addWishlist);
 	}
 
 
@@ -57,7 +59,7 @@ export default class GameController {
 		try {
 			games = await Game.readAll(this.sql);
 		} catch (error) {
-			const message = `Error while getting todo list: ${error}`;
+			const message = `Error while getting games list: ${error}`;
 			console.error(message);
 		}
 
@@ -79,6 +81,109 @@ export default class GameController {
 			template: "SearchView",
 		});
 	};
+	
+	getWishList = async (req: Request, res: Response) => {
+		let loggedIn: Boolean = this.checkIfLoggedIn(req,res);
+		if (loggedIn){
+			let sessionManager: SessionManager = SessionManager.getInstance();
+			let sessionId = req.findCookie("session_id")?.value;
+			if (sessionId){
+				let session = sessionManager.get(sessionId);
+				if (session){
+					if (session.data["userId"]){
+						let userId = session.data["userId"];
+						let games: Game[] = [];
+					
+						try {
+							games = await Game.readWishlist(this.sql, userId);
+						} catch (error) {
+							const message = `Error while getting wishlist: ${error}`;
+							console.error(message);
+						}
+					
+						const wishlist = games.map((game) => {
+							return {
+								...game.props,
+							};
+						});
+					
+					
+						await res.send({
+							statusCode: StatusCode.OK,
+							message: "Game list retrieved",
+							payload: {
+								title: "Wishlist",
+								wishlist: wishlist,
+								loggedIn: loggedIn
+							},
+							template: "WishlistView",
+						});
+					}
+
+				}
+			}
+		};
+	};
+
+	addWishlist = async (req: Request, res: Response) => {
+		let loggedIn: Boolean = this.checkIfLoggedIn(req,res);
+		if (loggedIn){
+			let sessionManager: SessionManager = SessionManager.getInstance();
+			let sessionId = req.findCookie("session_id")?.value;
+			if (sessionId){
+				let session = sessionManager.get(sessionId);
+				if (session){
+					if (session.data["userId"]){
+						let userId = session.data["userId"];
+						const gameId = req.params.gameid;
+						let games: Game[] = [];
+					
+						try {
+							await Game.addWishlist(this.sql, userId, gameId);
+						} catch (error) {
+							const message = `Error while getting wishlist: ${error}`;
+							console.error(message);
+						}
+
+						this.getWishList(req, res);
+					}
+
+				}
+			}
+		};
+	}
+	
+	getPlayedList = async (req: Request, res: Response) => {
+		
+		let games: Game[] = [];
+	
+		try {
+			games = await Game.readAll(this.sql);
+		} catch (error) {
+			const message = `Error while getting played games list: ${error}`;
+			console.error(message);
+		}
+	
+		const gamesList = games.map((game) => {
+			return {
+				...game.props,
+			};
+		});
+	
+		let loggedIn: Boolean = this.checkIfLoggedIn(req,res);
+		await res.send({
+			statusCode: StatusCode.OK,
+			message: "Game list retrieved",
+			payload: {
+				title: "Played Games",
+				games: gamesList,
+				loggedIn: loggedIn
+			},
+			template: "PlayedGamesView",
+		});
+
+	};
+
 
 	/**
 	 * This method should be called when a GET request is made to /games/:id.

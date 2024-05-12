@@ -11,6 +11,7 @@
 		{{#each top3}}
 			<li game-id="{{ this.props.id }}">
 				<a href="/games/{{ this.props.id }}">{{ this.props.title }}</a>
+				<img src="{{ this.props.cover }}" height="200" width="150">
 			</li>
 		{{/each}}
 	</ol>

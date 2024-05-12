@@ -6,8 +6,9 @@
 <h5>
 {{ game.description }} 
 </h5>
-
-  <img src="{{game.cover}}" width="400">
+<img src="{{game.cover}}" width="400">
+<button href="">Wishlist</button>
+<button>Played</button>
 
 {{#unless reviews}}
 	<p>No reviews yet, be the first!</p>
@@ -23,16 +24,19 @@
           {{ this.props.text }}
           </div>
         </div>
+
+        <!-- REVIEWS -->
         <div class="review-likes">
           <p>⭐️⭐️⭐️⭐️⭐️</p>
           <div class="review-likes">
             <img class="like-logo" src="../../images/icons/thumbs-up(2).svg">
             <p>{{this.props.likes}}</p>
           <form method="POST" action="/games/like/{{this.props.id}}" id="register-form">
-	      <input type="submit" value="Like" id="register-form-submit-button">
-        </form>
+	        <input type="submit" value="Like" id="register-form-submit-button">
+          </form>
           </div>
         </div>
+
 			</div>
 		{{/each}}
 	</div>

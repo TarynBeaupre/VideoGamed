@@ -1,3 +1,8 @@
+@font-face {
+  font-family: SilkScreen;
+  src: url(../fonts/slkscr.ttf);
+}
+
 * {
     box-sizing: border-box;
     background-color:rgb(30, 27, 54);
@@ -7,12 +12,64 @@
 body {
     font-family: Arial;
     margin: 0 auto; /* Center website */
-    max-width: 800px; /* Max width */
+    max-width: 1200px; /* Max width */
     padding: 20px;
 }
 
+button {
+  padding: 9px 25px;
+  border-radius: 10px;
+  background-color: rgb(173, 63, 206, 1);
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease 0s;
+}
 
-/* GAME REVIEWS */
+button:hover {
+  background-color: rgba(173, 63, 206, 0.8);
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1% 2%;
+  margin: 1%;
+  background-color: rgb(17, 15, 33);
+}
+
+/* TOP NAV BAR ======================== */
+
+header nav, header nav ul {
+  background-color: rgb(17, 15, 33);
+
+}
+
+.nav-links {
+  padding: 0;
+}
+
+.nav-links li, a, button {
+  font-family: SilkScreen, sans-serif;
+  text-decoration: none;
+  list-style: none;
+}
+
+.nav-links li {
+  display: inline-block;
+  padding: 10px;
+}
+
+.nav-links li a {
+  color:rgb(225, 161, 244);
+  transition: all 0.3s ease 0s;
+}
+
+.nav-links li a:hover {
+  color: white;
+}
+
+/* GAME REVIEWS ======================= */
 .reviews-container{
   display: flex;
   flex-direction: column;

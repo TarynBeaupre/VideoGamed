@@ -6,10 +6,20 @@ import {
 	snakeToCamel,
 } from "../utils";
 
-export interface ReviewProps {
+export interface ReviewPropsWithPicture {
 	id?: number;
     userId: number;
     userPfp: string;
+	title: string;
+    likes: number;
+	text: string;
+    stars: number;
+    reviewedGameId: number;
+}
+
+export interface ReviewProps {
+	id?: number;
+    userId: number;
 	title: string;
     likes: number;
 	text: string;
@@ -44,14 +54,14 @@ export default class Review{
         sql: postgres.Sql<any>, game_id:number
     ): Promise<Review[]> {
         const connection = await sql.reserve();
-        const rows = await connection<ReviewProps[]>`
+        const rows = await connection<ReviewPropsWithPicture[]>`
         SELECT reviews.*, users.pfp AS user_pfp
         FROM reviews
         INNER JOIN users ON reviews.user_id = users.id
         WHERE reviews.reviewed_game_id=${game_id};`;
         await connection.release();
         return rows.map (
-            (row) => new Review(sql, convertToCase(snakeToCamel, row) as ReviewProps)
+            (row) => new Review(sql, convertToCase(snakeToCamel, row) as ReviewPropsWithPicture)
         );
     }
     static async addReviewLike(

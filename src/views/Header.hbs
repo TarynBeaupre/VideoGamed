@@ -10,17 +10,30 @@
 
 <body>
 	<header>
+		{{#if loggedIn}}
 		<nav>
-			<ul>
-				{{#if loggedIn}}
+			<ul class="nav-links">
 				<li><a href="{{ path 'home' }}">Home</a></li>
-				<li><a href="{{ path 'logout' }}">Logout</a></li>
-				{{else}}
-				<li><a href="{{ path 'login' }}">Login</a></li>
-				<li><a href="{{ path 'register' }}">Register</a></li>
-				<li><a href="{{ path 'home' }}">Home</a></li>
-				{{/if}}
+				<li><a href="{{ path 'games' }}">All Games</a></li>
+				<li><a href="{{ path 'wishlist' }}">Wishlist</a></li>
+				<!--My games goes to the user's played games-->
+				<li><a href="{{ path 'played' }}">My Games</a></li>
+				<li><a href="{{ path 'reviews' }}">My Reviews</a></li>
+				<li><a href="{{ path 'profile' }}">Profile</a></li>
 			</ul>
 		</nav>
+		<a href="{{ path 'logout' }}"><button>Logout</button></a>
+		{{ else }}
+		<nav>
+			<ul class="nav-links">
+				<li><a href="{{ path 'home' }}">Home</a></li>
+				<li><a href="{{ path 'games' }}">All Games</a></li>
+			</ul>
+		</nav>
+		<div class="right-nav">
+			<a href="{{ path 'login' }}"><button>Login</button></a>
+			<a href="{{ path 'register' }}"><button>Register</button></a>
+		</div>
+		{{/if}}
 	</header>
 	<main>

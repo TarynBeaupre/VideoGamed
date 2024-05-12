@@ -9,6 +9,7 @@
 		{{#each games}}
 			<li game-id="{{ this.id }}">
 				<a href="/games/{{ this.id }}">{{ this.title }}</a>
+				<img src="{{ this.cover }}" height="200" width="150">
 			</li>
 		{{/each}}
 	</ol>
