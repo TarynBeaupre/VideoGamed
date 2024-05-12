@@ -54,5 +54,26 @@ export default class Review{
             (row) => new Review(sql, convertToCase(snakeToCamel, row) as ReviewProps)
         );
     }
+    static async addReviewLike(
+        sql: postgres.Sql<any>, game_id:number
+    ){
+        const connection = await sql.reserve();
+        try{
+            const [row] = await connection<ReviewProps[]>`
+            UPDATE reviews SET likes = likes+1 WHERE id = ${game_id}
+            RETURNING *;
+            `;           
+            await connection.release();
+            if (!row){
+            return null;
+            }
+            return new Review(sql, convertToCase(snakeToCamel, row) as ReviewProps);
+        }
+        catch{
+            console.log(game_id)
+            return null;
+        }
+
+    }
 
 }

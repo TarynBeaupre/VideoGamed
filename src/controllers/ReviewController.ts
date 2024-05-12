@@ -33,6 +33,7 @@ export default class ReviewController {
 	registerRoutes(router: Router) {
 		// Any routes that include an `:id` parameter should be registered last.
 		//router.get("/", this.getReview);
+		router.post("/games/like/:id", this.likeReview)
 	}
 
 
@@ -133,5 +134,20 @@ export default class ReviewController {
 
 	}
 
+	likeReview = async (req: Request, res: Response) => {
+		const id = req.getReviewId();
+		let review: Review | null = null;
 	
+		review = await Review.addReviewLike(this.sql, id);
+		if (!review){
+			return null
+		}
+		let loggedIn: Boolean = this.checkIfLoggedIn(req,res);
+		await res.send({
+			statusCode: StatusCode.OK,
+			message: "Review retrieved",
+			redirect:"/games/" + review.props.reviewedGameId
+		});
+};
+
 }

@@ -102,6 +102,9 @@ export default class Request {
 	getId = () => {
 		return Number(this.req.url?.split("/")[2]);
 	};
+	getReviewId = () => {
+		return Number(this.req.url?.split("/")[3]);
+	};
 
 	/**
 	 * @returns The ID of the sub-todo from the request URL.
