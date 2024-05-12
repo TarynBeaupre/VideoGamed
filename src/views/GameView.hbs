@@ -7,7 +7,10 @@
 {{ game.description }} 
 </h5>
 <img src="{{game.cover}}" width="400">
-<button href="">Wishlist</button>
+<form action="/wishlist" method="POST">
+  <input type="hidden" name="gameId" value="{{game.id}}">
+  <button type="submit">Wishlist</button>
+</form>
 <button>Played</button>
 
 {{#unless reviews}}

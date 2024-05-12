@@ -110,3 +110,8 @@ header nav, header nav ul {
   height: 20px;
   margin: 5px;
 }
+
+/* WISHLIST */
+.ol-wishlist {
+  list-style: none;
+}

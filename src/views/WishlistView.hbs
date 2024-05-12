@@ -5,10 +5,11 @@
 
 {{else}}
 <h2> Your wishlist: </h2>
-    <ol id="wishlist">
+    <ol id="wishlist" class="ol-wishlist">
 		{{#each wishlist}}
 			<li wishlist-id="{{ this.props.id }}">
-				<a href="/games/{{ this.props.id }}">{{ this.props.title }}</a>
+				<a href="/games/{{ this.props.id }}">{{ this.title }}</a>
+                <img src="{{this.cover}}" width="200">
 			</li>
 		{{/each}}
 	</ol>
