@@ -5,11 +5,20 @@
 {{#unless games}}
 	<p>No games found</p>
 {{else}}
+
 	<ol id="games">
 		{{#each games}}
 			<li game-id="{{ this.id }}">
-				<a href="/games/{{ this.id }}">{{ this.title }}</a>
-				<img src="{{ this.cover }}" height="200" width="150">
+									<div class="gameInfo">
+					<div>
+						<a href="/games/{{ this.id }}">{{ this.title }}</a>
+						<p> {{ this.developer }} </p>
+						<p> {{ this.releaseYear }} </p>
+					</div>
+					<div>
+						<img src="{{ this.cover }}" height="200" width="150">
+					</div>
+									</div>
 			</li>
 		{{/each}}
 	</ol>

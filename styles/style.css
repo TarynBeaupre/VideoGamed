@@ -39,6 +39,18 @@ header {
   background-color: rgb(17, 15, 33);
 }
 
+.topGames{
+  display: flex;
+  flex-direction: row;
+  margin: 20px;
+}
+
+.gameInfo{
+  display: flex;
+  justify-content: space-between;
+  width:400px;
+  margin:20px;
+}
 /* TOP NAV BAR ======================== */
 
 header nav, header nav ul {
@@ -50,7 +62,7 @@ header nav, header nav ul {
   padding: 0;
 }
 
-.nav-links li, a, button {
+.nav-links li, a, button, p {
   font-family: SilkScreen, sans-serif;
   text-decoration: none;
   list-style: none;

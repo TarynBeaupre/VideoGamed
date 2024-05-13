@@ -221,10 +221,16 @@ export default class GameController {
 
   getHomePage = async (req: Request, res: Response) => {
     const id = req.getId();
-    let games: Game[] | null = null;
+    let popularGames: Game[] | null = null;
+    let recentGames: Game[] | null = null;
 
-    games = await Game.readTop3Rated(this.sql);
-    if (!games) {
+    popularGames = await Game.readTop3Rated(this.sql);
+    if (!popularGames) {
+      this.goToError(res);
+      return;
+    }
+    recentGames = await Game.readTop3Recent(this.sql);
+    if (!recentGames) {
       this.goToError(res);
       return;
     }
@@ -235,7 +241,8 @@ export default class GameController {
       message: "Todo retrieved",
       template: "HomeView",
       payload: {
-        top3: games,
+        top3popular: popularGames,
+        top3recent: recentGames,
         loggedIn: loggedIn,
       },
     });

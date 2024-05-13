@@ -111,6 +111,26 @@ export default class Game {
 				new Game(sql, convertToCase(snakeToCamel, row) as GameProps)
 		);
 	}
+	
+	static async readTop3Recent( sql: postgres.Sql<any> ): Promise<Game[]>
+	{
+		const connection = await sql.reserve();
+		// Changed this query to make sure we only get the games with this user id
+		const rows = await connection<GameProps[]>`
+			SELECT *
+			FROM games
+			ORDER BY release_year DESC
+			LIMIT 3;
+		`;
+
+		await connection.release();
+		
+
+		return rows.map(
+			(row) =>
+				new Game(sql, convertToCase(snakeToCamel, row) as GameProps)
+		);
+	}
 
 
 }

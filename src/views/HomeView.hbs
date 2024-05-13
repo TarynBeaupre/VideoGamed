@@ -2,20 +2,53 @@
 
 
 <h1>Welcome back!</h1>
-<div>
+<div class="topGames">
+	<div>
     <h3> Top rated Games:</h3>
-    {{#unless top3}}
+    {{#unless top3popular}}
 	<p>No games found</p>
     {{else}}
 	<ol id="games">
-		{{#each top3}}
+		{{#each top3popular}}
 			<li game-id="{{ this.props.id }}">
-				<a href="/games/{{ this.props.id }}">{{ this.props.title }}</a>
-				<img src="{{ this.props.cover }}" height="200" width="150">
+				<div class="gameInfo">
+					<div>
+						<a href="/games/{{ this.props.id }}">{{ this.props.title }}</a>
+						<p> {{ this.props.developer }} </p>
+						<p> {{ this.props.releaseYear }} </p>
+					</div>
+					<div>
+						<img src="{{ this.props.cover }}" height="200" width="150">
+					</div>
+				</div>
 			</li>
 		{{/each}}
 	</ol>
-{{/unless}}
+	{{/unless}}
+	</div>
+	<div>
+	<h3> Most Recent Games: </h3>
+	 {{#unless top3recent}}
+	<p>No games found</p>
+    {{else}}
+	<ol id="games">
+		{{#each top3recent}}
+			<li game-id="{{ this.props.id }}">
+					<div class="gameInfo">
+					<div>
+						<a href="/games/{{ this.props.id }}">{{ this.props.title }}</a>
+						<p> {{ this.props.developer }} </p>
+						<p> {{ this.props.releaseYear }} </p>
+					</div>
+					<div>
+						<img src="{{ this.props.cover }}" height="200" width="150">
+					</div>
+				</div>
+			</li>
+		{{/each}}
+	</ol>
+	{{/unless}}
+	</div>
 </div>
 
 {{> Footer }}
