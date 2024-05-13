@@ -12,7 +12,7 @@ export interface ReviewPropsWithPicture {
     userPfp: string;
 	title: string;
     likes: number;
-	text: string;
+	review: string;
     stars: number;
     reviewedGameId: number;
 }
@@ -22,7 +22,7 @@ export interface ReviewProps {
     userId: number;
 	title: string;
     likes: number;
-	text: string;
+	review: string;
     stars: number;
     reviewedGameId: number;
 }
@@ -85,5 +85,21 @@ export default class Review{
         }
 
     }
+    static async create(
+		sql: postgres.Sql<any>,
+		props: ReviewProps,
+	): Promise<Review> {
+
+		const connection = await sql.reserve();
+
+		await sql<ReviewProps[]>`
+			INSERT INTO reviews
+				${sql(convertToCase(camelToSnake, props))}
+			RETURNING *;`;
+			await connection.release();
+			return new Review(sql,props);
+
+	
+	}
 
 }

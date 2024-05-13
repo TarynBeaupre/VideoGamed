@@ -11,17 +11,21 @@
 <span class="fa fa-star"></span>
 <span class="fa fa-star"></span>
 
-<form method="POST" action="{{ path 'games' }}" id="new-review-form">
-	<label for="email">Email:</label>
-    <input type="email" id="email" name="email" value="{{rememberedEmail}}">
-	
-	<label for="password">Password:</label>
-    <input type="password" id="password" name="password">
+<form method="POST" action="{{ path 'review' }}" id="new-review-form">
 
-	<label for="password">Confirm Password:</label>
-    <input type="password" id="confirmPassword" name="confirmPassword">
+    <input type="hidden" id="gameId" name="gameId" value= {{ gameId}}>
+
+	<label for="title">Review Title:</label>
+    <input type="text" id="title" name="title" value="">
+
+	<label for="stars">Star rating:</label>
+    <input type="text" id="stars" name="stars" value="1">
 	
-	<input type="submit" value="Create" id="register-form-submit-button">
+	<label for="review">Review:</label>
+    <input type="text" id="review" name="review" value="">
+
+
+	<input type="submit" value="Leave Review" id="register-form-submit-button">
 </form>
     </form>
 {{> Footer}}

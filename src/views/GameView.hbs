@@ -11,7 +11,12 @@
   <input type="hidden" name="gameId" value="{{game.id}}">
   <button type="submit">Wishlist</button>
 </form>
+
 <button>Played</button>
+<form action="/review" method="GET">
+  <input type="hidden" name="gameId" value="{{game.id}}">
+  <button type="submit">Leave a review</button>
+</form>
 
 {{#unless reviews}}
 	<p>No reviews yet, be the first!</p>
@@ -22,9 +27,14 @@
 			<div class="review-container" review-id="{{ this.props.id }}">
         <img class="review-profile-pic" src="{{ this.props.userPfp }}">
         <img class="review-username" src="{{ this.props.username }}">
+        <div class="review-title">
+          <div>
+          {{ this.props.title }}
+          </div>
+        </div>
         <div class="review-text">
           <div>
-          {{ this.props.text }}
+          {{ this.props.review }}
           </div>
         </div>
 

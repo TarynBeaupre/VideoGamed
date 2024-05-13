@@ -8,6 +8,7 @@ import SessionManager from "../auth/SessionManager";
 import Session from "../auth/SessionManager";
 import Cookie from "../auth/Cookie";
 import { InvalidCredentialsError } from "../models/User";
+import { check } from "prettier";
 
 
 /**
@@ -34,6 +35,8 @@ export default class ReviewController {
 		// Any routes that include an `:id` parameter should be registered last.
 		//router.get("/", this.getReview);
 		router.post("/games/like/:id", this.likeReview)
+		router.get("/review", this.goToReview)
+		router.post("/review", this.leaveReview)
 	}
 
 
@@ -148,6 +151,56 @@ export default class ReviewController {
 			message: "Review retrieved",
 			redirect:"/games/" + review.props.reviewedGameId
 		});
-};
+
+	
+	};
+	goToReview = async (req: Request, res: Response) => {
+		let params = req.getSearchParams()
+		let gameId = params.get("gameId")
+		await res.send({
+			statusCode: StatusCode.OK,
+				message: "Going to leave review",
+				template: "LeaveReviewView",
+				payload: {
+					gameId : gameId
+				},
+		});
+
+	
+	};
+	
+
+	leaveReview = async (req: Request, res: Response) => {
+		if (this.checkIfLoggedIn(req,res)){
+			
+			let gameId = req.body.gameId
+			let userId = req.session.get("userId");
+			let props: ReviewProps = { userId: userId, title: req.body.title, likes: 0, review: req.body.review, stars: req.body.stars, reviewedGameId: Number(gameId)};
+			let review = await Review.create(this.sql,props )
+			// Successfully created user account, direct to login page
+			await res.send({
+				statusCode: StatusCode.Created,
+				redirect: "/games/" + gameId,
+				message: "Review created"
+			});
+		
+		}
+		else{
+			this.goToError(res)
+		}
+
+
+
+	
+	};
+	goToError = async (res: Response) => {
+		
+		await res.send({
+		  statusCode: StatusCode.Forbidden,
+		  message: "Unauthorized action.",
+		  payload: { error: "Please login first." },
+		  template: "ErrorView",
+		});
+	  };
 
 }

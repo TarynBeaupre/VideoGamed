@@ -28,9 +28,10 @@ CREATE TABLE games (
 DROP TABLE IF EXISTS reviews;
 CREATE TABLE reviews (
     id SERIAL PRIMARY KEY,
+    title TEXT NOT NULL,
     stars INTEGER NOT NULL DEFAULT 0,
     likes INTEGER NOT NULL DEFAULT 0,
-    text TEXT NOT NULL,
+    review TEXT NOT NULL,
     user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
     reviewed_game_id INTEGER REFERENCES games(id) ON DELETE CASCADE
 
@@ -164,10 +165,10 @@ VALUES('chappachappa@email.com', 'Chappa','https://preview.redd.it/19winbuo94t91
 
 -- Reviews--
 
-INSERT INTO reviews(stars, likes, text, user_id, reviewed_game_id)
-VALUES (5, 23, 'Im going to make you MINE... CRAFT... ahaa', 1, 1);
+INSERT INTO reviews(title, stars, likes, review, user_id, reviewed_game_id)
+VALUES ('peak', 5, 23, 'Im going to make you MINE... CRAFT... ahaa', 1, 1);
 
-INSERT INTO reviews(stars, likes, text, user_id, reviewed_game_id)
-VALUES (5, 5, '1.6 update is great!', 2, 2);
-INSERT INTO reviews(stars, likes, text, user_id, reviewed_game_id)
-VALUES (5, 10, 'All my homies hate Pierre.', 1, 2);
+INSERT INTO reviews(title, stars, likes, review, user_id, reviewed_game_id)
+VALUES ('yes',5, 5, '1.6 update is great!', 2, 2);
+INSERT INTO reviews(title, stars, likes, review, user_id, reviewed_game_id)
+VALUES ('decent', 5, 10, 'All my homies hate Pierre.', 1, 2);
