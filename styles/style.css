@@ -133,3 +133,17 @@ header nav, header nav ul {
 .ol-wishlist {
   list-style: none;
 }
+
+/* GAME LIST DISPLAY */
+.game-list-details {
+  margin: 5px 20px;
+  max-width: 40%;
+  display: flex;
+  flex-direction: column;
+}
+
+.game-list {
+  margin: 5px 20px;
+  display: flex;
+  flex-direction: row;
+}
