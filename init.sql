@@ -8,7 +8,7 @@ CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     email VARCHAR(100) NOT NULL UNIQUE,
     username VARCHAR(100) DEFAULT 'Guest',
-    pfp VARCHAR(300),
+    pfp VARCHAR(300) DEFAULT 'https://i.pinimg.com/564x/af/0a/0a/af0a0af3734b37b50e7f48eacb3b09a6.jpg',
     password VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     edited_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
