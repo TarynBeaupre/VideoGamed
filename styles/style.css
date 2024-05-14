@@ -165,10 +165,9 @@ header nav, header nav ul {
   background-color:aquamarine;
 }
 
-.game-description{
-  height: 75px;
-  width: 75px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+.game-description {
+  margin: 10px;
+  height: 150px;
+  overflow: scroll;
 }
+

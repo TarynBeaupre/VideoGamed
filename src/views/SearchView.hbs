@@ -12,7 +12,9 @@
 				<div class="gameInfo">
 					<div>
 						<a href="/games/{{ this.id }}" class="game-link-title">{{ this.title }}</a>
-						<p class="game-description"> {{this.description}} </p>
+						<div class="ellipsis"><div>
+							<p class="game-description"> {{this.description}} </p>
+						</div></div>
 						<p> {{ this.developer }} </p>
 						<p> {{ this.releaseYear }} </p>
 					</div>
