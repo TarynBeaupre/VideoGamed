@@ -9,16 +9,17 @@
 	<ol id="games">
 		{{#each games}}
 			<li game-id="{{ this.id }}">
-									<div class="gameInfo">
+				<div class="gameInfo">
 					<div>
-						<a href="/games/{{ this.id }}">{{ this.title }}</a>
+						<a href="/games/{{ this.id }}" class="game-link-title">{{ this.title }}</a>
+						<p class="game-description"> {{this.description}} </p>
 						<p> {{ this.developer }} </p>
 						<p> {{ this.releaseYear }} </p>
 					</div>
 					<div>
 						<img src="{{ this.cover }}" height="200" width="150">
 					</div>
-									</div>
+				</div>
 			</li>
 		{{/each}}
 	</ol>

@@ -1,3 +1,25 @@
 {{> Header }}
+{{#unless played}}
+<h2>No games on your played list! Go play something :( </h2>
+<a href="{{ path 'games' }}"><button>Explore some games!</button></a>
+
+{{else}}
+<h2> Your played games list: </h2>
+    <div id="played" class="ol-played">
+		{{#each played}}
+			<div played-id="{{ this.props.id }}" class="game-list">
+				<img src="{{this.cover}}" width="200">
+				<div class="game-list-details">
+					<a href="/games/{{ this.props.id }}" class="game-link-title">{{ this.title }}</a>
+					<p> {{ this.description }}</p>
+					<h3>{{this.developer}}</h3>
+					<p>{{this.releaseYear}}</p>
+				</div>
+			</div>
+		{{/each}}
+	</div>
+<a href="{{ path 'games' }}"><button>Add more games!</button></a>
+
+{{/unless}}
 
 {{> Footer}}

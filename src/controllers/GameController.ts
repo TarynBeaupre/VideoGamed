@@ -39,6 +39,7 @@ export default class GameController {
     // Any routes that include an `:id` parameter should be registered last.
     router.get("/games/:gamesId", this.getGame);
     router.post("/wishlist", this.addWishlist);
+    router.post("/played", this.addPlayedList);
   }
 
   /**
@@ -156,32 +157,79 @@ export default class GameController {
   };
 
   getPlayedList = async (req: Request, res: Response) => {
-    let games: Game[] = [];
-
-    try {
-      games = await Game.readAll(this.sql);
-    } catch (error) {
-      const message = `Error while getting played games list: ${error}`;
-      console.error(message);
-    }
-
-    const gamesList = games.map((game) => {
-      return {
-        ...game.props,
-      };
-    });
-
     let loggedIn: Boolean = this.checkIfLoggedIn(req, res);
-    await res.send({
-      statusCode: StatusCode.OK,
-      message: "Game list retrieved",
-      payload: {
-        title: "Played Games",
-        games: gamesList,
-        loggedIn: loggedIn,
-      },
-      template: "PlayedGamesView",
-    });
+    if (loggedIn) {
+      let sessionManager: SessionManager = SessionManager.getInstance();
+      let sessionId = req.findCookie("session_id")?.value;
+      if (sessionId) {
+        let session = sessionManager.get(sessionId);
+        if (session && session.data["userId"]) {
+          let userId = session.data["userId"];
+          let games: Game[] = [];
+
+          try {
+            games = await Game.readPlayedList(this.sql, userId);
+          } catch (error) {
+            const message = `Error while getting played list: ${error}`;
+            console.error(message);
+          }
+
+          const played = games.map((game) => {
+            return {
+              ...game.props,
+            };
+          });
+
+          await res.send({
+            statusCode: StatusCode.OK,
+            message: "Game list retrieved",
+            payload: {
+              title: "PlayedList",
+              played: played,
+              loggedIn: loggedIn,
+            },
+            template: "PlayedGamesView",
+          });
+        }
+      }
+    }
+	else {
+		await res.send({
+			statusCode: StatusCode.Redirect,
+			message: "Login",
+			payload: {
+				title: "Login",
+			},
+			template: "LoginView"
+		});
+
+	}
+  };
+
+  addPlayedList = async (req: Request, res: Response) => {
+    let loggedIn: Boolean = this.checkIfLoggedIn(req, res);
+    if (loggedIn) {
+      let sessionManager: SessionManager = SessionManager.getInstance();
+      let sessionId = req.findCookie("session_id")?.value;
+      if (sessionId) {
+        let session = sessionManager.get(sessionId);
+        if (session) {
+          if (session.data["userId"]) {
+            let userId = session.data["userId"];
+            const gameId = req.body.gameId;
+
+            try {
+              await Game.addPlayedList(this.sql, userId, gameId);
+            } catch (error) {
+              const message = `Error while adding to played list: ${error}`;
+              console.error(message);
+            }
+
+            this.getPlayedList(req, res);
+          }
+        }
+      }
+    }
   };
 
   /**
@@ -236,16 +284,30 @@ export default class GameController {
     }
 
     let loggedIn: Boolean = this.checkIfLoggedIn(req, res);
-    await res.send({
-      statusCode: StatusCode.OK,
-      message: "Todo retrieved",
-      template: "HomeView",
-      payload: {
-        top3popular: popularGames,
-        top3recent: recentGames,
-        loggedIn: loggedIn,
-      },
-    });
+    if (loggedIn){
+      await res.send({
+        statusCode: StatusCode.OK,
+        message: "Todo retrieved",
+        template: "HomeView",
+        payload: {
+          top3popular: popularGames,
+          top3recent: recentGames,
+          loggedIn: loggedIn,
+        },
+      });
+    }
+    else {
+      await res.send({
+        statusCode: StatusCode.OK,
+        message: "Todo retrieved",
+        template: "HomeView",
+        payload: {
+          top3popular: popularGames,
+          top3recent: recentGames,
+          loggedIn: loggedIn,
+        },
+      });
+    }
   };
 
   // Reusable function I made since we need to check if the user is logged in before every action
@@ -266,6 +328,7 @@ export default class GameController {
     // this.goToLogin(res);
     return false;
   };
+ 
 
   // Reusable function I made since we need to direct back to login at every unauthorized action.
   goToLogin = async (res: Response) => {

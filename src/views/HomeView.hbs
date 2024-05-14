@@ -1,7 +1,10 @@
 {{> Header }}
 
-
+{{#if loggedIn}}
+<h1>Welcome back, {{user.username}}!</h1>
+{{else}}
 <h1>Welcome back!</h1>
+{{/if}}
 <div class="topGames">
 	<div>
     <h3> Top rated Games:</h3>
@@ -50,5 +53,4 @@
 	{{/unless}}
 	</div>
 </div>
-
 {{> Footer }}

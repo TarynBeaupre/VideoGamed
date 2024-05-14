@@ -111,6 +111,37 @@ export default class Game {
 				new Game(sql, convertToCase(snakeToCamel, row) as GameProps)
 		);
 	}
+
+	static async readPlayedList( sql: postgres.Sql<any>, userId: number): Promise<Game[]> 
+	{
+		const connection = await sql.reserve();
+
+		const rows = await connection<GameProps[]>`
+			SELECT G.*
+			FROM played_games PG
+			JOIN games G ON PG.played_game_id = G.id
+			WHERE PG.user_id = ${userId};
+		`;
+
+		await connection.release();
+		
+
+		return rows.map(
+			(row) =>
+				new Game(sql, convertToCase(snakeToCamel, row) as GameProps)
+		);
+	}
+
+	static async addPlayedList( sql: postgres.Sql<any>, userId: number, gameId:number){
+		const connection = await sql.reserve();
+
+		await connection<GameProps[]>`
+			INSERT INTO played_games(user_id, played_game_id)
+			VALUES(${userId}, ${gameId});
+		`;
+
+		connection.release();
+	}
 	
 	static async readTop3Recent( sql: postgres.Sql<any> ): Promise<Game[]>
 	{

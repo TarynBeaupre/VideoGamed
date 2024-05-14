@@ -147,3 +147,28 @@ header nav, header nav ul {
   display: flex;
   flex-direction: row;
 }
+
+.game-list-buttons {
+  display: flex;
+  flex-direction: row;
+}
+
+.game-link-title {
+  color: rgb(173, 63, 206, 1);
+}
+
+.remove-button {
+  background-color:rgb(255, 78, 78);
+}
+
+.add-button {
+  background-color:aquamarine;
+}
+
+.game-description{
+  height: 75px;
+  width: 75px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
