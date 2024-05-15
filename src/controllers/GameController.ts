@@ -40,6 +40,7 @@ export default class GameController {
     router.get("/games/:gamesId", this.getGame);
     router.post("/wishlist", this.addWishlist);
     router.post("/played", this.addPlayedList);
+    router.post("/search", this.getFilteredGamesList);
   }
 
   /**
@@ -78,8 +79,39 @@ export default class GameController {
       },
       template: "SearchView",
     });
-  };
 
+  };
+  getFilteredGamesList = async (req: Request, res: Response) => {
+    let games: Game[] = [];
+
+    try {
+      games = await Game.readAll(this.sql);
+    } catch (error) {
+      const message = `Error while getting games list: ${error}`;
+      console.error(message);
+    }
+
+    const gamesList = games.map((game) => {
+      return {
+        ...game.props,
+      };
+    });
+
+    let searchedGame = req.body.search
+    let filteredGamesList = gamesList.filter((game) => game.title.toUpperCase().includes(searchedGame.toUpperCase()))
+
+    let loggedIn: Boolean = this.checkIfLoggedIn(req, res);
+    await res.send({
+      statusCode: StatusCode.OK,
+      message: "Game list retrieved",
+      payload: {
+        title: "Game List",
+        games: filteredGamesList,
+        loggedIn: loggedIn,
+      },
+      template: "SearchView",
+    });
+  };
   getWishList = async (req: Request, res: Response) => {
     let loggedIn: Boolean = this.checkIfLoggedIn(req, res);
     if (loggedIn) {

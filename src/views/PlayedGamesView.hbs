@@ -7,10 +7,10 @@
 <h2> Your played games list: </h2>
     <div id="played" class="ol-played">
 		{{#each played}}
-			<div played-id="{{ this.props.id }}" class="game-list">
+			<div played-id="{{ this.id }}" class="game-list">
 				<img src="{{this.cover}}" width="200">
 				<div class="game-list-details">
-					<a href="/games/{{ this.props.id }}" class="game-link-title">{{ this.title }}</a>
+					<a href="/games/{{ this.id }}" class="game-link-title">{{ this.title }}</a>
 					<p> {{ this.description }}</p>
 					<h3>{{this.developer}}</h3>
 					<p>{{this.releaseYear}}</p>

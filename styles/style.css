@@ -26,6 +26,13 @@ button {
   transition: all 0.3s ease 0s;
 }
 
+.search-button{
+  padding: 9px 25px;
+  margin: 5px;
+  border-radius: 10px;
+  background-color: rgb(173, 63, 206, 1);
+  border: none;
+}
 button:hover {
   background-color: rgba(173, 63, 206, 0.8);
 }

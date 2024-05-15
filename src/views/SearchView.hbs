@@ -2,6 +2,14 @@
 
 <h1>All Games</h1>
 
+<form method="POST" action="/search" id="search-bar">
+	<div>
+		<label for="search">Search:</label>
+		<input type="text" id="search" name="search"/>
+	</div>
+	<input type="submit" value="Search" id="search-button" class="search-button">
+</form>
+
 {{#unless games}}
 	<p>No games found</p>
 {{else}}
@@ -11,10 +19,7 @@
 			<li game-id="{{ this.id }}">
 				<div class="gameInfo">
 					<div>
-						<a href="/games/{{ this.id }}" class="game-link-title">{{ this.title }}</a>
-						<div class="ellipsis"><div>
-							<p class="game-description"> {{this.description}} </p>
-						</div></div>
+						<a href="/games/{{ this.id }}">{{ this.title }}</a>
 						<p> {{ this.developer }} </p>
 						<p> {{ this.releaseYear }} </p>
 					</div>
