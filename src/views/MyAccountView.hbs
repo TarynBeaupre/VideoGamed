@@ -1,3 +1,52 @@
 {{> Header }}
 
+<div class="userInfo">
+<img class="review-profile-pic" src="{{ user.pfp }}">
+<h3> {{ user.username }} </h3> 
+<button> Change Username </button>
+<button> Change Profile Picture </button>
+</div>
+
+<div class="statsBox"> 
+<h2> Stats </h2>
+<h4> Reviews: {{ reviewsCount }} </h4>
+<h4> Likes Received: {{ likesReceived }} </h4>
+
+</div>
+
+<div class="reviewsBox">
+<h2> My Reviews </h2>
+{{#unless reviews}}
+	<p>You have not written any reviews yet. </p>
+{{else}}
+	<div id="reviews" class="reviews-container">
+		{{#each reviews}}
+			<div class="review-container" review-id="{{ this.props.id }}">
+        <h3> {{ this.props.username }} </h3> 
+        <div class="review-title">
+          <div>
+          {{ this.props.title }}
+          </div>
+        </div>
+        <div class="review-text">
+          <div>
+          {{ this.props.review }}
+          </div>
+        </div>
+
+        <!-- REVIEWS -->
+        <div class="review-likes">
+          <p>⭐️⭐️⭐️⭐️⭐️</p>
+          <div class="review-likes">
+            <img class="like-logo" src="../../images/icons/thumbs-up(2).svg">
+            <p>{{this.props.likes}}</p>
+          </div>
+        </div>
+
+			</div>
+		{{/each}}
+	</div>
+{{/unless}}
+</div>
+
 {{> Footer}}

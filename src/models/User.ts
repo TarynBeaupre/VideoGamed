@@ -83,6 +83,26 @@ export default class User {
 		return new User(sql, convertToCase(snakeToCamel, row) as UserProps);
 	}
 
+	static async getUser(
+		sql: postgres.Sql<any>,
+		id: number
+	): Promise<User> {
+
+		const connection = await sql.reserve();
+		// Checking if there's a user in the database with corresponding email and password 
+		const [row] = await connection<UserProps[]>`
+			SELECT * FROM
+			users WHERE id = ${id};
+		`;
+
+		// If not, throw an error
+		if (!row) {
+			throw new InvalidCredentialsError();
+		}
+		// Else, return the new user
+		return new User(sql, convertToCase(snakeToCamel, row) as UserProps);
+	}
+
 
 	
 

@@ -3,11 +3,11 @@
 <h1>All Games</h1>
 
 <form method="POST" action="/search" id="search-bar">
-	<div>
+	<div class="search">
 		<label for="search">Search:</label>
 		<input type="text" id="search" name="search"/>
+		<input type="submit" value="Search" id="search-button" class="search-button">
 	</div>
-	<input type="submit" value="Search" id="search-button" class="search-button">
 </form>
 
 {{#unless games}}

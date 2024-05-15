@@ -6,6 +6,8 @@ import User, { UserProps } from "../models/User";
 import { createUTCDate } from "../utils";
 import { DuplicateEmailError } from "../models/User";
 import { userInfo } from "os";
+import SessionManager from "../auth/SessionManager";
+import Review from "../models/Review";
 
 /**
  * Controller for handling User CRUD operations.
@@ -22,6 +24,7 @@ export default class UserController {
 	registerRoutes(router: Router) {
 		router.post("/users", this.createUser);
 		// Any routes that include an `:id` parameter should be registered last.
+		router.get("/profile", this.goToUserProfile)
 	}
 
 	/**
@@ -90,4 +93,31 @@ export default class UserController {
 		  
 		}
 	};
+	goToUserProfile = async (req: Request, res: Response) => 
+	{
+		let sessionManager: SessionManager = SessionManager.getInstance();
+		let sessionId = req.findCookie("session_id")?.value;
+		if (sessionId){
+			let session = sessionManager.get(sessionId);
+			if (session){
+				if (session.data["userId"]){
+					console.log("yipee")
+					let userId = session.data["userId"]
+					let user = await User.getUser(this.sql, userId)
+					let reviews = await Review.readUserReviews(this.sql, userId)
+					let reviewsCount = reviews.length;
+					let likesCount = 0
+					reviews.forEach((review) => likesCount += review.props.likes )
+					await res.send({
+						statusCode: StatusCode.OK,
+						payload: { user: user.props, reviews: reviews, reviewsCount: reviewsCount, likesReceived: likesCount, loggedIn: true },
+						template: "MyAccountView",
+						message: "User found"
+					});
+
+				}
+
+			}
+		}
+	}
 }

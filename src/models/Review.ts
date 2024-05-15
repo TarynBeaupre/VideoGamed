@@ -101,5 +101,18 @@ export default class Review{
 
 	
 	}
+    static async readUserReviews(sql: postgres.Sql<any>, userId:number){
+        const connection = await sql.reserve();
+        const rows = await connection<ReviewPropsWithPicture[]>`
+        SELECT reviews.*, users.pfp AS user_pfp
+        FROM reviews
+        INNER JOIN users ON reviews.user_id = users.id
+        WHERE reviews.user_id=${userId};`;
+        
+        await connection.release();
+        return rows.map (
+            (row) => new Review(sql, convertToCase(snakeToCamel, row) as ReviewPropsWithPicture)
+        );
+    }       
 
 }

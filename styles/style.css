@@ -69,11 +69,11 @@ header nav, header nav ul {
   padding: 0;
 }
 
-.nav-links li, a, button, p {
+* {
   font-family: SilkScreen, sans-serif;
   text-decoration: none;
-  list-style: none;
 }
+
 
 .nav-links li {
   display: inline-block;
@@ -177,4 +177,38 @@ header nav, header nav ul {
   height: 150px;
   overflow: scroll;
 }
+.search{
+  display: flex;
+  flex-direction: row;
+  align-items: center
+}
+.statsBox{
+  background-color: blueviolet;
+}
+.userInfo{ 
+  display:flex;
+  flex-direction: row;
+  background-color: blueviolet;
+  border-radius: 10px;
+  align-items: center;
+  padding:5px;
 
+}
+.userInfo button{
+  height: 30px;
+  background-color: rgb(17, 15, 33);
+
+}
+.userInfo h3{
+  background-color: blueviolet;
+}
+#search{
+  margin: 10px;
+  width: 800px;
+  height: 40px;
+  border-radius: 5px;
+}
+#login-form input{
+  margin: 5px;
+
+}
