@@ -172,3 +172,33 @@ INSERT INTO reviews(title, stars, likes, review, user_id, reviewed_game_id)
 VALUES ('yes',5, 5, '1.6 update is great!', 2, 2);
 INSERT INTO reviews(title, stars, likes, review, user_id, reviewed_game_id)
 VALUES ('decent', 5, 10, 'All my homies hate Pierre.', 1, 2);
+
+INSERT INTO tag(description) VALUES('Action');
+INSERT INTO tag(description) VALUES('Adventure');
+INSERT INTO tag(description) VALUES('Puzzle');
+INSERT INTO tag(description) VALUES('FPS');
+INSERT INTO tag(description) VALUES('Multiplayer');
+INSERT INTO tag(description) VALUES('Single-player');
+INSERT INTO tag(description) VALUES('Open World');
+INSERT INTO tag(description) VALUES('Horror');
+INSERT INTO tag(description) VALUES('Cozy');
+INSERT INTO tag(description) VALUES('RPG');
+INSERT INTO tag(description) VALUES('Indie');
+INSERT INTO tag(description) VALUES('Strategy');
+INSERT INTO tag(description) VALUES('Sports');
+INSERT INTO tag(description) VALUES('Sandbox');
+INSERT INTO tag(description) VALUES('Platformer');
+INSERT INTO tag(description) VALUES('2D');
+INSERT INTO tag(description) VALUES('3D');
+INSERT INTO tag(description) VALUES('VR');
+INSERT INTO tag(description) VALUES('Simulation');
+INSERT INTO tag(description) VALUES('MMO');
+
+-- Platform game tags--
+INSERT INTO tag(description) VALUES('WINDOWS');
+INSERT INTO tag(description) VALUES('MACOS');
+INSERT INTO tag(description) VALUES('MOBILE');
+
+
+
+
