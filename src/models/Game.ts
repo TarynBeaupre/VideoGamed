@@ -79,12 +79,17 @@ export default class Game {
 
 	static async addWishlist( sql: postgres.Sql<any>, userId: number, gameId:number){
 		const connection = await sql.reserve();
-		//check first if the game exists, if it already exists do nothing
-		await connection<GameProps[]>`
-			INSERT INTO wishlist_games(user_id, wishlisted_game_id)
-			VALUES(${userId}, ${gameId});
+
+		const [row] = await connection<GameProps[]>`
+			SELECT 1 FROM wishlist_games WHERE user_id = ${userId} AND wishlisted_game_id = ${gameId};
 		`;
 
+		if (!row){
+			await connection<GameProps[]>`
+				INSERT INTO wishlist_games(user_id, wishlisted_game_id)
+				VALUES(${userId}, ${gameId});
+			`;
+		}
 		connection.release();
 	}
 
@@ -101,13 +106,14 @@ export default class Game {
 		const connection = await sql.reserve();
 
 		const [row] = await connection<GameProps[]>`
-			SELECT * FROM wishlist_games WHERE user_id = ${userId} AND wishlisted_game_id = ${gameId};
+			SELECT 1 FROM wishlist_games WHERE user_id = ${userId} AND wishlisted_game_id = ${gameId};
 		`;
 		connection.release();
 
 		if (!row) {
 			return null;
 		}
+		else {return row;}
 	}
 
 	static async readTop3Rated( sql: postgres.Sql<any> ): Promise<Game[]>
@@ -153,11 +159,16 @@ export default class Game {
 	static async addPlayedList( sql: postgres.Sql<any>, userId: number, gameId:number){
 		const connection = await sql.reserve();
 
-		await connection<GameProps[]>`
-			INSERT INTO played_games(user_id, played_game_id)
-			VALUES(${userId}, ${gameId});
+		const [row] = await connection<GameProps[]>`
+			SELECT 1 FROM played_games WHERE user_id = ${userId} AND played_game_id = ${gameId};
 		`;
 
+		if (!row) {
+			await connection<GameProps[]>`
+				INSERT INTO played_games(user_id, played_game_id)
+				VALUES(${userId}, ${gameId});
+			`;
+		}
 		connection.release();
 	}
 

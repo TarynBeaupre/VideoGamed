@@ -14,9 +14,9 @@
 					<p> {{ this.description }}</p>
 					<h3>{{this.developer}}</h3>
 					<p>{{this.releaseYear}}</p>
-					<form action="/played" method="DELETE">
+					<form method="POST" action="/played/{{game.id}}">
 						<input type="hidden" name="method" value="DELETE">
-  						<input type="hidden" name="gameId" value="{{game.id}}">
+  						<input type="hidden" name="gameId" value="{{this.id}}">
   						<button type="submit" class="remove-button">Remove from played list</button>
 					</form>
 				</div>

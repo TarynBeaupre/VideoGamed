@@ -248,7 +248,7 @@ export default class GameController {
             const gameId = req.body.gameId;
 
             try {
-              if (Game.readWishlistGameFromId){
+              if (await Game.readWishlistGameFromId(this.sql, userId, gameId)){
                 await Game.deleteWishlist(this.sql, userId, gameId);
               }
               await Game.addPlayedList(this.sql, userId, gameId);
