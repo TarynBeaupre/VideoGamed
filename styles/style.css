@@ -194,13 +194,15 @@ header nav, header nav ul {
   padding:5px;
 
 }
-.userInfo button{
+.userInfo input{
   height: 30px;
   background-color: rgb(17, 15, 33);
-
+  margin: 10px;
+  background-color: blueviolet;
 }
 .userInfo h3{
   background-color: blueviolet;
+  margin: 10px;
 }
 #search{
   margin: 10px;

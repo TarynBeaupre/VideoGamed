@@ -25,6 +25,11 @@ export default class UserController {
 		router.post("/users", this.createUser);
 		// Any routes that include an `:id` parameter should be registered last.
 		router.get("/profile", this.goToUserProfile)
+		router.get("/updateUsername", this.goToUpdateUsername)
+		router.post("/updateUsername", this.updateUsername)
+		router.get("/updatePfp", this.goToUpdatePfp)
+		router.post("/updatePfp", this.updatePfp)
+
 	}
 
 	/**
@@ -101,7 +106,6 @@ export default class UserController {
 			let session = sessionManager.get(sessionId);
 			if (session){
 				if (session.data["userId"]){
-					console.log("yipee")
 					let userId = session.data["userId"]
 					let user = await User.getUser(this.sql, userId)
 					let reviews = await Review.readUserReviews(this.sql, userId)
@@ -120,4 +124,62 @@ export default class UserController {
 			}
 		}
 	}
+	updateUsername = async (req: Request, res: Response) => 
+	{
+			let sessionManager: SessionManager = SessionManager.getInstance();
+			let sessionId = req.findCookie("session_id")?.value;
+			if (sessionId){
+				let session = sessionManager.get(sessionId);
+				if (session){
+					if (session.data["userId"]){
+						let userId = session.data["userId"]
+						console.log(userId)
+						let newUsername = req.body.newUsername
+						console.log(newUsername)
+						await User.updateUsername(this.sql, userId, newUsername)
+						this.goToUserProfile(req,res)
+	
+					}
+	
+				}
+			}
+	}
+	updatePfp = async (req: Request, res: Response) => 
+		{
+				let sessionManager: SessionManager = SessionManager.getInstance();
+				let sessionId = req.findCookie("session_id")?.value;
+				if (sessionId){
+					let session = sessionManager.get(sessionId);
+					if (session){
+						if (session.data["userId"]){
+							let userId = session.data["userId"]
+							let newPfp = req.body.newPfp
+							await User.updatePfp(this.sql, userId, newPfp)
+							this.goToUserProfile(req,res)
+		
+						}
+		
+					}
+				}
+		}
+		goToUpdateUsername = async (req: Request, res: Response) => 
+		{
+			await res.send({
+			    statusCode: StatusCode.OK,
+				payload: { loggedIn: true },
+				template: "ChangeUsernameView",
+				message: "Going to change username"
+			});
+
+		}
+		goToUpdatePfp = async (req: Request, res: Response) => 
+			{
+				await res.send({
+					statusCode: StatusCode.OK,
+					payload: { loggedIn: true },
+					template: "ChangePfpView",
+					message: "Going to change pfp"
+				});
+	
+			}
 }

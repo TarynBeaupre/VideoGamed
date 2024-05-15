@@ -1,0 +1,10 @@
+{{> Header }}
+
+<form method="POST" action="{{ path 'updateUsername' }}" id="update-username-form">
+
+	<label for="newUsername">New username:</label>
+    <input type="text" id="newUsername" name="newUsername">
+	<input type="submit" value="Update">
+</form>
+
+{{> Footer}}

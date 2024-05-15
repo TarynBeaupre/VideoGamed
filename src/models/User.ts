@@ -102,7 +102,38 @@ export default class User {
 		// Else, return the new user
 		return new User(sql, convertToCase(snakeToCamel, row) as UserProps);
 	}
+	static async updateUsername(
+		sql: postgres.Sql<any>,
+		userId: number,
+		newUser: string
+	): Promise<User> {
 
+		const connection = await sql.reserve();
+		const [row] = await connection<UserProps[]>`
+			UPDATE users
+			SET username = ${newUser}
+			WHERE id = ${userId}; 
+		`;
+
+		// Else, return the new user
+		return new User(sql, convertToCase(snakeToCamel, row) as UserProps);
+	}
+	static async updatePfp(
+		sql: postgres.Sql<any>,
+		userId: number,
+		newPfp: string
+	): Promise<User> {
+
+		const connection = await sql.reserve();
+		const [row] = await connection<UserProps[]>`
+			UPDATE users
+			SET pfp = ${newPfp}
+			WHERE id = ${userId}; 
+		`;
+
+		// Else, return the new user
+		return new User(sql, convertToCase(snakeToCamel, row) as UserProps);
+	}
 
 	
 

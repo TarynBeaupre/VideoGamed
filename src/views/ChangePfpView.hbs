@@ -1,0 +1,10 @@
+{{> Header }}
+
+<form method="POST" action="{{ path 'updatePfp' }}" id="update-pfp-form">
+
+	<label for="newPfp">New profile picture link:</label>
+    <input type="text" id="newPfp" name="newPfp">
+	<input type="submit" value="Update">
+</form>
+
+{{> Footer}}
