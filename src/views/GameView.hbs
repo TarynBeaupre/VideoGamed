@@ -2,29 +2,42 @@
 <h1> {{ game.title }} </h1>
 <h2>{{ averageStars }}⭐</h2>
 <p>(Total stars: ⭐{{game.totalStars}})</p><br>
-<img src="{{game.cover}}" width="400">
-<div class="game-list-buttons">
-  <form action="/wishlist" method="POST">
-    <input type="hidden" name="gameId" value="{{game.id}}">
-    <button type="submit">Wishlist</button>
-  </form>
+<div class="game-info">
+  <div class="game-info-left">
+    <img src="{{game.cover}}" width="400">
+  </div>
+  <div class="game-info-right">
+    <div>
+      <h3>Developer: </h3>
+      <p>{{ game.developer }}</p>
+      <h3>Year: </h3>
+      <p>{{game.releaseYear}}</p>
+      <h3>Description:</h3>
+      <p>{{ game.description }} </p>
+      <h3>Tags</h3>
+      {{#each gametag}}
+      <p class="tag">{{this.description}}</p>
+      {{/each}}
+      <button>Add tag</button>
+    </div>
+    <div class="game-list-buttons">
+      <form action="/wishlist" method="POST">
+        <input type="hidden" name="gameId" value="{{game.id}}">
+        <button type="submit">Wishlist</button>
+      </form>
 
-  <form action="/played" method="POST">
-    <input type="hidden" name="gameId" value="{{game.id}}">
-    <button type="submit">Played</button>
-  </form>
+      <form action="/played" method="POST">
+        <input type="hidden" name="gameId" value="{{game.id}}">
+        <button type="submit">Played</button>
+      </form>
 
-  <form action="/review" method="GET">
-    <input type="hidden" name="gameId" value="{{game.id}}">
-    <button type="submit">Leave a review</button>
-  </form>
+      <form action="/review" method="GET">
+        <input type="hidden" name="gameId" value="{{game.id}}">
+        <button type="submit">Leave a review</button>
+      </form>
+    </div>
+  </div>
 </div>
-  <h3>Developer: </h3>
-  <p>{{ game.developer }}</p>
-  <h3>Year: </h3>
-  <p>{{game.releaseYear}}</p>
-<h3>Description:</h3>
-<p>{{ game.description }} </p>
 
 
 
