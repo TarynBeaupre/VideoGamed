@@ -70,8 +70,18 @@ header nav, header nav ul {
 }
 
 * {
-  font-family: SilkScreen, sans-serif;
+  font-family: SilkScreen, Arial, sans-serif;
   text-decoration: none;
+}
+
+p {
+  font-family: 'Exo 2', Arial, sans-serif;
+  font-size: 18px;
+  margin: 5px 0px 5px 0px;
+}
+
+h1, h2, h3, h4 {
+  margin: 5px 0px 5px 0px;
 }
 
 
@@ -95,10 +105,13 @@ header nav, header nav ul {
   flex-direction: column;
   margin:10px;
   padding: 5px;
-  background-color: #7fc3ef;
+  background-color: rgb(173, 63, 206, 1);
   border-radius: 5px;
 }
 
+.review-container {
+  padding: 15px;
+}
 
 .review-text {
   margin:7px;
@@ -118,12 +131,17 @@ header nav, header nav ul {
 .review-likes {
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: space-between;
 }
 
-.game-review {
+.review-profile-container, .game-review, .game-info {
   display: flex;
   flex-direction: row;
+}
+
+.game-info {
+  width: 40%;
+  justify-content: space-between;
 }
 
 .like-logo {

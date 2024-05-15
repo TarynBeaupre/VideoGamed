@@ -334,6 +334,7 @@ export default class GameController {
     const id = req.getId();
     let game: Game | null = null;
     let reviews: Review[] | null = [];
+    let averageStars: number = 0;
 
     game = await Game.read(this.sql, id);
     if (!game) {
@@ -342,6 +343,7 @@ export default class GameController {
     }
 
     reviews = await Review.readGameReviews(this.sql, id);
+    averageStars = await Review.readAverageStar(this.sql, id);
 
     let loggedIn: Boolean = this.checkIfLoggedIn(req, res);
     await res.send({
@@ -352,6 +354,7 @@ export default class GameController {
         game: game?.props,
         loggedIn: loggedIn,
         reviews: reviews,
+        averageStars: averageStars
       },
     });
   };

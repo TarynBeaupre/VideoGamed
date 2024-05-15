@@ -55,7 +55,7 @@ export default class Review{
     ): Promise<Review[]> {
         const connection = await sql.reserve();
         const rows = await connection<ReviewPropsWithPicture[]>`
-        SELECT reviews.*, users.pfp AS user_pfp
+        SELECT reviews.*, users.pfp AS user_pfp, users.username as username
         FROM reviews
         INNER JOIN users ON reviews.user_id = users.id
         WHERE reviews.reviewed_game_id=${game_id};`;
@@ -64,6 +64,23 @@ export default class Review{
             (row) => new Review(sql, convertToCase(snakeToCamel, row) as ReviewPropsWithPicture)
         );
     }
+
+    static async readAverageStar(sql: postgres.Sql<any>, game_id:number): Promise<number> {
+        const connection = await sql.reserve();
+        
+        const rows = await connection<{sum: number, count: number}[]>`
+        SELECT SUM(stars) as sum, COUNT(*) as count
+        FROM reviews WHERE reviewed_game_id = ${game_id};`;
+        await connection.release();
+
+        const sumOfStars = rows.length > 0 && rows[0].sum !== null ? rows[0].sum : 0;
+        const numberOfReviews = rows.length > 0 ? rows[0].count : 0;
+        
+        const averageRating = numberOfReviews > 0 ? sumOfStars / numberOfReviews : 0;
+        return averageRating;
+    }
+
+
     static async addReviewLike(
         sql: postgres.Sql<any>, game_id:number
     ){

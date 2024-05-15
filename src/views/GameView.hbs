@@ -1,45 +1,53 @@
 {{> Header }}
-
 <h1> {{ game.title }} </h1>
-<h3> {{ game.developer }} </h3>
-<h3> {{ game.releaseYear }} </h3>
-<h5>
-{{ game.description }} 
-</h5>
+<h2>{{ averageStars }}⭐</h2>
+<p>(Total stars: ⭐{{game.totalStars}})</p><br>
+  <h3>Developer: </h3>
+  <p>{{ game.developer }}</p>
+  <h3>Year: </h3>
+  <p>{{game.releaseYear}}</p>
+<h3>Description:</h3>
+<p>{{ game.description }} </p>
 <img src="{{game.cover}}" width="400">
-<form action="/wishlist" method="POST">
-  <input type="hidden" name="gameId" value="{{game.id}}">
-  <button type="submit">Wishlist</button>
-</form>
+<div class="game-list-buttons">
+  <form action="/wishlist" method="POST">
+    <input type="hidden" name="gameId" value="{{game.id}}">
+    <button type="submit">Wishlist</button>
+  </form>
 
-<form action="/played" method="POST">
-  <input type="hidden" name="gameId" value="{{game.id}}">
-  <button type="submit">Played</button>
-</form>
+  <form action="/played" method="POST">
+    <input type="hidden" name="gameId" value="{{game.id}}">
+    <button type="submit">Played</button>
+  </form>
 
-<form action="/review" method="GET">
-  <input type="hidden" name="gameId" value="{{game.id}}">
-  <button type="submit">Leave a review</button>
-</form>
+  <form action="/review" method="GET">
+    <input type="hidden" name="gameId" value="{{game.id}}">
+    <button type="submit">Leave a review</button>
+  </form>
+</div>
+
+
 
 {{#unless reviews}}
 	<p>No reviews yet, be the first!</p>
 {{else}}
 <h3>Top 3 reviews: </h3>
-	<div id="reviews" class="reviews-container">
 		{{#each reviews}}
+	<div id="reviews" class="reviews-container">
 			<div class="review-container" review-id="{{ this.props.id }}">
-        <img class="review-profile-pic" src="{{ this.props.userPfp }}">
-        <h3> {{ this.props.username }} </h3> 
+        <div class="review-profile-container">
+          <img class="review-profile-pic" src="{{ this.props.userPfp }}">
+          <h3> {{ this.props.username }} </h3> 
+        </div>
         <div class="review-title">
           <div>
           {{ this.props.title }}
           </div>
         </div>
         <div class="review-text">
-          <div>
+          <p>
           {{ this.props.review }}
-          </div>
+          </p>
         </div>
 
         <!-- REVIEWS -->
@@ -55,9 +63,8 @@
         </div>
 
 			</div>
-		{{/each}}
 	</div>
-  <p>{{ star-average }} star average</p>
+		{{/each}}
 {{/unless}}
 
 {{> Footer}}   
