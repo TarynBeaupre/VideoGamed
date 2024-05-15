@@ -40,14 +40,9 @@ export default class ReviewController {
 	}
 
 
-	/**
-	 * This method should be called when a GET request is made to /todos.
-	 * It should retrieve all todos from the database and send them as a response.
-	 *
-	 * @param req The request object.
-	 * @param res The response object.
-	 *
-	 * @example GET /todos
+
+		/**
+	 * MIGHT WANNA DELETE THIS
 	 */
 	getReviewsList = async (req: Request, res: Response) => {
 		
@@ -81,13 +76,7 @@ export default class ReviewController {
 	};
 
 	/**
-	 * This method should be called when a GET request is made to /todos/:id.
-	 * It should retrieve a single todo from the database and send it as a response.
-	 *
-	 * @param req The request object.
-	 * @param res The response object.
-	 *
-	 * @example GET /todos/1
+	 * MIGHT WANNA DELETE THIS
 	 */
 	getReview = async (req: Request, res: Response) => {
 			const id = req.getId();
@@ -114,58 +103,58 @@ export default class ReviewController {
 	};
 
 
-	
-	// Reusable function I made since we need to check if the user is logged in before every action
-	// Given the request object, checks that the request's session id exists in the session manager
-	// and if it has a user id
-	
-	checkIfLoggedIn = (req: Request, res: Response) => {
-
-		let sessionManager: SessionManager = SessionManager.getInstance();
-		let sessionId = req.findCookie("session_id")?.value;
-		if (sessionId){
-			let session = sessionManager.get(sessionId);
-			if (session){
-				if (session.data["userId"]){
-					return true;
-				}
-
-			}
-		}
-		// this.goToLogin(res);
-		return false;
-
-	}
 
 	likeReview = async (req: Request, res: Response) => {
-		const id = req.getReviewId();
-		let review: Review | null = null;
-	
-		review = await Review.addReviewLike(this.sql, id);
-		if (!review){
-			return null
+		if (this.checkIfLoggedIn(req,res)){
+			const id = req.getReviewId();
+			let review: Review | null = null;
+		
+			review = await Review.addReviewLike(this.sql, id);
+			if (!review){
+				this.goToError(res,"An error occurred. Please try again.")
+			}
+			else{
+				let loggedIn: Boolean = this.checkIfLoggedIn(req,res);
+				await res.send({
+					statusCode: StatusCode.OK,
+					message: "Review retrieved",
+					redirect:"/games/" + review.props.reviewedGameId
+				});
+			}
+
 		}
-		let loggedIn: Boolean = this.checkIfLoggedIn(req,res);
-		await res.send({
-			statusCode: StatusCode.OK,
-			message: "Review retrieved",
-			redirect:"/games/" + review.props.reviewedGameId
-		});
+		else{
+			this.goToLogin(res)
+		}
 
 	
 	};
 	goToReview = async (req: Request, res: Response) => {
+		if (this.checkIfLoggedIn(req,res)){
 		let params = req.getSearchParams()
 		let gameId = params.get("gameId")
-		await res.send({
-			statusCode: StatusCode.OK,
-				message: "Going to leave review",
-				template: "LeaveReviewView",
-				payload: {
-					gameId : gameId
-				},
-		});
-
+		let userId = req.session.get("userId");
+		if (gameId && userId){
+			let review = await Review.getSpecificReview(this.sql, userId, Number(gameId))
+			if (!review){
+				await res.send({
+					statusCode: StatusCode.OK,
+						message: "Going to leave review",
+						template: "LeaveReviewView",
+						payload: {
+							gameId : gameId
+						},
+				});
+			}
+			else{
+				this.goToError(res, "You have already left a review for this game.")
+			}
+		}
+		
+	}
+		else{
+			this.goToLogin(res)
+		}
 	
 	};
 	
@@ -186,21 +175,51 @@ export default class ReviewController {
 		
 		}
 		else{
-			this.goToError(res)
+			this.goToLogin(res)
 		}
 
 
 
 	
 	};
-	goToError = async (res: Response) => {
+	goToError = async (res: Response, message: string) => {
 		
 		await res.send({
 		  statusCode: StatusCode.Forbidden,
 		  message: "Unauthorized action.",
-		  payload: { error: "Please login first." },
+		  payload: { error: message },
 		  template: "ErrorView",
 		});
 	  };
+
+	  goToLogin = async (res: Response) => {
+		await res.send({
+		  statusCode: StatusCode.Unauthorized,
+		  message: "User needs to login before doing this action.",
+		  redirect: "/login",
+		});
+	  };
+	  
+	
+	// Reusable function I made since we need to check if the user is logged in before every action
+	// Given the request object, checks that the request's session id exists in the session manager
+	// and if it has a user id
+	
+	checkIfLoggedIn = (req: Request, res: Response) => {
+
+		let sessionManager: SessionManager = SessionManager.getInstance();
+		let sessionId = req.findCookie("session_id")?.value;
+		if (sessionId){
+			let session = sessionManager.get(sessionId);
+			if (session){
+				if (session.data["userId"]){
+					return true;
+				}
+
+			}
+		}
+		return false;
+
+	}
 
 }

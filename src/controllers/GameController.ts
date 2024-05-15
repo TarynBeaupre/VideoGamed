@@ -188,6 +188,9 @@ export default class GameController {
         }
       }
     }
+    else{
+      this.goToLogin(res)
+    }
   };
 
   removeWishlist = async (req: Request, res: Response) => {
@@ -254,14 +257,7 @@ export default class GameController {
       }
     }
 	else {
-		await res.send({
-			statusCode: StatusCode.Redirect,
-			message: "Login",
-			payload: {
-				title: "Login",
-			},
-			template: "LoginView"
-		});
+    this.goToLogin(res);
 
 	}
   };
@@ -292,6 +288,10 @@ export default class GameController {
           }
         }
       }
+    }
+    else{
+
+      this.goToLogin(res)
     }
   };
 
@@ -435,7 +435,7 @@ export default class GameController {
     await res.send({
       statusCode: StatusCode.Forbidden,
       message: "Unauthorized action.",
-      payload: { error: "You are not allowed to modify this todo." },
+      payload: { error: "You are not allowed to do this" },
       template: "ErrorView",
     });
   };

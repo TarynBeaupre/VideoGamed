@@ -49,6 +49,22 @@ export default class Review{
         return new Review(sql, convertToCase(snakeToCamel, row) as ReviewProps);
     }       
 
+    static async getSpecificReview(sql: postgres.Sql<any>, userId:number, gameId: number){
+        const connection = await sql.reserve();
+        const [row] = await connection<ReviewProps[]>`
+        SELECT * FROM
+        reviews where user_id=${userId} AND reviewed_game_id=${gameId};
+        `;
+
+        await connection.release();
+        if (!row){
+            return null;
+        }
+
+        return new Review(sql, convertToCase(snakeToCamel, row) as ReviewProps);
+    }       
+
+
     //gets ALL reviews for a specific game!
     static async readGameReviews(
         sql: postgres.Sql<any>, game_id:number
