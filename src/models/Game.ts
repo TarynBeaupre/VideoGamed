@@ -79,7 +79,7 @@ export default class Game {
 
 	static async addWishlist( sql: postgres.Sql<any>, userId: number, gameId:number){
 		const connection = await sql.reserve();
-
+		//check first if the game exists, if it already exists do nothing
 		await connection<GameProps[]>`
 			INSERT INTO wishlist_games(user_id, wishlisted_game_id)
 			VALUES(${userId}, ${gameId});
@@ -88,8 +88,13 @@ export default class Game {
 		connection.release();
 	}
 
-	static async removeWishlist(){
+	static async deleteWishlist( sql: postgres.Sql<any>, userId: number, gameId:number ){
+		const connection = await sql.reserve();
+		await connection<GameProps[]>`
+			DELETE FROM wishlist_games WHERE user_id = ${userId} AND wishlisted_game_id = ${gameId};
+		`;
 
+		connection.release();
 	}
 
 	static async readTop3Rated( sql: postgres.Sql<any> ): Promise<Game[]>
@@ -142,7 +147,18 @@ export default class Game {
 
 		connection.release();
 	}
-	
+
+	static async deletePlayed( sql: postgres.Sql<any>, userId: number, gameId:number ){
+		const connection = await sql.reserve();
+
+		await connection<GameProps[]>`
+			DELETE FROM played_games 
+			WHERE user_id = ${userId} AND played_game_id = ${gameId};
+		`;
+
+		connection.release();
+	}
+
 	static async readTop3Recent( sql: postgres.Sql<any> ): Promise<Game[]>
 	{
 		const connection = await sql.reserve();

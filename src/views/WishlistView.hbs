@@ -7,18 +7,25 @@
 <h2> Your wishlist: </h2>
     <div id="wishlist" class="ol-wishlist">
 		{{#each wishlist}}
-			<div wishlist-id="{{ this.props.id }}" class="game-list">
+			<div wishlist-id="{{ this.id }}" class="game-list">
 				<img src="{{this.cover}}" width="200">
 				<div class="game-list-details">
-					<a href="/games/{{ this.props.id }}" class="game-link-title">{{ this.title }}</a>
+					<a href="/games/{{ this.id }}" class="game-link-title">{{ this.title }}</a>
 					<p> {{ this.description }}</p>
 					<h3>{{this.developer}}</h3>
 					<p>{{this.releaseYear}}</p>
 					<div class="game-list-buttons">
-						<form action="/played" method="POST">
+						<form method="POST" action="/wishlist/{{game.id}}">
+							<input type="hidden" name="method" value="DELETE">
+  							<input type="hidden" name="gameId" value="{{game.id}}">
+							<button class="remove-button" type="submit">Remove from wishlist</button>
+						</form>
+						<!--
+						<form action="/wishlist" method="POST">
+							<input type="hidden" name="method" value="DELETE">
   							<input type="hidden" name="gameId" value="{{game.id}}">
   							<button type="submit" class="remove-button">Remove from wishlist</button>
-						</form>
+						</form>-->
 						<form action="/played" method="POST">
   							<input type="hidden" name="gameId" value="{{game.id}}">
   							<button type="submit" class="add-button">I've Played This</button>

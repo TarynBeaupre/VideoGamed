@@ -35,11 +35,14 @@ export default class GameController {
     router.get("/games", this.getGamesList);
     router.get("/wishlist", this.getWishList);
     router.get("/played", this.getPlayedList);
-
-    // Any routes that include an `:id` parameter should be registered last.
-    router.get("/games/:gamesId", this.getGame);
     router.post("/wishlist", this.addWishlist);
     router.post("/played", this.addPlayedList);
+    
+    // Any routes that include an `:id` parameter should be registered last.
+    router.get("/games/:gamesId", this.getGame);
+    router.delete("/wishlist/:id", this.removeWishlist);
+    router.delete("/played/:id", this.removePlayedList);
+    
   }
 
   /**
@@ -156,6 +159,32 @@ export default class GameController {
     }
   };
 
+  removeWishlist = async (req: Request, res: Response) => {
+    let loggedIn: Boolean = this.checkIfLoggedIn(req, res);
+    if (loggedIn) {
+      let sessionManager: SessionManager = SessionManager.getInstance();
+      let sessionId = req.findCookie("session_id")?.value;
+      if (sessionId) {
+        let session = sessionManager.get(sessionId);
+        if (session) {
+          if (session.data["userId"]) {
+            let userId = session.data["userId"];
+            const gameId = req.body.gameId;
+
+            try {
+              await Game.deleteWishlist(this.sql, userId, gameId);
+            } catch (error) {
+              const message = `Error while deleting from wishlist: ${error}`;
+              console.error(message);
+            }
+
+            this.getWishList(req, res);
+          }
+        }
+      }
+    }
+  };
+
   getPlayedList = async (req: Request, res: Response) => {
     let loggedIn: Boolean = this.checkIfLoggedIn(req, res);
     if (loggedIn) {
@@ -222,6 +251,32 @@ export default class GameController {
               await Game.addPlayedList(this.sql, userId, gameId);
             } catch (error) {
               const message = `Error while adding to played list: ${error}`;
+              console.error(message);
+            }
+
+            this.getPlayedList(req, res);
+          }
+        }
+      }
+    }
+  };
+
+  removePlayedList = async (req: Request, res: Response) => {
+    let loggedIn: Boolean = this.checkIfLoggedIn(req, res);
+    if (loggedIn) {
+      let sessionManager: SessionManager = SessionManager.getInstance();
+      let sessionId = req.findCookie("session_id")?.value;
+      if (sessionId) {
+        let session = sessionManager.get(sessionId);
+        if (session) {
+          if (session.data["userId"]) {
+            let userId = session.data["userId"];
+            const gameId = req.body.gameId;
+
+            try {
+              await Game.deletePlayed(this.sql, userId, gameId);
+            } catch (error) {
+              const message = `Error while deleting a game from played list: ${error}`;
               console.error(message);
             }
 
