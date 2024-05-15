@@ -2,12 +2,6 @@
 <h1> {{ game.title }} </h1>
 <h2>{{ averageStars }}⭐</h2>
 <p>(Total stars: ⭐{{game.totalStars}})</p><br>
-  <h3>Developer: </h3>
-  <p>{{ game.developer }}</p>
-  <h3>Year: </h3>
-  <p>{{game.releaseYear}}</p>
-<h3>Description:</h3>
-<p>{{ game.description }} </p>
 <img src="{{game.cover}}" width="400">
 <div class="game-list-buttons">
   <form action="/wishlist" method="POST">
@@ -25,13 +19,19 @@
     <button type="submit">Leave a review</button>
   </form>
 </div>
+  <h3>Developer: </h3>
+  <p>{{ game.developer }}</p>
+  <h3>Year: </h3>
+  <p>{{game.releaseYear}}</p>
+<h3>Description:</h3>
+<p>{{ game.description }} </p>
 
 
 
 {{#unless reviews}}
-	<p>No reviews yet, be the first!</p>
+	<br><p>No reviews yet, be the first!</p>
 {{else}}
-<h3>Top 3 reviews: </h3>
+<br><h3>Top 3 reviews: </h3>
 		{{#each reviews}}
 	<div id="reviews" class="reviews-container">
 			<div class="review-container" review-id="{{ this.props.id }}">

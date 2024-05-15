@@ -75,9 +75,9 @@ export default class Review{
 
         const sumOfStars = rows.length > 0 && rows[0].sum !== null ? rows[0].sum : 0;
         const numberOfReviews = rows.length > 0 ? rows[0].count : 0;
-        
+
         const averageRating = numberOfReviews > 0 ? sumOfStars / numberOfReviews : 0;
-        return averageRating;
+        return parseFloat(averageRating.toFixed(1));
     }
 
 
