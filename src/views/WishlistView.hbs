@@ -17,7 +17,7 @@
 					<div class="game-list-buttons">
 						<form method="POST" action="/wishlist/{{game.id}}">
 							<input type="hidden" name="method" value="DELETE">
-  							<input type="hidden" name="gameId" value="{{game.id}}">
+  							<input type="hidden" name="gameId" value="{{this.id}}">
 							<button class="remove-button" type="submit">Remove from wishlist</button>
 						</form>
 						<!--
@@ -27,7 +27,7 @@
   							<button type="submit" class="remove-button">Remove from wishlist</button>
 						</form>-->
 						<form action="/played" method="POST">
-  							<input type="hidden" name="gameId" value="{{game.id}}">
+  							<input type="hidden" name="gameId" value="{{this.id}}">
   							<button type="submit" class="add-button">I've Played This</button>
 						</form>
 					</div>

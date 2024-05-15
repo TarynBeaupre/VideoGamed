@@ -97,6 +97,19 @@ export default class Game {
 		connection.release();
 	}
 
+	static async readWishlistGameFromId( sql: postgres.Sql<any>, userId: number, gameId:number ){
+		const connection = await sql.reserve();
+
+		const [row] = await connection<GameProps[]>`
+			SELECT * FROM wishlist_games WHERE user_id = ${userId} AND wishlisted_game_id = ${gameId};
+		`;
+		connection.release();
+
+		if (!row) {
+			return null;
+		}
+	}
+
 	static async readTop3Rated( sql: postgres.Sql<any> ): Promise<Game[]>
 	{
 		const connection = await sql.reserve();

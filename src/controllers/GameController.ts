@@ -248,6 +248,9 @@ export default class GameController {
             const gameId = req.body.gameId;
 
             try {
+              if (Game.readWishlistGameFromId){
+                await Game.deleteWishlist(this.sql, userId, gameId);
+              }
               await Game.addPlayedList(this.sql, userId, gameId);
             } catch (error) {
               const message = `Error while adding to played list: ${error}`;
