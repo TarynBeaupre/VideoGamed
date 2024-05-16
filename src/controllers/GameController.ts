@@ -335,12 +335,15 @@ export default class GameController {
     let game: Game | null = null;
     let reviews: Review[] | null = [];
     let averageStars: number = 0;
+    let gametags: string[] = [];
 
     game = await Game.read(this.sql, id);
     if (!game) {
       this.goToError(res);
       return;
     }
+
+    gametags = await Game.readTagDescriptionsForGame(this.sql, id);
 
     reviews = await Review.readGameReviews(this.sql, id);
     averageStars = await Review.readAverageStar(this.sql, id);
@@ -354,7 +357,8 @@ export default class GameController {
         game: game?.props,
         loggedIn: loggedIn,
         reviews: reviews,
-        averageStars: averageStars
+        averageStars: averageStars,
+        gametags: gametags
       },
     });
   };

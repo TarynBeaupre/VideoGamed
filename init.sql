@@ -193,11 +193,11 @@ INSERT INTO tag(description) VALUES('3D');
 INSERT INTO tag(description) VALUES('VR');
 INSERT INTO tag(description) VALUES('Simulation');
 INSERT INTO tag(description) VALUES('MMO');
+INSERT INTO tag(description) VALUES('Windows');
+INSERT INTO tag(description) VALUES('MacOS');
+INSERT INTO tag(description) VALUES('Mobile');
 
--- Platform game tags--
-INSERT INTO tag(description) VALUES('WINDOWS');
-INSERT INTO tag(description) VALUES('MACOS');
-INSERT INTO tag(description) VALUES('MOBILE');
+INSERT INTO gametag()
 
 
 
