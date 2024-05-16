@@ -176,7 +176,7 @@ h1, h2, h3, h4 {
   flex-direction: row;
 }
 
-.game-list-buttons {
+.game-list-buttons, .add-tag {
   display: flex;
   flex-direction: row;
 }
@@ -212,6 +212,13 @@ h1, h2, h3, h4 {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+}
+
+.tag {
+  background-color: aqua;
+  border-radius: 25px;
+  padding: 5px;
+  width: fit-content;
 }
 
 
@@ -255,3 +262,4 @@ h1, h2, h3, h4 {
   margin: 5px;
 
 }
+

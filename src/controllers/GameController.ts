@@ -1,5 +1,6 @@
 import Game, { GameProps } from "../models/Game";
 import Review, { ReviewProps } from "../models/Review";
+import Tag, {TagProps} from "../models/Tag";
 import postgres from "postgres";
 import Request from "../router/Request";
 import Response, { StatusCode } from "../router/Response";
@@ -335,6 +336,7 @@ export default class GameController {
     let game: Game | null = null;
     let reviews: Review[] | null = [];
     let averageStars: number = 0;
+    let tags: Tag[] | null = [];
     let gametags: string[] = [];
 
     game = await Game.read(this.sql, id);
@@ -344,7 +346,7 @@ export default class GameController {
     }
 
     gametags = await Game.readTagDescriptionsForGame(this.sql, id);
-
+    tags = await Tag.readAll(this.sql);
     reviews = await Review.readGameReviews(this.sql, id);
     averageStars = await Review.readAverageStar(this.sql, id);
 
@@ -358,7 +360,8 @@ export default class GameController {
         loggedIn: loggedIn,
         reviews: reviews,
         averageStars: averageStars,
-        gametags: gametags
+        gametags: gametags,
+        tags: tags
       },
     });
   };
@@ -434,6 +437,7 @@ export default class GameController {
       redirect: "/login",
     });
   };
+
   // Reusable function I made since we need to show message at every unauthorized action (when logged in)
   goToError = async (res: Response) => {
     await res.send({
