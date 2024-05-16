@@ -129,6 +129,7 @@ export default class Game {
 			
 		return result.map(row => row.description);
 	}
+
 	
 
 	static async readTop3Rated( sql: postgres.Sql<any> ): Promise<Game[]>

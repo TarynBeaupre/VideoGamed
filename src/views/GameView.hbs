@@ -15,10 +15,24 @@
       <h3>Description:</h3>
       <p>{{ game.description }} </p>
       <h3>Tags</h3>
+      
+    </div>
+    <div>
       {{#each gametags}}
         <p class="tag">{{this}}</p>
       {{/each}}
-      <button>Add tag</button>
+
+      <form action="/action_page.php">
+      <div class="add-tag">
+        <select>
+        {{#each tags}} 
+          <option value="{{this.props.description}}">{{this.props.description}}</option>
+        {{/each}}
+        </select>
+        <br><br>
+        <button>Add tag</button>
+      </div>
+      </form>
     </div>
     <div class="game-list-buttons">
       <form action="/wishlist" method="POST">
@@ -79,5 +93,6 @@
 	</div>
 		{{/each}}
 {{/unless}}
+
 
 {{> Footer}}   
