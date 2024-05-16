@@ -137,14 +137,21 @@ export default class ReviewController {
 		if (gameId && userId){
 			let review = await Review.getSpecificReview(this.sql, userId, Number(gameId))
 			if (!review){
-				await res.send({
-					statusCode: StatusCode.OK,
-						message: "Going to leave review",
-						template: "LeaveReviewView",
-						payload: {
-							gameId : gameId
-						},
-				});
+				let game = await Game.getPlayedGame(this.sql, userId, Number(gameId))
+				if (!game){
+					this.goToError(res, "You need to add this game to your played games before reviewing it.")
+				}
+				else{
+					await res.send({
+						statusCode: StatusCode.OK,
+							message: "Going to leave review",
+							template: "LeaveReviewView",
+							payload: {
+								gameId : gameId
+							},
+					});
+				}
+
 			}
 			else{
 				this.goToError(res, "You have already left a review for this game.")

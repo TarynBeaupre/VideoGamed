@@ -230,6 +230,24 @@ export default class Game {
 		
 
 	}
+	static async getPlayedGame( sql: postgres.Sql<any>, userId: number, gameId: number)
+	{
+		const connection = await sql.reserve();
+
+		const [row] = await connection<GameProps[]>`
+		SELECT * FROM played_games WHERE user_id = ${userId} AND played_game_id = ${gameId};
+		`;
+
+		await connection.release();
+		
+		if (!row){
+			return null
+		}
+
+		return new Game(sql, convertToCase(snakeToCamel, row) as GameProps)
+	
+	}
+
 
 
 }
