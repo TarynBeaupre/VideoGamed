@@ -15,8 +15,8 @@
       <h3>Description:</h3>
       <p>{{ game.description }} </p>
       <h3>Tags</h3>
-      {{#each gametag}}
-      <p class="tag">{{this.description}}</p>
+      {{#each gametags}}
+        <p class="tag">{{this}}</p>
       {{/each}}
       <button>Add tag</button>
     </div>

@@ -197,7 +197,10 @@ INSERT INTO tag(description) VALUES('Windows');
 INSERT INTO tag(description) VALUES('MacOS');
 INSERT INTO tag(description) VALUES('Mobile');
 
-INSERT INTO gametag()
+INSERT INTO gametag(tag_id, game_id) VALUES(5, 1);
+INSERT INTO gametag(tag_id, game_id) VALUES(6, 1);
+INSERT INTO gametag(tag_id, game_id) VALUES(7, 1);
+
 
 
 

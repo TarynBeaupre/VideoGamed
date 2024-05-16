@@ -214,6 +214,13 @@ h1, h2, h3, h4 {
   justify-content: space-between;
 }
 
+.tag {
+  background-color: aqua;
+  border-radius: 25px;
+  padding: 5px;
+  width: fit-content;
+}
+
 
 /* Home page */
 .search{
