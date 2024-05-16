@@ -9,7 +9,7 @@ import Session from "../auth/SessionManager";
 import Cookie from "../auth/Cookie";
 import { InvalidCredentialsError } from "../models/User";
 import { check } from "prettier";
-
+import Game from "../models/Game";
 
 /**
  * Controller for handling Todo CRUD operations.
@@ -165,7 +165,8 @@ export default class ReviewController {
 			let gameId = req.body.gameId
 			let userId = req.session.get("userId");
 			let props: ReviewProps = { userId: userId, title: req.body.title, likes: 0, review: req.body.review, stars: req.body.stars, reviewedGameId: Number(gameId)};
-			let review = await Review.create(this.sql,props )
+			await Review.create(this.sql,props )
+			await Game.addStars(this.sql, gameId, req.body.stars)
 			// Successfully created user account, direct to login page
 			await res.send({
 				statusCode: StatusCode.Created,

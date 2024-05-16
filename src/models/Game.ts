@@ -202,6 +202,19 @@ export default class Game {
 				new Game(sql, convertToCase(snakeToCamel, row) as GameProps)
 		);
 	}
+	static async addStars( sql: postgres.Sql<any>, gameId: number, stars: number)
+	{
+		const connection = await sql.reserve();
+		// Changed this query to make sure we only get the games with this user id
+		await connection<GameProps[]>`
+		UPDATE games SET total_stars = total_stars + ${stars} WHERE id = ${gameId}
+		RETURNING *; 
+		`;
+
+		await connection.release();
+		
+
+	}
 
 
 }
