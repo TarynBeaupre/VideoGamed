@@ -191,7 +191,7 @@ export default class AuthController {
 						statusCode: StatusCode.OK,
 						redirect: "/home",
 						message:"Logged in successfully!",
-						payload: {user: user.props}
+						payload: {user: user.props, loggedIn: true}
 					});
 		
 			}

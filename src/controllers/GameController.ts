@@ -10,6 +10,7 @@ import SessionManager from "../auth/SessionManager";
 import Session from "../auth/SessionManager";
 import Cookie from "../auth/Cookie";
 import User, { InvalidCredentialsError } from "../models/User";
+import { threadId } from "worker_threads";
 
 /**
  * Controller for handling Todo CRUD operations.
@@ -60,60 +61,60 @@ export default class GameController {
 
     try {
       games = await Game.readAll(this.sql);
+      const gamesList = games.map((game) => {
+        return {
+          ...game.props,
+        };
+      });
+  
+      let loggedIn: Boolean = this.checkIfLoggedIn(req, res);
+      await res.send({
+        statusCode: StatusCode.OK,
+        message: "Game list retrieved",
+        payload: {
+          title: "Game List",
+          games: gamesList,
+          loggedIn: loggedIn,
+        },
+        template: "SearchView",
+      });
+  
     } catch (error) {
-      const message = `Error while getting games list: ${error}`;
-      console.error(message);
+      this.goToError(res,"There was an error getting your games list. Try again.")
     }
 
-    const gamesList = games.map((game) => {
-      return {
-        ...game.props,
-      };
-    });
-
-    let loggedIn: Boolean = this.checkIfLoggedIn(req, res);
-    await res.send({
-      statusCode: StatusCode.OK,
-      message: "Game list retrieved",
-      payload: {
-        title: "Game List",
-        games: gamesList,
-        loggedIn: loggedIn,
-      },
-      template: "SearchView",
-    });
-
+    
   };
   getFilteredGamesList = async (req: Request, res: Response) => {
     let games: Game[] = [];
 
     try {
       games = await Game.readAll(this.sql);
+      const gamesList = games.map((game) => {
+        return {
+          ...game.props,
+        };
+      });
+  
+      let searchedGame = req.body.search
+      let filteredGamesList = gamesList.filter((game) => game.title.toUpperCase().includes(searchedGame.toUpperCase()))
+  
+      let loggedIn: Boolean = this.checkIfLoggedIn(req, res);
+      await res.send({
+        statusCode: StatusCode.OK,
+        message: "Game list retrieved",
+        payload: {
+          title: "Game List",
+          games: filteredGamesList,
+          loggedIn: loggedIn,
+        },
+        template: "SearchView",
+      });
     } catch (error) {
-      const message = `Error while getting games list: ${error}`;
-      console.error(message);
+      this.goToError(res,"There was an error getting your games list. Try again.")
     }
 
-    const gamesList = games.map((game) => {
-      return {
-        ...game.props,
-      };
-    });
-
-    let searchedGame = req.body.search
-    let filteredGamesList = gamesList.filter((game) => game.title.toUpperCase().includes(searchedGame.toUpperCase()))
-
-    let loggedIn: Boolean = this.checkIfLoggedIn(req, res);
-    await res.send({
-      statusCode: StatusCode.OK,
-      message: "Game list retrieved",
-      payload: {
-        title: "Game List",
-        games: filteredGamesList,
-        loggedIn: loggedIn,
-      },
-      template: "SearchView",
-    });
+   
   };
   getWishList = async (req: Request, res: Response) => {
     let loggedIn: Boolean = this.checkIfLoggedIn(req, res);
@@ -128,27 +129,27 @@ export default class GameController {
 
           try {
             games = await Game.readWishlist(this.sql, userId);
+            const wishlist = games.map((game) => {
+              return {
+                ...game.props,
+              };
+            });
+  
+            await res.send({
+              statusCode: StatusCode.OK,
+              message: "Game list retrieved",
+              payload: {
+                title: "Wishlist",
+                wishlist: wishlist,
+                loggedIn: loggedIn,
+              },
+              template: "WishlistView",
+            });
           } catch (error) {
-            const message = `Error while getting wishlist: ${error}`;
-            console.error(message);
+            this.goToError(res,"There was an error getting your wishlist. Try again.")
           }
 
-          const wishlist = games.map((game) => {
-            return {
-              ...game.props,
-            };
-          });
 
-          await res.send({
-            statusCode: StatusCode.OK,
-            message: "Game list retrieved",
-            payload: {
-              title: "Wishlist",
-              wishlist: wishlist,
-              loggedIn: loggedIn,
-            },
-            template: "WishlistView",
-          });
         }
       }
     }
@@ -179,12 +180,10 @@ export default class GameController {
 
             try {
               await Game.addWishlist(this.sql, userId, gameId);
+              this.getWishList(req, res);
             } catch (error) {
-              const message = `Error while getting wishlist: ${error}`;
-              console.error(message);
+              this.goToError(res,"There was an error adding this game to your wishlist. Try again.")
             }
-
-            this.getWishList(req, res);
           }
         }
       }
@@ -208,12 +207,11 @@ export default class GameController {
 
             try {
               await Game.deleteWishlist(this.sql, userId, gameId);
+              
+               this.getWishList(req, res);
             } catch (error) {
-              const message = `Error while deleting from wishlist: ${error}`;
-              console.error(message);
+              this.goToError(res,"There was an error removing this game from your wishlist. Try again.")
             }
-
-            this.getWishList(req, res);
           }
         }
       }
@@ -233,11 +231,7 @@ export default class GameController {
 
           try {
             games = await Game.readPlayedList(this.sql, userId);
-          } catch (error) {
-            const message = `Error while getting played list: ${error}`;
-            console.error(message);
-          }
-
+            
           const played = games.map((game) => {
             return {
               ...game.props,
@@ -254,6 +248,11 @@ export default class GameController {
             },
             template: "PlayedGamesView",
           });
+
+          } catch (error) {
+            this.goToError(res,"There was an error getting your played list. Try again.")
+          }
+
         }
       }
     }
@@ -281,8 +280,7 @@ export default class GameController {
               }
               await Game.addPlayedList(this.sql, userId, gameId);
             } catch (error) {
-              const message = `Error while adding to played list: ${error}`;
-              console.error(message);
+              this.goToError(res,"There was an error adding this game to your played list. Try again.")
             }
 
             this.getPlayedList(req, res);
@@ -310,12 +308,11 @@ export default class GameController {
 
             try {
               await Game.deletePlayed(this.sql, userId, gameId);
+              this.getPlayedList(req, res);
             } catch (error) {
-              const message = `Error while deleting a game from played list: ${error}`;
-              console.error(message);
+              this.goToError(res,"There was an error deleting this game from your played list. Try again.")
             }
 
-            this.getPlayedList(req, res);
           }
         }
       }
@@ -341,7 +338,7 @@ export default class GameController {
 
     game = await Game.read(this.sql, id);
     if (!game) {
-      this.goToError(res);
+      this.goToError(res, "A game with this ID was not found.");
       return;
     }
 
@@ -372,41 +369,22 @@ export default class GameController {
     let recentGames: Game[] | null = null;
 
     popularGames = await Game.readTop3Rated(this.sql);
-    if (!popularGames) {
-      this.goToError(res);
-      return;
-    }
     recentGames = await Game.readTop3Recent(this.sql);
-    if (!recentGames) {
-      this.goToError(res);
-      return;
-    }
 
     let loggedIn: Boolean = this.checkIfLoggedIn(req, res);
-    if (loggedIn){
-      await res.send({
-        statusCode: StatusCode.OK,
-        message: "Todo retrieved",
-        template: "HomeView",
-        payload: {
+
+    await res.send({
+      statusCode: StatusCode.OK,
+      message: "HomePage retrieved",
+      template: "HomeView",
+      payload: {
           top3popular: popularGames,
           top3recent: recentGames,
           loggedIn: loggedIn,
-        },
-      });
-    }
-    else {
-      await res.send({
-        statusCode: StatusCode.OK,
-        message: "Todo retrieved",
-        template: "HomeView",
-        payload: {
-          top3popular: popularGames,
-          top3recent: recentGames,
-          loggedIn: loggedIn,
-        },
-      });
-    }
+      }
+    });
+    
+
   };
 
   // Reusable function I made since we need to check if the user is logged in before every action
@@ -439,11 +417,11 @@ export default class GameController {
   };
 
   // Reusable function I made since we need to show message at every unauthorized action (when logged in)
-  goToError = async (res: Response) => {
+  goToError = async (res: Response, message: string) => {
     await res.send({
       statusCode: StatusCode.Forbidden,
       message: "Unauthorized action.",
-      payload: { error: "You are not allowed to do this" },
+      payload: { error: message },
       template: "ErrorView",
     });
   };
