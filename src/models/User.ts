@@ -41,6 +41,7 @@ export default class User {
 		const [row] = await sql<UserProps[]>`
 			SELECT * FROM users 
 			WHERE email = ${props.email};
+
 		`;
 		// If there was something returned, the email already exists in the database, so throw error
 		if (row){

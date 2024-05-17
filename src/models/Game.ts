@@ -248,7 +248,23 @@ export default class Game {
 		return new Game(sql, convertToCase(snakeToCamel, row) as GameProps)
 	
 	}
+	static async create( sql: postgres.Sql<any>, props: GameProps)
+	{
+		const connection = await sql.reserve();
 
+		const [row] = await sql<GameProps[]>`
+		INSERT INTO games
+			${sql(convertToCase(camelToSnake, props))}
+		RETURNING *;`;
+		await connection.release();
+
+		if (!row){
+			return null
+		}
+
+		return new Game(sql, convertToCase(snakeToCamel, row) as GameProps)
+	
+	}
 
 
 }

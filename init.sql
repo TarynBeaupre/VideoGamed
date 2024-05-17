@@ -19,7 +19,7 @@ CREATE TABLE games (
     id SERIAL PRIMARY KEY,
     title VARCHAR(100) NOT NULL,
     description TEXT NOT NULL,
-    cover VARCHAR(300),
+    cover VARCHAR(300) DEFAULT 'https://www.huber-online.com/daisy_website_files/_processed_/8/0/csm_no-image_d5c4ab1322.jpg',
     developer VARCHAR(100) NOT NULL,
     release_year SMALLINT NOT NULL,
     total_stars INTEGER DEFAULT 0

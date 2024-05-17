@@ -11,7 +11,7 @@ import {
 describe("CRUD operations", () => {
 	// Set up the connection to the DB.
 	const sql = postgres({
-		database: "MyDB",
+		database: "VideoGamedDB",
 	});
 
 	beforeEach(async () => {
@@ -25,7 +25,7 @@ describe("CRUD operations", () => {
 	 */
 	afterEach(async () => {
 		// Replace the table_name with the name of the table(s) you want to clean up.
-		const tables = ["table_name"];
+		const tables = ["users", "games", "reviews", "played_games"];
 
 		try {
 			for (const table of tables) {

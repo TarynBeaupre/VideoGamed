@@ -21,8 +21,7 @@ test.beforeEach(async () => {
  */
 test.afterEach(async ({ page }) => {
 	// Replace the table_name with the name of the table(s) you want to clean up.
-	const tables = ["table_name"];
-
+	const tables = ["users", "games", "reviews", "played_games"];
 	try {
 		for (const table of tables) {
 			await sql.unsafe(`DELETE FROM ${table}`);
