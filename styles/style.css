@@ -216,7 +216,7 @@ h1, h2, h3, h4 {
 }
 
 .tag {
-  background-color: aqua;
+  background-color: rgb(32, 179, 179);
   border-radius: 25px;
   padding: 5px;
   width: fit-content;
@@ -232,12 +232,12 @@ h1, h2, h3, h4 {
 
 /* profile */
 .statsBox{
-  background-color: blueviolet;
+  background-color: rgb(173, 63, 206, 1);
 }
 .userInfo{ 
   display:flex;
   flex-direction: row;
-  background-color: blueviolet;
+  background-color: rgb(17, 15, 33);;
   border-radius: 10px;
   align-items: center;
   padding:5px;
@@ -248,11 +248,11 @@ h1, h2, h3, h4 {
   height: 30px;
   background-color: rgb(17, 15, 33);
   margin: 10px;
-  background-color: blueviolet;
+  background-color: rgb(173, 63, 206, 1);
 }
 
 .userInfo h3{
-  background-color: blueviolet;
+  background-color: rgb(17, 15, 33);
   margin: 10px;
 }
 
