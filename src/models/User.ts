@@ -7,6 +7,8 @@ export interface UserProps {
 	password: string;
 	createdAt: Date;
 	editedAt?: Date;
+	pfp?: string;
+	username?: string;
 }
 
 export class DuplicateEmailError extends Error {
@@ -48,12 +50,12 @@ export default class User {
 			throw new DuplicateEmailError();}
 		// If not, proceed with creating the user
 		else{
-			await sql<UserProps[]>`
+			const [row] = await sql<UserProps[]>`
 			INSERT INTO users
 				${sql(convertToCase(camelToSnake, props))}
 			RETURNING *;`;
 			await connection.release();
-			return new User(sql,props);
+			return new User(sql, convertToCase(snakeToCamel, row) as UserProps);
 		}
 
 	
@@ -116,7 +118,6 @@ export default class User {
 			WHERE id = ${userId}; 
 		`;
 
-		// Else, return the new user
 		return new User(sql, convertToCase(snakeToCamel, row) as UserProps);
 	}
 	static async updatePfp(
@@ -132,7 +133,7 @@ export default class User {
 			WHERE id = ${userId}; 
 		`;
 
-		// Else, return the new user
+
 		return new User(sql, convertToCase(snakeToCamel, row) as UserProps);
 	}
 

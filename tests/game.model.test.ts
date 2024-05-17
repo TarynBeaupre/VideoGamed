@@ -52,7 +52,7 @@ describe("Game CRUD operations", () => {
 	 * @see https://www.postgresql.org/docs/13/sql-altersequence.html
 	 */
 	afterEach(async () => {
-		const tables = ["users", "games", "reviews", "played_games"];
+		const tables = ["users", "games", "reviews"];
 
 		try {
 			for (const table of tables) {
