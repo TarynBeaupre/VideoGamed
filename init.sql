@@ -61,6 +61,12 @@ CREATE TABLE gametag (
     game_id INTEGER REFERENCES games(id) ON DELETE CASCADE
 );
 
+DROP TABLE IF EXISTS liked_review;
+CREATE TABLE liked_review (
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+    review_id INTEGER REFERENCES reviews(id) ON DELETE CASCADE
+);
+
 --Games--
 --INSERT INTO games(title, description, cover, developer, release_year, total_stars)
 --VALUES ('title',

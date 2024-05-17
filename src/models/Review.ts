@@ -5,6 +5,7 @@ import {
 	createUTCDate,
 	snakeToCamel,
 } from "../utils";
+import { a } from "vitest/dist/suite-a18diDsI";
 
 export interface ReviewPropsWithPicture {
 	id?: number;
@@ -49,11 +50,26 @@ export default class Review{
         return new Review(sql, convertToCase(snakeToCamel, row) as ReviewProps);
     }       
 
-    static async getSpecificReview(sql: postgres.Sql<any>, userId:number, gameId: number){
+    static async getSpecificReviewWithId(sql: postgres.Sql<any>, review_id:number){
         const connection = await sql.reserve();
         const [row] = await connection<ReviewProps[]>`
         SELECT * FROM
-        reviews where user_id=${userId} AND reviewed_game_id=${gameId};
+        reviews where id = ${review_id};
+        `;
+
+        await connection.release();
+        if (!row){
+            return null;
+        }
+
+        return new Review(sql, convertToCase(snakeToCamel, row) as ReviewProps);
+    }       
+
+    static async getSpecificReview(sql: postgres.Sql<any>, user_id:number, game_id: number){
+        const connection = await sql.reserve();
+        const [row] = await connection<ReviewProps[]>`
+        SELECT * FROM
+        reviews where user_id = ${user_id} and reviewed_game_id = ${game_id};
         `;
 
         await connection.release();
@@ -98,22 +114,33 @@ export default class Review{
 
 
     static async addReviewLike(
-        sql: postgres.Sql<any>, game_id:number
+        sql: postgres.Sql<any>, review_id: number, user_id: number
     ){
         const connection = await sql.reserve();
         try{
-            const [row] = await connection<ReviewProps[]>`
-            UPDATE reviews SET likes = likes+1 WHERE id = ${game_id}
-            RETURNING *;
-            `;           
-            await connection.release();
-            if (!row){
-            return null;
+            const alreadyLiked = await connection<ReviewProps[]>`
+                SELECT * FROM liked_review WHERE user_id = ${user_id} AND
+                review_id = ${review_id};
+            `;
+            if (alreadyLiked.length == 0){
+                await connection<ReviewProps[]>`
+                    INSERT INTO liked_review(user_id, review_id)
+                    VALUES(${user_id}, ${review_id});
+                `;
+
+                const [row] = await connection<ReviewProps[]>`
+                UPDATE reviews SET likes = likes+1 WHERE id = ${review_id}
+                RETURNING *;
+                `;
+    
+                await connection.release();
+                
             }
-            return new Review(sql, convertToCase(snakeToCamel, row) as ReviewProps);
+            else {
+                return;
+            }
         }
         catch{
-            console.log(game_id)
             return null;
         }
 

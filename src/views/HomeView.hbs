@@ -1,6 +1,10 @@
 {{> Header }}
 
-<h1>Welcome!</h1>
+{{#if loggedIn}}
+<h1>Welcome Back!</h1>
+{{else}}
+<h1>Welcome, Guest!</h1>
+{{/if}}
 
 <div class="topGames">
 	<div>

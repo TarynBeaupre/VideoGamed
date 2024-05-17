@@ -45,6 +45,7 @@ export default class GameController {
     router.delete("/wishlist/:id", this.removeWishlist);
     router.delete("/played/:id", this.removePlayedList);
     router.post("/search", this.getFilteredGamesList);
+    router.post("/games/:gamesId", this.addGameTag);
   }
 
   /**
@@ -262,6 +263,60 @@ export default class GameController {
 	}
   };
 
+  addGameTag = async (req: Request, res: Response) => {
+    let loggedIn: Boolean = this.checkIfLoggedIn(req, res);
+    if (loggedIn) {
+      let sessionManager: SessionManager = SessionManager.getInstance();
+      let sessionId = req.findCookie("session_id")?.value;
+      if (sessionId) {
+        let session = sessionManager.get(sessionId);
+        if (session && session.data["userId"]) {
+            const gameId = req.body.gameId;
+            const tagId = req.body.tagId;
+
+            if (!tagId) {
+              return;
+            }
+
+            try {
+              await Tag.addGameTag(this.sql, tagId, gameId);
+              this.getGame(req, res);
+
+            } catch (error) {
+              await res.send({
+                statusCode: StatusCode.InternalServerError,
+                message: "Error while adding tag.",
+                template: "ErrorView",
+                payload: {
+                  loggedIn: loggedIn,
+                },
+              })
+            }
+          } else {
+            await res.send({
+              statusCode: StatusCode.Unauthorized,
+              message: "Unauthorized: Session or user not found.",
+              template: "ErrorView",
+              payload: {
+                loggedIn: loggedIn,
+              },
+            })
+          }
+        } else {
+          await res.send({
+            statusCode: StatusCode.Unauthorized,
+            message: "Unauthorized: No session ID found.",
+            template: "ErrorView",
+            payload: {
+              loggedIn: loggedIn,
+            },
+          })
+        }
+      } else {
+        this.goToLogin(res);
+      }
+  };
+
   addPlayedList = async (req: Request, res: Response) => {
     let loggedIn: Boolean = this.checkIfLoggedIn(req, res);
     if (loggedIn) {
@@ -342,7 +397,7 @@ export default class GameController {
       return;
     }
 
-    gametags = await Game.readTagDescriptionsForGame(this.sql, id);
+    gametags = await Tag.readTagDescriptionsForGame(this.sql, id);
     tags = await Tag.readAll(this.sql);
     reviews = await Review.readGameReviews(this.sql, id);
     averageStars = await Review.readAverageStar(this.sql, id);

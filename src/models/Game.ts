@@ -116,19 +116,7 @@ export default class Game {
 		else {return row;}
 	}
 
-	static async readTagDescriptionsForGame(sql: postgres.Sql<any>, gameId: number): Promise<string[]> {
-		const connection = await sql.reserve();
 	
-			const result = await connection<{ description: string }[]>`
-				SELECT t.description
-				FROM tag t
-				JOIN gametag gt ON t.id = gt.tag_id
-				WHERE gt.game_id = ${gameId};
-			`;
-			connection.release();
-			
-		return result.map(row => row.description);
-	}
 
 	
 

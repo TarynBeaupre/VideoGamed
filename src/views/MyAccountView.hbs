@@ -28,15 +28,15 @@
 		{{#each reviews}}
 			<div class="review-container" review-id="{{ this.props.id }}">
         <h3> {{ this.props.username }} </h3> 
-        <div class="review-title">
+        <div class="review-title" href="">
           <div>
-          {{ this.props.title }}
+            <a href="/games/{{ this.props.reviewedGameId }}">{{ this.props.title }}</a>
           </div>
         </div>
         <div class="review-text">
-          <div>
+          <p>
           {{ this.props.review }}
-          </div>
+          </p>
         </div>
 
         <!-- REVIEWS -->

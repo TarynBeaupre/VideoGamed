@@ -22,15 +22,16 @@
         <p class="tag">{{this}}</p>
       {{/each}}
 
-      <form action="/action_page.php">
+      <form method="POST" action="/games/{{game.id}}">
       <div class="add-tag">
-        <select>
-        {{#each tags}} 
-          <option value="{{this.props.description}}">{{this.props.description}}</option>
-        {{/each}}
+        <input type="hidden" name="gameId" value="{{game.id}}">
+        <select name="tagId">
+          {{#each tags}} 
+            <option value="{{this.props.id}}">{{this.props.description}}</option>
+          {{/each}}
         </select>
         <br><br>
-        <button>Add tag</button>
+        <button type="submit">Add tag</button>
       </div>
       </form>
     </div>
@@ -79,13 +80,14 @@
 
         <!-- REVIEWS -->
         <div class="review-likes">
-          <p>⭐️⭐️⭐️⭐️⭐️</p>
+          <p>{{this.props.stars}}⭐️</p>
           <div class="review-likes">
-            <img class="like-logo" src="../../images/icons/thumbs-up(2).svg">
-            <p>{{this.props.likes}}</p>
           <form method="POST" action="/games/like/{{this.props.id}}" id="register-form">
-	        <input type="submit" value="Like" id="register-form-submit-button">
+            <button type="submit" class="like-button">
+              <img class="like-logo" src="../../images/icons/thumbs-up(2).svg">
+            </button>
           </form>
+            <p>{{this.props.likes}}</p>
           </div>
         </div>
 

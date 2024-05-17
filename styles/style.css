@@ -135,6 +135,7 @@ h1, h2, h3, h4 {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  margin: 0px 8px 0px 8px;
 }
 
 .review-profile-container, .game-review, .game-info {
@@ -215,7 +216,7 @@ h1, h2, h3, h4 {
 }
 
 .tag {
-  background-color: aqua;
+  background-color: rgb(32, 179, 179);
   border-radius: 25px;
   padding: 5px;
   width: fit-content;
@@ -231,35 +232,46 @@ h1, h2, h3, h4 {
 
 /* profile */
 .statsBox{
-  background-color: blueviolet;
+  background-color: rgb(173, 63, 206, 1);
 }
 .userInfo{ 
   display:flex;
   flex-direction: row;
-  background-color: blueviolet;
+  background-color: rgb(17, 15, 33);;
   border-radius: 10px;
   align-items: center;
   padding:5px;
 
 }
+
 .userInfo input{
   height: 30px;
   background-color: rgb(17, 15, 33);
   margin: 10px;
-  background-color: blueviolet;
+  background-color: rgb(173, 63, 206, 1);
 }
+
 .userInfo h3{
-  background-color: blueviolet;
+  background-color: rgb(17, 15, 33);
   margin: 10px;
 }
+
 #search{
   margin: 10px;
   width: 800px;
   height: 40px;
   border-radius: 5px;
 }
+
 #login-form input{
   margin: 5px;
 
+}
+
+.like-button {
+  background-color: rgb(30, 27, 54);
+  height: fit-content;
+  padding: 0;
+  margin: 0;
 }
 
