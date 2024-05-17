@@ -80,13 +80,14 @@
 
         <!-- REVIEWS -->
         <div class="review-likes">
-          <p>⭐️⭐️⭐️⭐️⭐️</p>
+          <p>{{this.props.stars}}⭐️</p>
           <div class="review-likes">
-            <img class="like-logo" src="../../images/icons/thumbs-up(2).svg">
-            <p>{{this.props.likes}}</p>
           <form method="POST" action="/games/like/{{this.props.id}}" id="register-form">
-	          <input type="submit" value="Like" id="register-form-submit-button">
+            <button type="submit" class="like-button">
+              <img class="like-logo" src="../../images/icons/thumbs-up(2).svg">
+            </button>
           </form>
+            <p>{{this.props.likes}}</p>
           </div>
         </div>
 
