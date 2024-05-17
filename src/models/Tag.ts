@@ -12,7 +12,7 @@ export interface GameTagProps {
 }
 
 export interface TagProps {
-	tagId: number;
+	id: number;
 	description: string;
 }
 
@@ -25,8 +25,8 @@ export default class Tag {
 	static async readAll(sql: postgres.Sql<any>){
         const connection = await sql.reserve();
     
-            const rows = await connection<{ description: string }[]>`
-                SELECT t.description
+            const rows = await connection<TagProps[]>`
+                SELECT *
                 FROM tag t;
             `;
             connection.release();
@@ -36,4 +36,34 @@ export default class Tag {
                 new Tag(sql, convertToCase(snakeToCamel, row) as TagProps)
         );
     }
+
+	static async addGameTag(sql: postgres.Sql<any>, tag_id: number, game_id: number){
+		const connection = await sql.reserve();
+			const tags = await connection<TagProps[]>`
+				SELECT * FROM gametag 
+				WHERE tag_id = ${tag_id} and game_id = ${game_id};
+			`;
+			if (tags.length == 0){
+				await connection<TagProps[]>`
+					INSERT INTO gametag(tag_id, game_id)
+					VALUES(${tag_id}, ${game_id});
+				`;
+			}
+            connection.release();
+        
+	}
+
+	static async readTagDescriptionsForGame(sql: postgres.Sql<any>, gameId: number): Promise<string[]> {
+		const connection = await sql.reserve();
+	
+			const result = await connection<{ description: string }[]>`
+				SELECT t.description
+				FROM tag t
+				JOIN gametag gt ON t.id = gt.tag_id
+				WHERE gt.game_id = ${gameId};
+			`;
+			connection.release();
+			
+		return result.map(row => row.description);
+	}
 }

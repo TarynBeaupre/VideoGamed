@@ -126,9 +126,9 @@ export default class ReviewController {
 		else{
 			this.goToLogin(res)
 		}
-
-	
 	};
+
+
 	goToReview = async (req: Request, res: Response) => {
 		if (this.checkIfLoggedIn(req,res)){
 		let params = req.getSearchParams()
@@ -185,11 +185,8 @@ export default class ReviewController {
 		else{
 			this.goToLogin(res)
 		}
-
-
-
-	
 	};
+
 	goToError = async (res: Response, message: string) => {
 		
 		await res.send({

@@ -5,6 +5,7 @@ import {
 	createUTCDate,
 	snakeToCamel,
 } from "../utils";
+import { a } from "vitest/dist/suite-a18diDsI";
 
 export interface ReviewPropsWithPicture {
 	id?: number;
@@ -98,19 +99,31 @@ export default class Review{
 
 
     static async addReviewLike(
-        sql: postgres.Sql<any>, game_id:number
+        sql: postgres.Sql<any>, game_id:number, review_id: number, user_id: number
     ){
         const connection = await sql.reserve();
         try{
-            const [row] = await connection<ReviewProps[]>`
-            UPDATE reviews SET likes = likes+1 WHERE id = ${game_id}
-            RETURNING *;
-            `;           
-            await connection.release();
-            if (!row){
-            return null;
+            const [alreadyLiked] = await connection<ReviewProps[]>`
+                SELECT 1 FROM liked_review WHERE user_id = ${user_id} AND
+                review_id = ${review_id};
+            `;
+            if (!alreadyLiked){
+                await connection<ReviewProps[]>`
+                    INSERT INTO liked_review(user_id, review_id)
+                    VALUES(${user_id}, ${review_id});
+                `
+
+                const [row] = await connection<ReviewProps[]>`
+                UPDATE reviews SET likes = likes+1 WHERE id = ${game_id}
+                RETURNING *;
+                `;
+    
+                await connection.release();
+                if (!row){
+                return null;
+                }
+                return new Review(sql, convertToCase(snakeToCamel, row) as ReviewProps);
             }
-            return new Review(sql, convertToCase(snakeToCamel, row) as ReviewProps);
         }
         catch{
             console.log(game_id)
