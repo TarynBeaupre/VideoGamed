@@ -175,4 +175,23 @@ export default class Review{
         );
     }       
 
+    static async readTop3Liked(sql: postgres.Sql<any>){
+        const connection = await sql.reserve();
+        const rows = await connection<ReviewPropsWithPicture[]>`
+        SELECT reviews.*, users.pfp AS user_pfp, users.username as username
+        FROM reviews
+        INNER JOIN users ON reviews.user_id = users.id
+        ORDER BY likes DESC
+        LIMIT 3`;
+
+        await connection.release();
+        if (!rows){
+            return null;
+        }
+
+        return rows.map (
+            (row) => new Review(sql, convertToCase(snakeToCamel, row) as ReviewPropsWithPicture)
+        );;
+    }     
+
 }

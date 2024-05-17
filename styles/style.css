@@ -226,10 +226,29 @@ h1, h2, h3, h4 {
 /* Home page */
 .search{
   display: flex;
-  flex-direction: row;
+  flex-direction: row;  
   align-items: center
 }
+.top3ReviewsHeading{
+  text-align: center;
+}
 
+.welcomeHeading{
+  text-align: center;
+  color:rgb(209, 172, 244);
+  margin:10px;
+}
+.reviewsBox{
+  display: flex;
+  flex-direction:row;
+  justify-content: space-evenly;
+}
+
+.oneReview{
+  width:300px;
+  border-color: blueviolet;
+  border-style: solid;
+}
 /* profile */
 .statsBox{
   background-color: rgb(173, 63, 206, 1);

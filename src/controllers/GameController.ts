@@ -422,9 +422,11 @@ export default class GameController {
     const id = req.getId();
     let popularGames: Game[] | null = null;
     let recentGames: Game[] | null = null;
+    let popularReviews: Review[] | null = null; 
 
     popularGames = await Game.readTop3Rated(this.sql);
     recentGames = await Game.readTop3Recent(this.sql);
+    popularReviews = await Review.readTop3Liked(this.sql)
 
     let loggedIn: Boolean = this.checkIfLoggedIn(req, res);
 
@@ -435,6 +437,7 @@ export default class GameController {
       payload: {
           top3popular: popularGames,
           top3recent: recentGames,
+          top3reviews: popularReviews,
           loggedIn: loggedIn,
       }
     });

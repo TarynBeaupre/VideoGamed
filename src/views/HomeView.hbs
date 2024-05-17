@@ -1,9 +1,9 @@
 {{> Header }}
 
 {{#if loggedIn}}
-<h1>Welcome Back!</h1>
+<h1 class="welcomeHeading">Welcome Back!</h1>
 {{else}}
-<h1>Welcome, Guest!</h1>
+<h1 class="welcomeHeading">Welcome, Guest!</h1>
 {{/if}}
 
 <div class="topGames">
@@ -53,5 +53,52 @@
 	</ol>
 	{{/unless}}
 	</div>
+	
 </div>
+<h2 class="top3ReviewsHeading"> Most liked reviews: </h2>
+<div>
+{{#unless top3reviews}}
+	<br><p>No reviews yet, be the first!</p>
+{{else}}
+<br>
+<div class="reviewsBox">
+		{{#each top3reviews}}
+	<div id="reviews" class="oneReview">
+			<div class="review-container" review-id="{{ this.props.id }}">
+        <div class="review-profile-container">
+          <img class="review-profile-pic" src="{{ this.props.userPfp }}">
+          <h3> {{ this.props.username }} </h3> 
+        </div>
+        <div class="review-title">
+          <div>
+          {{ this.props.title }}
+          </div>
+        </div>
+        <div class="review-text">
+          <p>
+          {{ this.props.review }}
+          </p>
+        </div>
+
+        <!-- REVIEWS -->
+        <div class="review-likes">
+          <p>{{this.props.stars}}⭐️</p>
+          <div class="review-likes">
+          <form method="POST" action="/games/like/{{this.props.id}}" id="register-form">
+            <button type="submit" class="like-button">
+              <img class="like-logo" src="../../images/icons/thumbs-up(2).svg">
+            </button>
+          </form>
+            <p>{{this.props.likes}}</p>
+          </div>
+        </div>
+
+			</div>
+	</div>
+		{{/each}}
+
+</div>
+
+{{/unless}}
+	</div>
 {{> Footer }}
