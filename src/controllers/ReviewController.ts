@@ -10,6 +10,7 @@ import Cookie from "../auth/Cookie";
 import { InvalidCredentialsError } from "../models/User";
 import { check } from "prettier";
 import Game from "../models/Game";
+import GameController from "./GameController";
 
 /**
  * Controller for handling Todo CRUD operations.
@@ -34,9 +35,10 @@ export default class ReviewController {
 	registerRoutes(router: Router) {
 		// Any routes that include an `:id` parameter should be registered last.
 		//router.get("/", this.getReview);
-		router.post("/games/like/:id", this.likeReview)
 		router.get("/review", this.goToReview)
 		router.post("/review", this.leaveReview)
+
+		router.post("/games/like/:id", this.likeReview)
 	}
 
 
@@ -107,13 +109,11 @@ export default class ReviewController {
 	likeReview = async (req: Request, res: Response) => {
 		if (this.checkIfLoggedIn(req,res)){
 			const id = req.getReviewId();
-			let review: Review | null = null;
-		
-			review = await Review.addReviewLike(this.sql, id);
-			if (!review){
-				this.goToError(res,"An error occurred. Please try again.")
-			}
-			else{
+			let review = await Review.getSpecificReviewWithId(this.sql, id)
+			if (review){
+				//let gameId = req.body.gameId;
+				let userId = req.session.get("userId");
+				await Review.addReviewLike(this.sql, id, userId);
 				let loggedIn: Boolean = this.checkIfLoggedIn(req,res);
 				await res.send({
 					statusCode: StatusCode.OK,
@@ -121,7 +121,6 @@ export default class ReviewController {
 					redirect:"/games/" + review.props.reviewedGameId
 				});
 			}
-
 		}
 		else{
 			this.goToLogin(res)
