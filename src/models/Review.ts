@@ -148,16 +148,21 @@ export default class Review{
     static async create(
 		sql: postgres.Sql<any>,
 		props: ReviewProps,
-	): Promise<Review> {
+	) {
 
 		const connection = await sql.reserve();
 
-		await sql<ReviewProps[]>`
+        const [row] = await sql<ReviewProps[]>`
 			INSERT INTO reviews
 				${sql(convertToCase(camelToSnake, props))}
 			RETURNING *;`;
 			await connection.release();
-			return new Review(sql,props);
+        
+            if (!row){
+                return null
+            }
+		
+        return new Review(sql, convertToCase(snakeToCamel, row) as ReviewProps)
 
 	
 	}
@@ -170,6 +175,9 @@ export default class Review{
         WHERE reviews.user_id=${userId};`;
         
         await connection.release();
+        if (!rows){
+            return null;
+        }
         return rows.map (
             (row) => new Review(sql, convertToCase(snakeToCamel, row) as ReviewPropsWithPicture)
         );

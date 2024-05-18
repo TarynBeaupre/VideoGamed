@@ -67,7 +67,7 @@ describe("Game CRUD operations", () => {
 	});
 
 	test("Game was created.", async () => {
-		// Create a new todo.
+		// Create a new game.
 		const game = await createGame({ title: "Test Game 2" });
             expect(game?.props.title).toBe("Test Game 2");
             expect(game?.props.description).toBe("This is a test game");
