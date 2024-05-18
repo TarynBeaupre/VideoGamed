@@ -112,6 +112,7 @@ export default class User {
 	): Promise<User> {
 
 		const connection = await sql.reserve();
+		newUser.trim();
 		const [row] = await connection<UserProps[]>`
 			UPDATE users
 			SET username = ${newUser}

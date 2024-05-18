@@ -3,6 +3,8 @@ import { getPath } from "../src/url";
 import postgres from "postgres";
 import { createUTCDate } from "../src/utils";
 import User, { UserProps } from "../src/models/User";
+import { makeHttpRequest } from "./client";
+
 
 let sql = postgres({
 	database: "VideoGamedDB",
@@ -181,3 +183,57 @@ test("User's email was remembered.", async ({ page }) => {
 	expect(emailCookie).toBeTruthy();
 	expect(emailCookie?.value).toBe("chippichippi@email.com");
 });
+
+test("Retrieve user's profile.", async ({page}) => {
+	/*
+	await page.goto(`/login`);
+
+	await page.fill('form#login-form input[name="email"]', "chippichippi@email.com");
+	await page.fill('form#login-form input[name="password"]', "chippi123");
+	await page.check('form#login-form input[name="remember"]');
+	await page.click("form#login-form #login-form-submit-button");*/
+	makeHttpRequest("POST", `/login`, {email:"chippichippi@email.com", password:"chippi123"});
+
+    await page.goto(getPath('/profile'));
+    await page.waitForSelector('.userInfo');
+    
+    const username = await page.textContent('.userInfo h3');
+    expect(username).toBe('Chippi');
+});
+
+/*
+test("Update username.", async ({page}) => {
+	await page.goto(`/login`);
+
+	await page.fill('form#login-form input[name="email"]', "chippichippi@email.com");
+	await page.fill('form#login-form input[name="password"]', "chippi123");
+	await page.check('form#login-form input[name="remember"]');
+	await page.click("form#login-form #login-form-submit-button");
+
+    await page.goto(getPath('profile'));
+    await page.click('#update-username-button input[type="submit"]');
+    //await page.waitForSelector('form#update-username-form');
+
+    await page.fill('form#update-username-form #newUsername', 'Chippi');
+    await page.click('form#update-username-form #update-username-form-button');
+
+    await page.goto(getPath('profile'));
+    const updatedUsername = await page.$('#username');
+    expect(updatedUsername?.innerText()).toBe('Chippi');
+});
+
+test("Update profile picture.", async ({page}) => {
+	await page.goto(getPath('profile'));
+    await page.click('#update-pfp-button input[type="submit"]');
+    await page.waitForSelector('form#update-pfp-form');
+
+    const newPfp = 'https://i.pinimg.com/564x/af/0a/0a/af0a0af3734b37b50e7f48eacb3b09a6.jpg';
+    await page.fill('form#update-pfp-form input[name="newPfp"]', newPfp);
+    await page.click('form#update-pfp-form input[type="submit"]');
+
+	//expect(await page?.url()).toBe(getPath("profile"));
+
+    await page.goto(getPath('profile'));
+    const updatedPfpSrc = await page.getAttribute('.userInfo img.review-profile-pic', 'src');
+    expect(updatedPfpSrc).toBe(newPfp);
+});*/
