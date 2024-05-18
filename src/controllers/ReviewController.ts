@@ -35,76 +35,11 @@ export default class ReviewController {
 	registerRoutes(router: Router) {
 		// Any routes that include an `:id` parameter should be registered last.
 		//router.get("/", this.getReview);
-		router.get("/review", this.goToReview)
-		router.post("/review", this.leaveReview)
+		router.get("/review", this.goToReviewPage)
+		router.post("/review", this.createReview)
 
 		router.post("/games/like/:id", this.likeReview)
 	}
-
-
-
-		/**
-	 * MIGHT WANNA DELETE THIS
-	 */
-	getReviewsList = async (req: Request, res: Response) => {
-		
-		let reviews: Review[] = [];
-
-		try {
-
-
-		} catch (error) {
-			const message = `Error while getting reviews list: ${error}`;
-			console.error(message);
-		}
-
-		const reviewsList = reviews.map((review) => {
-			return {
-				...review.props,
-			};
-		});
-
-        let loggedIn: Boolean = this.checkIfLoggedIn(req,res);
-		await res.send({
-			statusCode: StatusCode.OK,
-			message: "Review list retrieved",
-			payload: {
-				title: "Review List",
-				reviews: reviewsList,
-				loggedIn: loggedIn
-			},
-			template: "LeaveReviewView",
-		});
-	};
-
-	/**
-	 * MIGHT WANNA DELETE THIS
-	 */
-	getReview = async (req: Request, res: Response) => {
-			const id = req.getId();
-			let review: Review | null = null;
-	
-			review = await Review.read(this.sql, id);
-			if (!review){
-				//this.goToError(res)
-				return;
-			}
-			
-            let loggedIn: Boolean = this.checkIfLoggedIn(req,res);
-			await res.send({
-				statusCode: StatusCode.OK,
-				message: "Review retrieved",
-				template: "ReviewsView",
-				payload: {
-					review: review?.props,
-					loggedIn: loggedIn,
-				},
-			});
-		
-		
-	};
-
-
 
 	likeReview = async (req: Request, res: Response) => {
 		if (this.checkIfLoggedIn(req,res)){
@@ -128,7 +63,7 @@ export default class ReviewController {
 	};
 
 
-	goToReview = async (req: Request, res: Response) => {
+	goToReviewPage = async (req: Request, res: Response) => {
 		if (this.checkIfLoggedIn(req,res)){
 		let params = req.getSearchParams()
 		let gameId = params.get("gameId")
@@ -165,7 +100,7 @@ export default class ReviewController {
 	};
 	
 
-	leaveReview = async (req: Request, res: Response) => {
+	createReview = async (req: Request, res: Response) => {
 		if (this.checkIfLoggedIn(req,res)){
 			
 			let gameId = req.body.gameId

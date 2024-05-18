@@ -83,9 +83,9 @@ export default class GameController {
     } catch (error) {
       this.goToError(res,"There was an error getting your games list. Try again.")
     }
-
-    
   };
+
+
   getFilteredGamesList = async (req: Request, res: Response) => {
     let games: Game[] = [];
 
@@ -114,9 +114,8 @@ export default class GameController {
     } catch (error) {
       this.goToError(res,"There was an error getting your games list. Try again.")
     }
-
-   
   };
+
   getWishList = async (req: Request, res: Response) => {
     let loggedIn: Boolean = this.checkIfLoggedIn(req, res);
     if (loggedIn) {
@@ -405,7 +404,7 @@ export default class GameController {
     let loggedIn: Boolean = this.checkIfLoggedIn(req, res);
     await res.send({
       statusCode: StatusCode.OK,
-      message: "Todo retrieved",
+      message: "Game retrieved",
       template: "GameView",
       payload: {
         game: game?.props,
