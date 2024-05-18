@@ -115,7 +115,8 @@ export default class User {
 		const [row] = await connection<UserProps[]>`
 			UPDATE users
 			SET username = ${newUser}
-			WHERE id = ${userId}; 
+			WHERE id = ${userId}
+			RETURNING *; 
 		`;
 
 		return new User(sql, convertToCase(snakeToCamel, row) as UserProps);
@@ -130,7 +131,8 @@ export default class User {
 		const [row] = await connection<UserProps[]>`
 			UPDATE users
 			SET pfp = ${newPfp}
-			WHERE id = ${userId}; 
+			WHERE id = ${userId}
+			RETURNING *; ; 
 		`;
 
 

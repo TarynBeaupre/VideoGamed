@@ -34,7 +34,6 @@ describe("User CRUD operations", () => {
 			email: props.email || "user@email.com",
 			password: props.password || "password",
 			createdAt: props.createdAt || createUTCDate(),
-			// isAdmin: props.isAdmin || false, // Uncomment if implementing admin feature.
 		});
 	};
 
@@ -90,9 +89,29 @@ describe("User CRUD operations", () => {
 		}).rejects.toThrow("Invalid credentials.");
 	});
 
-	test("User changed username ", async () => {
+	
+	test("User has default profile picture", async () => {
+		const user = await createUser({ password: "Password123" });
+		expect(user.props.pfp).toBe("https://i.pinimg.com/564x/af/0a/0a/af0a0af3734b37b50e7f48eacb3b09a6.jpg");
+	});
+
+	test("User has default username", async () => {
 		const user = await createUser({ password: "Password123" });
 		expect(user.props.username).toBe("Guest");
+	});
+
+	
+	test("User has updated profile picture", async () => {
+		const user = await createUser({ password: "Password123" });
+		const newUser = await User.updatePfp(sql, user.props.id!, "testPfp")
+		expect(newUser.props.pfp).toBe("testPfp");
+	});
+
+		
+	test("User has updated username", async () => {
+		const user = await createUser({ password: "Password123" });
+		const newUser = await User.updateUsername(sql, user.props.id!, "newUsername")
+		expect(newUser.props.username).toBe("newUsername");
 	});
 
 	
