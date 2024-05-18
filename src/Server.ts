@@ -67,7 +67,7 @@ export default class Server {
 			res.send({
 				statusCode: StatusCode.OK,
 				message: "Homepage!",
-				redirect: "/home"
+				redirect: "/home",
 			});
 		});
 	}

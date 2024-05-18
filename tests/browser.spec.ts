@@ -35,7 +35,15 @@ test.afterEach(async ({ page }) => {
 });
 
 test("Homepage was retrieved successfully", async ({ page }) => {
-	await page.goto("/");
-
-	expect(await page?.title()).toBe("My App");
+	await page.goto("/home");
+	const welcomeTextElement = await page.$(".welcomeHeading");
+	expect(await welcomeTextElement?.innerText()).toBe("Welcome, Guest!");
 });
+
+/*test("Homepage was retrieved successfully when logged in", async ({ page }) => {
+	await page.goto("/home");
+	const welcomeTextElement = await page.$(".welcomeHeading");
+	expect(await welcomeTextElement?.innerText()).toBe("Welcome Back!");
+});*/
+
+

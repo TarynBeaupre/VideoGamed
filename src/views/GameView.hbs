@@ -1,5 +1,5 @@
 {{> Header }}
-<h1> {{ game.title }} </h1>
+<h1 > {{ game.title }} </h1>
 <h2>{{ averageStars }}⭐</h2>
 <p>(Total stars: ⭐{{game.totalStars}})</p><br>
 <div class="game-info">
@@ -65,29 +65,29 @@
 			<div class="review-container" review-id="{{ this.props.id }}">
         <div class="review-profile-container">
           <img class="review-profile-pic" src="{{ this.props.userPfp }}">
-          <h3> {{ this.props.username }} </h3> 
+          <h3 id="review-username"> {{ this.props.username }} </h3> 
         </div>
         <div class="review-title">
-          <div>
+          <div id="review-title">
           {{ this.props.title }}
           </div>
         </div>
         <div class="review-text">
-          <p>
+          <p id="review-text">
           {{ this.props.review }}
           </p>
         </div>
 
         <!-- REVIEWS -->
         <div class="review-likes">
-          <p>{{this.props.stars}}⭐️</p>
+          <p id="review-stars">{{this.props.stars}}⭐️</p>
           <div class="review-likes">
           <form method="POST" action="/games/like/{{this.props.id}}" id="register-form">
             <button type="submit" class="like-button">
               <img class="like-logo" src="../../images/icons/thumbs-up(2).svg">
             </button>
           </form>
-            <p>{{this.props.likes}}</p>
+            <p id="review-likes">{{this.props.likes}}</p>
           </div>
         </div>
 
