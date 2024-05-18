@@ -28,6 +28,7 @@ describe("Game CRUD operations", () => {
 			description: props.description || "This is a test game",
             developer: props.developer || "Test Dev",
 			releaseYear: props.releaseYear || 2024,
+			totalStars: props.totalStars || 0
 		};
 
 		return await Game.create(sql, gameProps);
@@ -100,19 +101,121 @@ describe("Game CRUD operations", () => {
 	});
 
 	test("Games were listed.", async () => {
-		// Create a new todo.
+
 		const game1 = await createGame();
 		const game2 = await createGame();
 		const game3 = await createGame();
 
-		// List all the todos from the database.
 		const games = await Game.readAll(sql);
 
-		// Check if the created todo is in the list of todos.
 		expect(games).toBeInstanceOf(Array);
 		expect(games).toContainEqual(game1);
 		expect(games).toContainEqual(game2);
 		expect(games).toContainEqual(game3);
+	});
+
+	
+	test("Top 3 rated games were listed", async () => {
+
+		const game = await createGame({title: "Test1", totalStars: 10});
+		const game1 = await createGame({title: "Test2", totalStars: 1});
+		const game2 = await createGame({title: "Test3", totalStars: 100});
+
+
+		const top3 = await Game.readTop3Rated(sql)
+
+		expect(top3).toBeDefined();
+
+        expect(top3![0].props.title).toBe("Test3");
+        expect(top3![1].props.title).toBe("Test1");
+        expect(top3![2].props.title).toBe("Test2");
+
+
+	});
+
+	test("Top 3 recent games were listed", async () => {
+
+		const game = await createGame({title: "Test1", releaseYear: 2005});
+		const game1 = await createGame({title: "Test2", releaseYear: 2500});
+		const game2 = await createGame({title: "Test3", releaseYear: 2010});
+
+
+		const top3 = await Game.readTop3Recent(sql)
+
+		expect(top3).toBeDefined();
+
+        expect(top3![0].props.title).toBe("Test2");
+        expect(top3![1].props.title).toBe("Test3");
+        expect(top3![2].props.title).toBe("Test1");
+
+
+	});
+
+	test("Game stars were added", async () => {
+
+        const game = await createGame({ title: "Test Game For Review" });
+
+        const beforeStars = game?.props.totalStars
+
+        await Game.addStars(sql,game?.props.id!,5)
+
+        const afterReview = await Game.read(sql,game?.props.id!)
+
+        const afterStars = afterReview!.props.totalStars
+
+        expect(beforeStars).toBe(0);
+        expect(afterStars).toBe(5);
+
+        
+	});
+
+	test("Game was added to played games", async () => {
+
+        const game = await createGame({ title: "Test Game For Review" });
+		const user = await createUser({email: "newUser@email.com"});
+
+		await Game.addPlayedList(sql,user.props.id!, game?.props.id!)
+		const playedGame = await Game.getPlayedGame(sql,user.props.id!, game?.props.id!)
+
+		expect(playedGame).toBeDefined()
+        
+	});
+	test("Game was deleted from played games", async () => {
+
+        const game = await createGame({ title: "Test Game For Review" });
+		const user = await createUser({email: "newUser@email.com"});
+
+		await Game.addPlayedList(sql,user.props.id!, game?.props.id!)
+		await Game.deletePlayed(sql,user.props.id!, game?.props.id!)
+		const playedGame = await Game.getPlayedGame(sql,user.props.id!, game?.props.id!)
+
+		expect(playedGame).toBeNull()
+        
+	});
+
+	test("Game was added to wishlist", async () => {
+
+        const game = await createGame({ title: "Test Game For Review" });
+		const user = await createUser({email: "newUser@email.com"});
+
+		await Game.addWishlist(sql,user.props.id!, game?.props.id!)
+		const wishlistGame = await Game.readWishlistGameFromId(sql,user.props.id!, game?.props.id!)
+
+		expect(wishlistGame).toBeTruthy()
+        
+	});
+
+	test("Game was deleted from wishlist", async () => {
+
+        const game = await createGame({ title: "Test Game For Review" });
+		const user = await createUser({email: "newUser@email.com"});
+
+		await Game.addWishlist(sql,user.props.id!, game?.props.id!)
+		await Game.deleteWishlist(sql,user.props.id!, game?.props.id!)
+		const wishlistedGame = await Game.readWishlistGameFromId(sql,user.props.id!, game?.props.id!)
+
+		expect(wishlistedGame).toBeNull()
+        
 	});
 
 

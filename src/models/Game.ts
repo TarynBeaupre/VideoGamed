@@ -42,7 +42,7 @@ export default class Game {
 		sql: postgres.Sql<any>
 	): Promise<Game[]> {
 		const connection = await sql.reserve();
-		// Changed this query to make sure we only get the games with this user id
+
 		const rows = await connection<GameProps[]>`
 			SELECT *
 			FROM games;
