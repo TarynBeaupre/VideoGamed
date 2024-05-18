@@ -37,17 +37,6 @@ const createUser = async (props: Partial<UserProps> = {}) => {
 	});
 };
 
-const createGame = async(props: Partial<GameProps> = {}) => {
-    return await Game.create(sql, {
-        title: props.title || "Test Game",
-        description: props.description || "test game",
-        cover: props.cover || "https://www.huber-online.com/daisy_website_files/_processed_/8/0/csm_no-image_d5c4ab1322.jpg",
-        developer: props.developer || "Developer",
-        releaseYear: props.releaseYear || 2005,
-        totalStars: props.totalStars || 50
-    });
-};
-
 //Testing login with a hardcoded user
 const login = async (
 	page: Page,
