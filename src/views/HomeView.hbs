@@ -64,16 +64,16 @@
 <div class="reviewsBox">
 		{{#each top3reviews}}
 	<div id="reviews" class="oneReview">
-			<div class="review-container" review-id="{{ this.props.id }}">
-        <div class="review-profile-container">
-          <img class="review-profile-pic" src="{{ this.props.userPfp }}">
-          <h3> {{ this.props.username }} </h3> 
-        </div>
-        <div class="review-title">
-          <div id="top3review-titles">
-          {{ this.props.title }}
-          </div>
-        </div>
+		<div class="review-container" review-id="{{ this.props.id }}">
+			<div class="review-profile-container">
+				<img class="review-profile-pic" src="{{ this.props.userPfp }}">
+				<h3> {{ this.props.username }} </h3> 
+			</div>
+			<div class="review-title">
+				<div id="top3review-titles">
+					{{ this.props.title }}
+				</div>
+			</div>
         <div class="review-text">
           <p>
           {{ this.props.review }}
