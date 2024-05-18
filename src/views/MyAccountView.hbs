@@ -3,7 +3,7 @@
 <h4> My Profile </h4>
 <div class="userInfo">
 <img class="review-profile-pic" src="{{ user.pfp }}">
-<h3> {{ user.username }} </h3> 
+<h3 id="username"> {{ user.username }} </h3> 
 <form method="GET" action="{{ path 'updateUsername' }}" id="update-username-button">
 	<input type="submit" value="Change username" id="register-form-submit-button">
 </form>
@@ -41,7 +41,7 @@
 
         <!-- REVIEWS -->
         <div class="review-likes">
-          <p>⭐️⭐️⭐️⭐️⭐️</p>
+          <p>{{this.props.stars}}⭐️</p>
           <div class="review-likes">
             <img class="like-logo" src="../../images/icons/thumbs-up(2).svg">
             <p>{{this.props.likes}}</p>
