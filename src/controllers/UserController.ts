@@ -29,6 +29,9 @@ export default class UserController {
 		router.post("/updateUsername", this.updateUsername)
 		router.get("/updatePfp", this.goToUpdatePfp)
 		router.post("/updatePfp", this.updatePfp)
+		router.get("/profile", this.goToUserProfile)
+
+		router.get("/profile/:id", this.goToUserProfile)
 
 	}
 
@@ -100,29 +103,37 @@ export default class UserController {
 	};
 	goToUserProfile = async (req: Request, res: Response) => 
 	{
-		let sessionManager: SessionManager = SessionManager.getInstance();
-		let sessionId = req.findCookie("session_id")?.value;
-		if (sessionId){
-			let session = sessionManager.get(sessionId);
-			if (session){
-				if (session.data["userId"]){
-					let userId = session.data["userId"]
-					let user = await User.getUser(this.sql, userId)
-					let reviews = await Review.readUserReviews(this.sql, userId)
-					let reviewsCount = reviews.length;
-					let likesCount = 0
-					reviews.forEach((review) => likesCount += review.props.likes )
-					await res.send({
-						statusCode: StatusCode.OK,
-						payload: { user: user.props, reviews: reviews, reviewsCount: reviewsCount, likesReceived: likesCount, loggedIn: true },
-						template: "MyAccountView",
-						message: "User found"
-					});
-
-				}
-
+		let loggedIn: Boolean = this.checkIfLoggedIn(req, res);
+		if (loggedIn) {
+			let userId = req.session.get("userId")
+			let requestedUserId = req.getId()
+			if (Number.isNaN(requestedUserId)){
+				requestedUserId = userId
 			}
+			if (userId == requestedUserId){
+				let user = await User.getUser(this.sql, userId)
+				let reviews = await Review.readUserReviews(this.sql, userId)
+				let reviewsCount = reviews?.length;
+				let likesCount = 0
+				reviews?.forEach((review) => likesCount += review.props.likes )
+				await res.send({
+					statusCode: StatusCode.OK,
+					payload: { user: user.props, reviews: reviews, reviewsCount: reviewsCount, likesReceived: likesCount, loggedIn: true },
+					template: "MyAccountView",
+					message: "User found"
+				});
+			}
+
+			else{
+				this.goToError(res, "You cannot access a profile that is not yours.")
+			}}
+		else{
+			this.goToLogin(res)
 		}
+
+	
+	
+		
 	}
 	updateUsername = async (req: Request, res: Response) => 
 	{
@@ -182,4 +193,38 @@ export default class UserController {
 				});
 	
 			}
+
+			goToError = async (res: Response, message: string) => {
+				await res.send({
+				  statusCode: StatusCode.Forbidden,
+				  message: "Unauthorized action.",
+				  payload: { error: message },
+				  template: "ErrorView",
+				});
+			  };
+			  checkIfLoggedIn = (req: Request, res: Response) => {
+				let sessionManager: SessionManager = SessionManager.getInstance();
+				let sessionId = req.findCookie("session_id")?.value;
+				if (sessionId) {
+				  let session = sessionManager.get(sessionId);
+				  if (session) {
+					if (session.data["userId"]) {
+					  return true;
+					}
+				  }
+				}
+				// this.goToLogin(res);
+				return false;
+			  };
+			 
+			
+			  // Reusable function I made since we need to direct back to login at every unauthorized action.
+			  goToLogin = async (res: Response) => {
+				await res.send({
+				  statusCode: StatusCode.Unauthorized,
+				  message: "User needs to login before doing this action.",
+				  redirect: "/login",
+				});
+			  };
+			
 }

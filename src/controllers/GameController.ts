@@ -34,17 +34,22 @@ export default class GameController {
    */
   registerRoutes(router: Router) {
     router.get("/home", this.getHomePage);
-    router.get("/games", this.getGamesList);
     router.get("/wishlist", this.getWishList);
     router.get("/played", this.getPlayedList);
+    router.get("/games", this.getGamesList)
+
     router.post("/wishlist", this.addWishlist);
     router.post("/played", this.addPlayedList);
-    
+    router.post("/search", this.getFilteredGamesList);
+
     // Any routes that include an `:id` parameter should be registered last.
+    router.get("/played/:id", this.getPlayedList);
     router.get("/games/:gamesId", this.getGame);
+    router.get("/wishlist/:id", this.getWishList);
+
+  
     router.delete("/wishlist/:id", this.removeWishlist);
     router.delete("/played/:id", this.removePlayedList);
-    router.post("/search", this.getFilteredGamesList);
     router.post("/games/:gamesId", this.addGameTag);
   }
 
@@ -69,16 +74,33 @@ export default class GameController {
       });
   
       let loggedIn: Boolean = this.checkIfLoggedIn(req, res);
-      await res.send({
-        statusCode: StatusCode.OK,
-        message: "Game list retrieved",
-        payload: {
-          title: "Game List",
-          games: gamesList,
-          loggedIn: loggedIn,
-        },
-        template: "SearchView",
-      });
+      if (loggedIn){
+        await res.send({
+          statusCode: StatusCode.OK,
+          message: "Game list retrieved",
+          payload: {
+            title: "Game List",
+            games: gamesList,
+            loggedIn: loggedIn,
+            userId: req.session.get("userId")
+            
+          },
+          template: "SearchView",
+        });
+      }
+      else{
+        await res.send({
+          statusCode: StatusCode.OK,
+          message: "Game list retrieved",
+          payload: {
+            title: "Game List",
+            games: gamesList,
+            loggedIn: loggedIn,
+          },
+          template: "SearchView",
+        });
+      }
+
   
     } catch (error) {
       this.goToError(res,"There was an error getting your games list. Try again.")
@@ -101,16 +123,32 @@ export default class GameController {
       let filteredGamesList = gamesList.filter((game) => game.title.toUpperCase().includes(searchedGame.toUpperCase()))
   
       let loggedIn: Boolean = this.checkIfLoggedIn(req, res);
-      await res.send({
-        statusCode: StatusCode.OK,
-        message: "Game list retrieved",
-        payload: {
-          title: "Game List",
-          games: filteredGamesList,
-          loggedIn: loggedIn,
-        },
-        template: "SearchView",
-      });
+      if (loggedIn){
+        await res.send({
+          statusCode: StatusCode.OK,
+          message: "Game list retrieved",
+          payload: {
+            title: "Game List",
+            games: filteredGamesList,
+            loggedIn: loggedIn,
+            userId: req.session.get("userId")
+          },
+          template: "SearchView",
+        });
+      }
+      else{
+        await res.send({
+          statusCode: StatusCode.OK,
+          message: "Game list retrieved",
+          payload: {
+            title: "Game List",
+            games: filteredGamesList,
+            loggedIn: loggedIn,
+          },
+          template: "SearchView",
+        });
+      }
+ 
     } catch (error) {
       this.goToError(res,"There was an error getting your games list. Try again.")
     }
@@ -119,63 +157,51 @@ export default class GameController {
   getWishList = async (req: Request, res: Response) => {
     let loggedIn: Boolean = this.checkIfLoggedIn(req, res);
     if (loggedIn) {
-      let sessionManager: SessionManager = SessionManager.getInstance();
-      let sessionId = req.findCookie("session_id")?.value;
-      if (sessionId) {
-        let session = sessionManager.get(sessionId);
-        if (session && session.data["userId"]) {
-          let userId = session.data["userId"];
-          let games: Game[] = [];
+      let userId = req.session.get("userId")
+      let wishlistId = req.getId()
+      if (Number.isNaN(wishlistId)){
+				wishlistId = userId
+			}
+      if (userId == wishlistId){
+        let games: Game[] = [];
 
-          try {
-            games = await Game.readWishlist(this.sql, userId);
-            const wishlist = games.map((game) => {
-              return {
-                ...game.props,
-              };
-            });
-  
-            await res.send({
-              statusCode: StatusCode.OK,
-              message: "Game list retrieved",
-              payload: {
-                title: "Wishlist",
-                wishlist: wishlist,
-                loggedIn: loggedIn,
-              },
-              template: "WishlistView",
-            });
-          } catch (error) {
-            this.goToError(res,"There was an error getting your wishlist. Try again.")
-          }
+        games = await Game.readWishlist(this.sql, userId);
+        const wishlist = games.map((game) => {
+          return {
+            ...game.props,
+          };
+        });
 
-
-        }
+        await res.send({
+          statusCode: StatusCode.OK,
+          message: "Game list retrieved",
+          payload: {
+            title: "Wishlist",
+            wishlist: wishlist,
+            loggedIn: loggedIn,
+            userId: userId
+          },
+          template: "WishlistView",
+        });
+      }
+      else{
+        this.goToError(res, "You cannot access a wishlist that is not yours.")
       }
     }
-	else {
-		await res.send({
-			statusCode: StatusCode.Redirect,
-			message: "Login",
-			payload: {
-				title: "Login",
-			},
-			template: "LoginView"
-		});
+    else{
+      this.goToLogin(res)
+    }
+      
+    }
 
-	}
-  };
+	
+  
 
   addWishlist = async (req: Request, res: Response) => {
     let loggedIn: Boolean = this.checkIfLoggedIn(req, res);
     if (loggedIn) {
-      let sessionManager: SessionManager = SessionManager.getInstance();
-      let sessionId = req.findCookie("session_id")?.value;
-      if (sessionId) {
-        let session = sessionManager.get(sessionId);
-        if (session) {
-          if (session.data["userId"]) {
-            let userId = session.data["userId"];
+
+            let userId = req.session.get("userId")
             const gameId = req.body.gameId;
 
             try {
@@ -184,9 +210,9 @@ export default class GameController {
             } catch (error) {
               this.goToError(res,"There was an error adding this game to your wishlist. Try again.")
             }
-          }
-        }
-      }
+          
+        
+      
     }
     else{
       this.goToLogin(res)
@@ -196,13 +222,7 @@ export default class GameController {
   removeWishlist = async (req: Request, res: Response) => {
     let loggedIn: Boolean = this.checkIfLoggedIn(req, res);
     if (loggedIn) {
-      let sessionManager: SessionManager = SessionManager.getInstance();
-      let sessionId = req.findCookie("session_id")?.value;
-      if (sessionId) {
-        let session = sessionManager.get(sessionId);
-        if (session) {
-          if (session.data["userId"]) {
-            let userId = session.data["userId"];
+      let userId = req.session.get("userId")
             const gameId = req.body.gameId;
 
             try {
@@ -212,54 +232,53 @@ export default class GameController {
             } catch (error) {
               this.goToError(res,"There was an error removing this game from your wishlist. Try again.")
             }
-          }
-        }
+          
+        
       }
     }
-  };
+  
 
   getPlayedList = async (req: Request, res: Response) => {
     let loggedIn: Boolean = this.checkIfLoggedIn(req, res);
     if (loggedIn) {
-      let sessionManager: SessionManager = SessionManager.getInstance();
-      let sessionId = req.findCookie("session_id")?.value;
-      if (sessionId) {
-        let session = sessionManager.get(sessionId);
-        if (session && session.data["userId"]) {
-          let userId = session.data["userId"];
-          let games: Game[] = [];
+      let userId = req.session.get("userId")
+      let requestedUserId = req.getId()
+      if (Number.isNaN(requestedUserId)){
+				requestedUserId = userId
+			}
+      if (userId == requestedUserId){
+        let games: Game[] = [];
 
-          try {
-            games = await Game.readPlayedList(this.sql, userId);
-            
-          const played = games.map((game) => {
-            return {
-              ...game.props,
-            };
-          });
+        games = await Game.readPlayedList(this.sql, userId);
+        const played = games.map((game) => {
+          return {
+            ...game.props,
+          };
+        });
 
-          await res.send({
-            statusCode: StatusCode.OK,
-            message: "Game list retrieved",
-            payload: {
-              title: "PlayedList",
-              played: played,
-              loggedIn: loggedIn,
-            },
-            template: "PlayedGamesView",
-          });
-
-          } catch (error) {
-            this.goToError(res,"There was an error getting your played list. Try again.")
-          }
-
-        }
+        await res.send({
+          statusCode: StatusCode.OK,
+          message: "Game list retrieved",
+          payload: {
+            title: "PlayedList",
+            played: played,
+            loggedIn: loggedIn,
+            userId: userId
+          },
+          template: "PlayedGamesView",
+        });
+      }
+      else{
+        this.goToError(res, "You cannot access a wishlist that is not yours.")
       }
     }
-	else {
-    this.goToLogin(res);
+    else{
+      this.goToLogin(res)
+    }
+    
+   
 
-	}
+	
   };
 
   addGameTag = async (req: Request, res: Response) => {
@@ -402,19 +421,39 @@ export default class GameController {
     averageStars = await Review.readAverageStar(this.sql, id);
 
     let loggedIn: Boolean = this.checkIfLoggedIn(req, res);
-    await res.send({
-      statusCode: StatusCode.OK,
-      message: "Game retrieved",
-      template: "GameView",
-      payload: {
-        game: game?.props,
-        loggedIn: loggedIn,
-        reviews: reviews,
-        averageStars: averageStars,
-        gametags: gametags,
-        tags: tags
-      },
-    });
+    if (loggedIn){
+      await res.send({
+        statusCode: StatusCode.OK,
+        message: "Game retrieved",
+        template: "GameView",
+        payload: {
+          game: game?.props,
+          loggedIn: loggedIn,
+          userId: req.session.get("userId"),
+          reviews: reviews,
+          averageStars: averageStars,
+          gametags: gametags,
+          tags: tags
+        },
+      });
+
+    }
+    else{
+      await res.send({
+        statusCode: StatusCode.OK,
+        message: "Game retrieved",
+        template: "GameView",
+        payload: {
+          game: game?.props,
+          loggedIn: loggedIn,
+          reviews: reviews,
+          averageStars: averageStars,
+          gametags: gametags,
+          tags: tags
+        },
+      });
+    }
+
   };
 
   getHomePage = async (req: Request, res: Response) => {
@@ -429,18 +468,34 @@ export default class GameController {
 
     let loggedIn: Boolean = this.checkIfLoggedIn(req, res);
 
-    await res.send({
-      statusCode: StatusCode.OK,
-      message: "HomePage retrieved",
-      template: "HomeView",
-      payload: {
-          top3popular: popularGames,
-          top3recent: recentGames,
-          top3reviews: popularReviews,
-          loggedIn: loggedIn,
-      }
-    });
-    
+    if (loggedIn){
+      await res.send({
+        statusCode: StatusCode.OK,
+        message: "HomePage retrieved",
+        template: "HomeView",
+        payload: {
+            top3popular: popularGames,
+            top3recent: recentGames,
+            top3reviews: popularReviews,
+            loggedIn: loggedIn,
+            userId: req.session.get("userId")
+        }
+      });
+    }
+    else{
+      await res.send({
+        statusCode: StatusCode.OK,
+        message: "HomePage retrieved",
+        template: "HomeView",
+        payload: {
+            top3popular: popularGames,
+            top3recent: recentGames,
+            top3reviews: popularReviews,
+            loggedIn: loggedIn,
+        }
+      });
+    }
+
 
   };
 
