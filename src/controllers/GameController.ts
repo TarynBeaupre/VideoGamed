@@ -297,8 +297,23 @@ export default class GameController {
             }
 
             try {
-              await Tag.addGameTag(this.sql, tagId, gameId);
-              this.getGame(req, res);
+              let tagExists = await Tag.readTagsForGame(this.sql, gameId);
+              if (!tagExists){
+                await Tag.addGameTag(this.sql, tagId, gameId);
+                this.getGame(req, res);
+              }
+              else {
+                await res.send({
+                  statusCode: StatusCode.InternalServerError,
+                  message: "Error while adding tag.",
+                  template: "ErrorView",
+                  payload: {
+                    error: "Tag already added.",
+                    loggedIn: loggedIn,
+                  },
+                });
+                return;
+              }
 
             } catch (error) {
               await res.send({
@@ -415,7 +430,7 @@ export default class GameController {
       return;
     }
 
-    gametags = await Tag.readTagDescriptionsForGame(this.sql, id);
+    gametags = await Tag.readTagsForGame(this.sql, id);
     tags = await Tag.readAll(this.sql);
     reviews = await Review.readGameReviews(this.sql, id);
     averageStars = await Review.readAverageStar(this.sql, id);

@@ -53,10 +53,10 @@ export default class Tag {
         
 	}
 
-	static async readTagDescriptionsForGame(sql: postgres.Sql<any>, gameId: number): Promise<string[]> {
+	static async readTagsForGame(sql: postgres.Sql<any>, gameId: number): Promise<Tag[]> {
 		const connection = await sql.reserve();
 	
-			const result = await connection<{ description: string }[]>`
+			const rows = await connection<{ description: string }[]>`
 				SELECT t.description
 				FROM tag t
 				JOIN gametag gt ON t.id = gt.tag_id
@@ -64,6 +64,9 @@ export default class Tag {
 			`;
 			connection.release();
 			
-		return result.map(row => row.description);
+			return rows.map(
+				(row) =>
+					new Tag(sql, convertToCase(snakeToCamel, row) as TagProps)
+			);
 	}
 }

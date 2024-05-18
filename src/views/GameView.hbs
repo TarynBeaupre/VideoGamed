@@ -1,4 +1,5 @@
 {{> Header }}
+<h2 id="error"> {{ error }} </h2>
 <h1 > {{ game.title }} </h1>
 <h2>{{ averageStars }}⭐</h2>
 <p>(Total stars: ⭐{{game.totalStars}})</p><br>
@@ -19,7 +20,7 @@
     </div>
     <div>
       {{#each gametags}}
-        <p class="tag">{{this}}</p>
+        <p class="tag">{{this.props.description}}</p>
       {{/each}}
 
       <form method="POST" action="/games/{{game.id}}">
@@ -27,7 +28,7 @@
         <input type="hidden" name="gameId" value="{{game.id}}">
         <select name="tagId">
           {{#each tags}} 
-            <option value="{{this.props.id}}">{{this.props.description}}</option>
+            <option id="tag-description" value="{{this.props.id}}">{{this.props.description}}</option>
           {{/each}}
         </select>
         <br><br>
