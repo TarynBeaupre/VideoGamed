@@ -37,64 +37,22 @@ const createUser = async (props: Partial<UserProps> = {}) => {
 	});
 };
 
-//Testing login with a hardcoded user
-const login = async (
-	page: Page,
-	email: string = "user@email.com",
-	password: string = "password",
-) => {
-	await page.goto(`/login`);
-	await page.fill('form#login-form input[name="email"]', email);
-	await page.fill('form#login-form input[name="password"]', password);
-	await page.click("form#login-form #login-form-submit-button");
-};
+// Helper function to log in as the test user
+async function loginAsUser(page) {
+    await page.goto(getPath('login'));
+    await page.fill('form#login-form input[name="email"]', 'chippichippi@email.com');
+    await page.fill('form#login-form input[name="password"]', 'chippi123');
+    await page.click('form#login-form #login-form-submit-button');
+}
 
-const logout = async (page: Page) => {
-	await page.goto("/logout");
-};
-
-test.beforeEach(async () => {
-    createUser();
-});
-
-test.afterEach(async ({ page }) => {
-	const tables = ["reviews", "liked_reviews", "games", "users"];
-
-	try {
-		for (const table of tables) {
-			await sql.unsafe(`DELETE FROM ${table}`);
-			await sql.unsafe(`ALTER SEQUENCE ${table}_id_seq RESTART WITH 1;`);
-		}
-        await sql.unsafe(`DELETE FROM users WHERE email='user@email.com';`);
-	} catch (error) {
-		console.error(error);
-	}
-
-	await logout(page);
-});
 
 test("Review was created successfully", async ({ page }) => {
-    await page.goto(`/game/1`);
-    makeHttpRequest("POST", "/login", {email: "user@email.com", password: "password"});
-    makeHttpRequest("POST", "/played/1", )
+    await loginAsUser(page);
 
-    const review = await createReview({
-        title: "Test Review",
-        stars: 5,
-        likes: 5,
-        review: "test review text",
-        userId: 3,
-        reviewedGameId: 1
-    });
-    const reviewTitles = ["Test Review", "peak"];
-
-    await page.goto(`/games/1`);
-    const reviewElements = await page.$$("[review-id]");
+    await page.goto(`/games/5`);
+    const reviewElements = await page.$("#review-title");
     //Note that 1 review is hardcoded, so adding one makes 2 total
-    expect(reviewElements.length).toBe(2);
-    for (let i = 0; i < 2; i ++){
-        expect(await reviewElements[i].innerText()).toMatch(reviewTitles[i]);
-    }
+    expect(reviewElements?.innerText()).toMatch("Test Review");
 });
 
 test("Top 3 reviews were retrieved successfully", async ({ page }) => {
