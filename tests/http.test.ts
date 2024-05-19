@@ -62,7 +62,6 @@ describe("HTTP operations", () => {
 
 		expect(statusCode).toBe(StatusCode.NotFound);
 		expect(Object.keys(body).includes("message")).toBe(true);
-		expect(Object.keys(body).includes("payload")).toBe(false);
 		expect(body.message).toBe("Invalid route: GET /foo");
 	});
 });

@@ -4,6 +4,7 @@ import postgres from "postgres";
 import { createUTCDate } from "../src/utils";
 import User, { UserProps } from "../src/models/User";
 import { makeHttpRequest } from "./client";
+import { Page } from "@playwright/test";
 
 
 let sql = postgres({
@@ -26,18 +27,36 @@ const createUser = async (props: Partial<UserProps> = {}) => {
  * @see https://www.postgresql.org/docs/13/sql-altersequence.html
  */
 
-test.afterEach(async () => {
-	const tables = ["todos", "subtodos", "users"];
+test.afterEach(async ({ page }) => {
 
-	try {
-		for (const table of tables) {
-			await sql.unsafe(`DELETE FROM ${table}`);
-			await sql.unsafe(`ALTER SEQUENCE ${table}_id_seq RESTART WITH 1;`);
-		}
-	} catch (error) {
-		console.error(error);
-	}
+    const tables = ["users"];
+
+    try {
+            await sql.unsafe(`
+            DROP TABLE IF EXISTS users CASCADE; 
+            CREATE TABLE users (
+				id SERIAL PRIMARY KEY,
+				email VARCHAR(100) NOT NULL UNIQUE,
+				username VARCHAR(100) DEFAULT 'Guest',
+				pfp VARCHAR(300) DEFAULT 'https://i.pinimg.com/564x/af/0a/0a/af0a0af3734b37b50e7f48eacb3b09a6.jpg',
+				password VARCHAR(255) NOT NULL,
+				created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+				edited_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );`);
+    } catch (error) {
+        console.error(error);
+    }
+
+
 });
+
+
+const logout = async (page: Page) => {
+
+	await page.click("#logout");
+}
+
+
 
 test("User was registered.", async ({ page }) => {
 	await page.goto(`/register`);
@@ -90,8 +109,16 @@ test("User was not registered with mismatched passwords.", async ({ page }) => {
 
 test("User was logged in.", async ({ page }) => {
 
-	await page.goto(`/`);
+	await page.goto(`/register`);
 
+	await page.fill('form#register-form input[name="email"]', "user2@email.com");
+	await page.fill('form#register-form input[name="password"]', "Password123");
+	await page.fill(
+		'form#register-form input[name="confirmPassword"]',
+		"Password123",
+	);
+	await page.click("form#register-form #register-form-submit-button");
+	
 	let loginElement = await page.$(`div a[href="${getPath("login")}"]`);
 	let logoutElement = await page.$(`div a[href="${getPath("logout")}"]`);
 
@@ -100,8 +127,8 @@ test("User was logged in.", async ({ page }) => {
 
 	await loginElement?.click();
 
-	await page.fill('form#login-form input[name="email"]', "chippichippi@email.com");
-	await page.fill('form#login-form input[name="password"]', "chippi123");
+	await page.fill('form#login-form input[name="email"]', "user2@email.com");
+	await page.fill('form#login-form input[name="password"]', "Password123");
 	await page.click("form#login-form #login-form-submit-button");
 
 	expect(await page?.url()).toBe(getPath("home"));
@@ -141,6 +168,23 @@ test("User was not logged in with incorrect password.", async ({ page }) => {
 });
 
 test("User was logged out.", async ({ page, context }) => {
+	await page.goto(`/register`);
+
+	await page.fill('form#register-form input[name="email"]', "user3@email.com");
+	await page.fill('form#register-form input[name="password"]', "Password123");
+	await page.fill(
+		'form#register-form input[name="confirmPassword"]',
+		"Password123",
+	);
+	await page.click("form#register-form #register-form-submit-button");
+	
+	let loginElement = await page.$(`div a[href="${getPath("login")}"]`);
+	let logoutElement = await page.$(`div a[href="${getPath("logout")}"]`);
+
+	expect(await loginElement).toBeTruthy();
+	expect(await logoutElement).toBeFalsy();
+
+	await loginElement?.click();
 
 	expect((await context.cookies()).length).toBe(0);
 
@@ -148,13 +192,13 @@ test("User was logged out.", async ({ page, context }) => {
 
 	expect((await context.cookies()).length).toBe(1);
 
-	await page.fill('form#login-form input[name="email"]', "chippichippi@email.com");
+	await page.fill('form#login-form input[name="email"]', "user3@email.com");
 	await page.fill('form#login-form input[name="password"]', "chippi123");
 	await page.click("form#login-form #login-form-submit-button");
 
 	expect(await page?.url()).toBe(getPath("home"));
 
-	const logoutElement = await page.$(`div a[href="${getPath("logout")}"]`);
+	logoutElement = await page.$(`div a[href="${getPath("logout")}"]`);
 
 	await logoutElement?.click();
 
@@ -163,7 +207,7 @@ test("User was logged out.", async ({ page, context }) => {
 	const welcomeTextElement = await page.$(".welcomeHeading");
 	expect(await welcomeTextElement?.innerText()).toBe("Welcome, Guest!");
 
-	const loginElement = await page.$(`div a[href="${getPath("login")}"]`);
+	loginElement = await page.$(`div a[href="${getPath("login")}"]`);
 
 	expect(await loginElement).toBeTruthy();
 });
@@ -194,7 +238,7 @@ test("Retrieve user's profile.", async ({page}) => {
 	await page.click("form#login-form #login-form-submit-button");*/
 	makeHttpRequest("POST", `/login`, {email:"chippichippi@email.com", password:"chippi123"});
 
-    await page.goto(getPath('/profile'));
+	makeHttpRequest("GET", `/profile`);
     await page.waitForSelector('.userInfo');
     
     const username = await page.textContent('.userInfo h3');

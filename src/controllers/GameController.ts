@@ -1,6 +1,7 @@
 import Game, { GameProps } from "../models/Game";
 import Review, { ReviewProps } from "../models/Review";
 import Tag, {TagProps} from "../models/Tag";
+import GameTag from "../models/Tag";
 import postgres from "postgres";
 import Request from "../router/Request";
 import Response, { StatusCode } from "../router/Response";
@@ -295,9 +296,8 @@ export default class GameController {
             if (!tagId) {
               return;
             }
-
             try {
-              let tagExists = await Tag.readTagsForGame(this.sql, gameId);
+              let tagExists = await Tag.readSpecificTagForGame(this.sql, gameId, tagId)
               if (!tagExists){
                 await Tag.addGameTag(this.sql, tagId, gameId);
                 this.getGame(req, res);
@@ -422,7 +422,7 @@ export default class GameController {
     let reviews: Review[] | null = [];
     let averageStars: number = 0;
     let tags: Tag[] | null = [];
-    let gametags: string[] = [];
+    let gametags: GameTag[] = [];
 
     game = await Game.read(this.sql, id);
     if (!game) {

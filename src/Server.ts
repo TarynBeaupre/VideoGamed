@@ -123,7 +123,9 @@ export default class Server {
 		if (!handler) {
 			response.send({
 				statusCode: StatusCode.NotFound,
-				message: `Invalid route: ${req.method} ${req.url}`,
+				message: "Route not found.",
+				payload: {error: "Non valid route."},
+				template: "ErrorView",
 			});
 
 			return;
