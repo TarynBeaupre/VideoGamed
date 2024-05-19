@@ -25,7 +25,7 @@ const createUser = async (props: Partial<UserProps> = {}) => {
  * from the todos and subtodos tables and resets the sequence for each table.
  * @see https://www.postgresql.org/docs/13/sql-altersequence.html
  */
-/*
+
 test.afterEach(async () => {
 	const tables = ["todos", "subtodos", "users"];
 
@@ -37,12 +37,12 @@ test.afterEach(async () => {
 	} catch (error) {
 		console.error(error);
 	}
-});*/
+});
 
 test("User was registered.", async ({ page }) => {
 	await page.goto(`/register`);
 
-	await page.fill('form#register-form input[name="email"]', "user@email.com");
+	await page.fill('form#register-form input[name="email"]', "user1@email.com");
 	await page.fill('form#register-form input[name="password"]', "Password123");
 	await page.fill(
 		'form#register-form input[name="confirmPassword"]',
@@ -73,7 +73,7 @@ test("User was not registered with blank email.", async ({ page }) => {
 test("User was not registered with mismatched passwords.", async ({ page }) => {
 	await page.goto(`register`);
 
-	await page.fill('form#register-form input[name="email"]', "user@email.com");
+	await page.fill('form#register-form input[name="email"]', "user2@email.com");
 	await page.fill('form#register-form input[name="password"]', "Password123");
 	await page.fill(
 		'form#register-form input[name="confirmPassword"]',

@@ -12,7 +12,7 @@ export interface GameTagProps {
 }
 
 export interface TagProps {
-	id: number;
+	id?: number;
 	description: string;
 }
 
@@ -68,5 +68,16 @@ export default class Tag {
 				(row) =>
 					new Tag(sql, convertToCase(snakeToCamel, row) as TagProps)
 			);
+	}
+	static async create(sql: postgres.Sql<any>, props: Partial<TagProps>): Promise<Tag>{
+		const connection = await sql.reserve();
+	
+		const [row] = await sql<TagProps[]>`
+		INSERT INTO tag
+			${sql(convertToCase(camelToSnake, props))}
+		RETURNING *;`;
+		connection.release();
+		return new Tag(sql, convertToCase(snakeToCamel, row) as TagProps)
+
 	}
 }
