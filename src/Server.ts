@@ -124,7 +124,7 @@ export default class Server {
 			response.send({
 				statusCode: StatusCode.NotFound,
 				message: "Route not found.",
-				payload: {error: "Non valid route."},
+				payload: {error: "Invalid route."},
 				template: "ErrorView",
 			});
 
