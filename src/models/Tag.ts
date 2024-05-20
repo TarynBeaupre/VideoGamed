@@ -73,19 +73,24 @@ export default class Tag {
 	static async readSpecificTagForGame(sql: postgres.Sql<any>, gameId: number, tagId: string) {
 		const connection = await sql.reserve();
 	
-			const row = await connection<{ description: string }[]>`
+			const row = await connection<TagProps[]>`
 				SELECT *
 				FROM gametag gt
 				WHERE gt.game_id = ${gameId} AND gt.tag_id = ${tagId};
 			`;
 			connection.release();
 			
-			if (!row){
+			if (row.length == 0){
 				return null
 			}
 
 			else{
-				return new Tag(sql, convertToCase(snakeToCamel, row) as TagProps)
+				const tagFound = await connection<TagProps[]>`
+				SELECT *
+				FROM tag
+				WHERE id = ${tagId};
+				`;
+				return new Tag(sql, convertToCase(snakeToCamel, tagFound) as TagProps)
 			}
 	}
 	static async create(sql: postgres.Sql<any>, props: Partial<TagProps>): Promise<Tag>{
