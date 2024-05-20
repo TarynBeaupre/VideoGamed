@@ -195,9 +195,11 @@ test("Retrieve user's profile.", async ({page}) => {
 
 	await page.goto(`/profile`);
 
-    let usernameOnPage = await page.$('.userInfo #username');
+	await page.waitForSelector('#profile-username');
+    let usernameOnPage = await page.$(`#profile-username`);
+	let usernameText = await usernameOnPage?.innerText();
     
-    expect(usernameOnPage?.innerText()).toBe('Chippi');
+    expect(usernameText).toBe('Chippi');
 });
 
 
@@ -208,21 +210,35 @@ test("Update username.", async ({page}) => {
 	await page.fill('form#login-form input[name="password"]', "chippi123");
 	await page.check('form#login-form input[name="remember"]');
 	await page.click("form#login-form #login-form-submit-button");
+	//makeHttpRequest("POST", `/login`, {email:"chippichippi@email.com", password:"chippi123"});
 
-    await page.goto(getPath('profile'));
+	await page.goto(`/profile`);
+
     await page.click('#update-username-button input[type="submit"]');
-    //await page.waitForSelector('form#update-username-form');
+    
 
     await page.fill('form#update-username-form #newUsername', 'Chippi');
     await page.click('form#update-username-form #update-username-form-button');
 
-    await page.goto(getPath('profile'));
-    const updatedUsername = await page.$('#username');
-    expect(updatedUsername?.innerText()).toBe('Chippi');
+    await page.goto(`/profile`);
+
+	await page.waitForSelector('#profile-username');
+    let usernameOnPage = await page.$(`#profile-username`);
+	let updatedUsername = await usernameOnPage?.innerText();
+    expect(updatedUsername).toBe('Chippi');
 });
-/*
+
 test("Update profile picture.", async ({page}) => {
-	await page.goto(getPath('profile'));
+	await page.goto(`/login`);
+
+	await page.fill('form#login-form input[name="email"]', "chippichippi@email.com");
+	await page.fill('form#login-form input[name="password"]', "chippi123");
+	await page.check('form#login-form input[name="remember"]');
+	await page.click("form#login-form #login-form-submit-button");
+	//makeHttpRequest("POST", `/login`, {email:"chippichippi@email.com", password:"chippi123"});
+
+	await page.goto(`/profile`);
+
     await page.click('#update-pfp-button input[type="submit"]');
     await page.waitForSelector('form#update-pfp-form');
 
@@ -232,7 +248,9 @@ test("Update profile picture.", async ({page}) => {
 
 	//expect(await page?.url()).toBe(getPath("profile"));
 
-    await page.goto(getPath('profile'));
-    const updatedPfpSrc = await page.getAttribute('.userInfo img.review-profile-pic', 'src');
+	//await page.goto(`/profile`);
+	await page.waitForSelector("#profile-pfp")
+
+    const updatedPfpSrc = await page.getAttribute('#profile-pfp', 'src');
     expect(updatedPfpSrc).toBe(newPfp);
-});*/
+});

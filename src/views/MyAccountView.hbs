@@ -2,8 +2,8 @@
 
 <h4> My Profile </h4>
 <div class="userInfo">
-<img class="review-profile-pic" src="{{ user.pfp }}">
-<h3 id="username"> {{ user.username }} </h3> 
+  <img class="review-profile-pic" id="profile-pfp" src="{{ user.pfp }}">
+    <h3 id="profile-username"> {{ user.username }} </h3> 
 <form method="GET" action="{{ path 'updateUsername' }}" id="update-username-button">
 	<input type="submit" value="Change username" id="register-form-submit-button">
 </form>
