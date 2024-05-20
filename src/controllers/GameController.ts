@@ -299,8 +299,23 @@ export default class GameController {
             try {
               let tagExists = await Tag.readSpecificTagForGame(this.sql, gameId, tagId)
               if (!tagExists){
-                await Tag.addGameTag(this.sql, tagId, gameId);
-                this.getGame(req, res);
+                if (req.findCookie("email")?.value == 'admin@email.com'){
+                  await Tag.addGameTag(this.sql, tagId, gameId);
+                  this.getGame(req, res);
+                }
+                else{
+                  await res.send({
+                    statusCode: StatusCode.InternalServerError,
+                    message: "Error while adding tag.",
+                    template: "ErrorView",
+                    payload: {
+                      error: "Only an admin can add tags to a game!",
+                      loggedIn: loggedIn,
+                    },
+                  });
+                  return;
+                }
+
               }
               else {
                 await res.send({
