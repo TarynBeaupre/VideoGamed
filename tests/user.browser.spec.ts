@@ -11,51 +11,6 @@ let sql = postgres({
 	database: "VideoGamedDB",
 });
 
-/*
-const createUser = async (props: Partial<UserProps> = {}) => {
-	return await User.create(sql, {
-		email: props.email || "user@email.com",
-		password: props.password || "password",
-		createdAt: props.createdAt || createUTCDate(),
-		// isAdmin: props.isAdmin || false, // Uncomment if implementing admin feature.
-	});
-};*/
-
-/**
- * Clean up the database after each test. This function deletes all the rows
- * from the todos and subtodos tables and resets the sequence for each table.
- * @see https://www.postgresql.org/docs/13/sql-altersequence.html
- */
-
-test.afterEach(async ({ page }) => {
-
-    const tables = ["users"];
-
-    try {
-            await sql.unsafe(`
-            DROP TABLE IF EXISTS users CASCADE; 
-            CREATE TABLE users (
-				id SERIAL PRIMARY KEY,
-				email VARCHAR(100) NOT NULL UNIQUE,
-				username VARCHAR(100) DEFAULT 'Guest',
-				pfp VARCHAR(300) DEFAULT 'https://i.pinimg.com/564x/af/0a/0a/af0a0af3734b37b50e7f48eacb3b09a6.jpg',
-				password VARCHAR(255) NOT NULL,
-				created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-				edited_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            );`);
-    } catch (error) {
-        console.error(error);
-    }
-
-
-});
-
-
-const logout = async (page: Page) => {
-
-	await page.click("#logout");
-}
-
 
 
 test("User was registered.", async ({ page }) => {
@@ -229,23 +184,23 @@ test("User's email was remembered.", async ({ page }) => {
 });
 
 test("Retrieve user's profile.", async ({page}) => {
-	/*
+	
 	await page.goto(`/login`);
 
 	await page.fill('form#login-form input[name="email"]', "chippichippi@email.com");
 	await page.fill('form#login-form input[name="password"]', "chippi123");
 	await page.check('form#login-form input[name="remember"]');
-	await page.click("form#login-form #login-form-submit-button");*/
-	makeHttpRequest("POST", `/login`, {email:"chippichippi@email.com", password:"chippi123"});
+	await page.click("form#login-form #login-form-submit-button");
+	//makeHttpRequest("POST", `/login`, {email:"chippichippi@email.com", password:"chippi123"});
 
-	makeHttpRequest("GET", `/profile`);
-    await page.waitForSelector('.userInfo');
+	await page.goto(`/profile`);
+
+    let usernameOnPage = await page.$('.userInfo #username');
     
-    const username = await page.textContent('.userInfo h3');
-    expect(username).toBe('Chippi');
+    expect(usernameOnPage?.innerText()).toBe('Chippi');
 });
 
-/*
+
 test("Update username.", async ({page}) => {
 	await page.goto(`/login`);
 
@@ -265,7 +220,7 @@ test("Update username.", async ({page}) => {
     const updatedUsername = await page.$('#username');
     expect(updatedUsername?.innerText()).toBe('Chippi');
 });
-
+/*
 test("Update profile picture.", async ({page}) => {
 	await page.goto(getPath('profile'));
     await page.click('#update-pfp-button input[type="submit"]');

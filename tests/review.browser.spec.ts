@@ -38,7 +38,7 @@ const createUser = async (props: Partial<UserProps> = {}) => {
 };
 
 // Helper function to log in as the test user
-async function loginAsUser(page) {
+async function loginAsUser(page: Page) {
     await page.goto(getPath('login'));
     await page.fill('form#login-form input[name="email"]', 'chippichippi@email.com');
     await page.fill('form#login-form input[name="password"]', 'chippi123');

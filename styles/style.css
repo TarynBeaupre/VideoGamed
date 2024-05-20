@@ -294,3 +294,18 @@ h1, h2, h3, h4 {
   margin: 0;
 }
 
+.topGames {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.topGames > div {
+  flex: 1;
+}
+
+@media (max-width: 1000px) {
+  .topGames {
+      flex-direction: column;
+  }
+}
